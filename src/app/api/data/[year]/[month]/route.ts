@@ -22,6 +22,7 @@ export async function GET(
   if (monthData) {
     return NextResponse.json(monthData);
   } else {
-    return NextResponse.json({ error: `Data not found for BS ${yearNum}/${monthNum}. Available mock data is limited.` }, { status: 404 });
+    const availableYears = Object.keys(bsCalendarData).map(k => k.split('/')[0]).filter((v, i, a) => a.indexOf(v) === i).sort().join(', ');
+    return NextResponse.json({ error: `Data not found for BS ${yearNum}/${monthNum}. Available mock data is limited. Loaded years: ${availableYears || 'None'}` }, { status: 404 });
   }
 }
