@@ -1,68 +1,61 @@
+
 'use server';
 
-import { summarizeRelevantBsEvents } from '@/ai/flows/holiday-event-analyzer';
-import { convertBsToAd, convertAdToBs, getBsMonthDataForAi } from '@/lib/date-converter';
-import type { NepaliDate, EnglishDate, ConversionResult, EventSummaryType } from '@/types';
+import { getBsMonthDataForAi, convertBsToAd, convertAdToBs } from '@/lib/date-converter';
+import type { NepaliDate, EnglishDate, ConversionResult, BsMonthData } from '@/types';
 import { NEPALI_MONTHS } from '@/types';
 
-interface ConversionAndSummaryResult {
+interface ConversionAndEventsResult {
   conversion: ConversionResult;
-  summary?: EventSummaryType;
-  summaryError?: string;
-  bsYearForSummary?: number;
-  bsMonthForSummary?: number;
-  bsMonthNameForSummary?: string;
+  holiFest?: string[];
+  marriage?: string[];
+  bratabandha?: string[];
+  eventDataError?: string;
+  bsYearForEvents?: number;
+  bsMonthForEvents?: number;
+  bsMonthNameForEvents?: string;
 }
 
-async function fetchEventSummary(bsYear: number, bsMonth: number): Promise<{ summary?: EventSummaryType, summaryError?: string }> {
-  const monthData = getBsMonthDataForAi(bsYear, bsMonth);
+async function fetchEventData(bsYear: number, bsMonth: number): Promise<{ holiFest?: string[], marriage?: string[], bratabandha?: string[], eventDataError?: string }> {
+  const monthData: BsMonthData | null = getBsMonthDataForAi(bsYear, bsMonth);
   if (!monthData) {
-    return { summaryError: `Could not retrieve event data for ${NEPALI_MONTHS[bsMonth-1]} ${bsYear}.` };
+    return { eventDataError: `Could not retrieve event data for ${NEPALI_MONTHS[bsMonth-1]} ${bsYear}. Mock data might be limited for this month.` };
   }
 
-  try {
-    const aiInput = {
-      year: bsYear.toString(),
-      month: NEPALI_MONTHS[bsMonth - 1],
-      holiFest: monthData.holiFest,
-      marriage: monthData.marriage,
-      bratabandha: monthData.bratabandha,
-    };
-    const summaryResult = await summarizeRelevantBsEvents(aiInput);
-    return { summary: summaryResult };
-  } catch (e: any) {
-    console.error("AI Summary Error:", e);
-    return { summaryError: `Failed to generate event summary: ${e.message}` };
-  }
+  return { 
+    holiFest: monthData.holiFest,
+    marriage: monthData.marriage,
+    bratabandha: monthData.bratabandha 
+  };
 }
 
-export async function convertBsToAdWithSummary(bsDate: NepaliDate): Promise<ConversionAndSummaryResult> {
+export async function convertBsToAdWithEvents(bsDate: NepaliDate): Promise<ConversionAndEventsResult> {
   const conversionResult = convertBsToAd(bsDate);
   
   if (conversionResult.adDate) {
-    const summaryData = await fetchEventSummary(bsDate.year, bsDate.month);
+    const eventData = await fetchEventData(bsDate.year, bsDate.month);
     return { 
       conversion: conversionResult, 
-      ...summaryData,
-      bsYearForSummary: bsDate.year,
-      bsMonthForSummary: bsDate.month,
-      bsMonthNameForSummary: NEPALI_MONTHS[bsDate.month-1]
+      ...eventData,
+      bsYearForEvents: bsDate.year,
+      bsMonthForEvents: bsDate.month,
+      bsMonthNameForEvents: NEPALI_MONTHS[bsDate.month-1]
     };
   }
   return { conversion: conversionResult };
 }
 
-export async function convertAdToBsWithSummary(adDate: EnglishDate): Promise<ConversionAndSummaryResult> {
+export async function convertAdToBsWithEvents(adDate: EnglishDate): Promise<ConversionAndEventsResult> {
   const conversionResult = convertAdToBs(adDate);
 
   if (conversionResult.bsDate) {
-    const summaryData = await fetchEventSummary(conversionResult.bsDate.year, conversionResult.bsDate.month);
+    const eventData = await fetchEventData(conversionResult.bsDate.year, conversionResult.bsDate.month);
     return { 
       conversion: conversionResult, 
-      ...summaryData,
-      bsYearForSummary: conversionResult.bsDate.year,
-      bsMonthForSummary: conversionResult.bsDate.month,
-      bsMonthNameForSummary: NEPALI_MONTHS[conversionResult.bsDate.month-1]
+      ...eventData,
+      bsYearForEvents: conversionResult.bsDate.year,
+      bsMonthForEvents: conversionResult.bsDate.month,
+      bsMonthNameForEvents: NEPALI_MONTHS[conversionResult.bsDate.month-1]
     };
   }
   return { conversion: conversionResult };

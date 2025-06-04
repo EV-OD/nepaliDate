@@ -1,3 +1,4 @@
+
 export interface BsDayData {
   n: string; // nepali date
   e: string; // english date
@@ -48,10 +49,6 @@ export type ConversionResult = {
   bsDate?: NepaliDate;
   adDate?: EnglishDate;
   error?: string;
-};
-
-export type EventSummaryType = {
-  summary: string;
 };
 
 export const NEPALI_MONTHS = [

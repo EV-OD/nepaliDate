@@ -1,27 +1,44 @@
+
 'use client';
 
-import type { EventSummaryType } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PartyPopper } from 'lucide-react';
+import { ListChecks, Info, CalendarX2 } from 'lucide-react'; // Replaced PartyPopper
+import React from 'react';
 
-interface EventSummaryDisplayProps {
-  summaryData: EventSummaryType | null;
+interface EventDisplayProps {
+  holiFest?: string[];
+  marriageEvents?: string[];
+  bratabandhaEvents?: string[];
   isLoading: boolean;
-  error?: string | null;
+  eventDataError?: string | null;
   bsYear?: number;
   bsMonthName?: string;
 }
 
-export default function EventSummaryDisplay({ summaryData, isLoading, error, bsYear, bsMonthName }: EventSummaryDisplayProps) {
+export default function EventSummaryDisplay({ 
+  holiFest, 
+  marriageEvents, 
+  bratabandhaEvents, 
+  isLoading, 
+  eventDataError, 
+  bsYear, 
+  bsMonthName 
+}: EventDisplayProps) {
+
+  const hasHoliFest = holiFest && holiFest.length > 0;
+  const hasMarriage = marriageEvents && marriageEvents.length > 0;
+  const hasBratabandha = bratabandhaEvents && bratabandhaEvents.length > 0;
+  const hasAnyEventData = hasHoliFest || hasMarriage || hasBratabandha;
+
   if (isLoading) {
     return (
-      <Card className="mt-6 bg-accent/20">
+      <Card className="mt-6 bg-secondary/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-headline">
-            <PartyPopper className="h-5 w-5 animate-pulse" />
+            <ListChecks className="h-5 w-5 animate-pulse text-primary" />
             Events & Holidays for {bsMonthName} {bsYear}
           </CardTitle>
-          <CardDescription>Analyzing events...</CardDescription>
+          <CardDescription>Loading event details...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -34,37 +51,66 @@ export default function EventSummaryDisplay({ summaryData, isLoading, error, bsY
     );
   }
 
-  if (error) {
+  if (eventDataError) {
     return (
-      <Card className="mt-6 border-destructive">
+      <Card className="mt-6 border-destructive bg-destructive/10">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 font-headline text-destructive">
-            <PartyPopper className="h-5 w-5" />
-            Event Summary Error
+            <CalendarX2 className="h-5 w-5" />
+            Error Loading Events
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-destructive-foreground">{error}</p>
+          <p className="text-destructive-foreground">{eventDataError}</p>
         </CardContent>
       </Card>
     );
   }
 
-  if (!summaryData || !summaryData.summary) {
-    return null; // Don't display anything if no summary or not loading/error
+  // Only show the card if there's a year and month, even if no events or error yet
+  // This avoids showing an empty card before a conversion happens
+  if (!bsYear || !bsMonthName) {
+    return null;
   }
+  
+  const renderEventList = (items: string[] | undefined, typeLabel: string, itemSuffix: string = "") => {
+    if (!items || items.length === 0) {
+      return null; // Don't render section if no items
+    }
+    return (
+      <div>
+        <h4 className="font-semibold text-md mt-3 mb-1 text-primary">{typeLabel}:</h4>
+        <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/90">
+          {items.map((item, index) => (
+            <li key={index}>
+              {item.includes("गते") || itemSuffix === "" ? item : `${item}${itemSuffix}`}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
 
   return (
-    <Card className="mt-6 bg-accent/20 shadow-md">
+    <Card className="mt-6 bg-secondary/30 shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 font-headline text-lg">
-          <PartyPopper className="h-6 w-6 text-accent-foreground" />
-          Events & Holidays Summary for {bsMonthName} {bsYear}
+          <ListChecks className="h-6 w-6 text-primary" />
+          Events & Holidays for {bsMonthName} {bsYear}
         </CardTitle>
-        <CardDescription>AI-generated overview of important dates.</CardDescription>
+        <CardDescription>Overview of notable dates for the selected month.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm whitespace-pre-wrap">{summaryData.summary}</p>
+        {!hasAnyEventData && (
+          <div className="flex items-center gap-2 text-muted-foreground py-2">
+            <Info className="h-5 w-5"/>
+            <p>No specific events listed for this month in our current data.</p>
+          </div>
+        )}
+        {renderEventList(holiFest, "Holidays & Festivals")}
+        {renderEventList(marriageEvents, "Auspicious Marriage Dates", " गते")}
+        {renderEventList(bratabandhaEvents, "Auspicious Bratabandha Dates", " गते")}
       </CardContent>
     </Card>
   );

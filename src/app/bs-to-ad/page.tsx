@@ -1,15 +1,16 @@
+
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
-import type { ConversionResult, EventSummaryType } from '@/types';
-import { convertBsToAdWithSummary } from '@/app/actions';
+import type { ConversionResult } from '@/types';
+import { convertBsToAdWithEvents } from '@/app/actions';
 import { BsDateFormFields, ResultDisplay } from '@/components/converters/DateConverterFormFields';
 import EventSummaryDisplay from '@/components/converters/EventSummaryDisplay';
 import { Loader2 } from 'lucide-react';
@@ -33,11 +34,12 @@ const formSchema = z.object({
 export default function BsToAdPage() {
   const [isPending, startTransition] = useTransition();
   const [conversionResult, setConversionResult] = useState<ConversionResult | null>(null);
-  const [eventSummary, setEventSummary] = useState<EventSummaryType | null>(null);
-  const [summaryError, setSummaryError] = useState<string | null>(null);
-  const [summaryYear, setSummaryYear] = useState<number | undefined>();
-  const [summaryMonthName, setSummaryMonthName] = useState<string | undefined>();
-
+  const [holiFestEvents, setHoliFestEvents] = useState<string[] | undefined>(undefined);
+  const [marriageEvents, setMarriageEvents] = useState<string[] | undefined>(undefined);
+  const [bratabandhaEvents, setBratabandhaEvents] = useState<string[] | undefined>(undefined);
+  const [eventDataError, setEventDataError] = useState<string | null>(null);
+  const [eventsYear, setEventsYear] = useState<number | undefined>();
+  const [eventsMonthName, setEventsMonthName] = useState<string | undefined>();
 
   const { toast } = useToast();
 
@@ -54,18 +56,22 @@ export default function BsToAdPage() {
   const watchedBsMonth = form.watch("bsMonth");
 
   React.useEffect(() => {
-    form.setValue("bsDay", 1); // Reset day when month/year changes
+    form.setValue("bsDay", 1); 
   }, [watchedBsYear, watchedBsMonth, form]);
 
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setConversionResult(null);
-    setEventSummary(null);
-    setSummaryError(null);
+    setHoliFestEvents(undefined);
+    setMarriageEvents(undefined);
+    setBratabandhaEvents(undefined);
+    setEventDataError(null);
+    setEventsYear(undefined);
+    setEventsMonthName(undefined);
 
     startTransition(async () => {
       try {
-        const result = await convertBsToAdWithSummary({
+        const result = await convertBsToAdWithEvents({
           year: values.bsYear,
           month: values.bsMonth,
           day: values.bsDay,
@@ -76,15 +82,19 @@ export default function BsToAdPage() {
         } else {
            toast({ title: "Conversion Successful", description: `Converted BS ${values.bsDay}/${values.bsMonth}/${values.bsYear} to AD.` });
         }
-        if(result.summary) setEventSummary(result.summary);
-        if(result.summaryError) setSummaryError(result.summaryError);
-        setSummaryYear(result.bsYearForSummary);
-        setSummaryMonthName(result.bsMonthNameForSummary);
+        
+        setHoliFestEvents(result.holiFest);
+        setMarriageEvents(result.marriage);
+        setBratabandhaEvents(result.bratabandha);
+        if(result.eventDataError) setEventDataError(result.eventDataError);
+        setEventsYear(result.bsYearForEvents);
+        setEventsMonthName(result.bsMonthNameForEvents);
 
       } catch (error) {
         const errMessage = error instanceof Error ? error.message : "An unknown error occurred.";
         toast({ variant: "destructive", title: "Error", description: errMessage });
         setConversionResult({ error: errMessage });
+        setEventDataError("Failed to process request.");
       }
     });
   };
@@ -129,11 +139,13 @@ export default function BsToAdPage() {
       </Card>
 
       <EventSummaryDisplay 
-        summaryData={eventSummary} 
-        isLoading={isPending && !conversionResult?.error && !!form.formState.isValid} 
-        error={summaryError}
-        bsYear={summaryYear}
-        bsMonthName={summaryMonthName}
+        holiFest={holiFestEvents}
+        marriageEvents={marriageEvents}
+        bratabandhaEvents={bratabandhaEvents}
+        isLoading={isPending && !conversionResult?.error && !!form.formState.isValid && !eventDataError && (!holiFestEvents && !marriageEvents && !bratabandhaEvents)}
+        eventDataError={eventDataError}
+        bsYear={eventsYear}
+        bsMonthName={eventsMonthName}
       />
     </div>
   );
