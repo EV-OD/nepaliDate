@@ -7,7 +7,8 @@ import { Code, Info, Server, ExternalLink, Database, AlertCircle } from "lucide-
 
 async function getApiInfo() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
-  const res = await fetch(`${baseUrl}/api/data/info`, { cache: 'no-store' });
+  // Fetch from the new API info endpoint
+  const res = await fetch(`${baseUrl}/api/calendar/info`, { cache: 'no-store' }); 
   if (!res.ok) {
     const errorText = await res.text();
     console.error("API Info Fetch Error:", res.status, errorText);
