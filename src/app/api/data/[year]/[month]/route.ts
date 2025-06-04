@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getBsCalendarData } from '@/lib/bsCalendarData';
+import { getBsCalendarData } from '@/lib/bsCalendarData'; // Corrected import
 
 export async function GET(
   request: NextRequest,
@@ -15,7 +15,7 @@ export async function GET(
     return NextResponse.json({ error: "Invalid year or month format. Month must be 1-12." }, { status: 400 });
   }
 
-  const bsCalendarData = getBsCalendarData(); // Call the function to get data
+  const bsCalendarData = getBsCalendarData(); // Correctly CALL the function
   const key = `${yearNum}/${monthNum}`;
   const monthData = bsCalendarData[key];
 
