@@ -3,70 +3,43 @@ const { scrapeData } = require('./calendar-scraper.js');
 const fs = require('fs');
 
 async function main() {
-  const args = process.argv.slice(2); // Get command line arguments after node and script path
+  const startYear = 1992;
+  const endYear = 2083;
 
-  const yearsToScrape = [];
-  const yearMonthPairs = [];
-
-  if (args.length === 0) {
-    // Default: Scrape a couple of example months if no arguments are provided
-    console.log("No arguments provided. Scraping example data for 2076/1 and 2076/2.");
-    yearMonthPairs.push({ year: 2076, month: 1 });
-    yearMonthPairs.push({ year: 2076, month: 2 });
-  } else {
-    args.forEach(arg => {
-      if (arg.includes('/')) {
-        const [yearStr, monthStr] = arg.split('/');
-        const year = parseInt(yearStr);
-        const month = parseInt(monthStr);
-        if (!isNaN(year) && !isNaN(month) && month >= 1 && month <= 12) {
-          yearMonthPairs.push({ year, month });
-        } else {
-          console.warn(`Skipping invalid year/month argument: ${arg}`);
-        }
-      } else {
-        const year = parseInt(arg);
-        if (!isNaN(year)) {
-          yearsToScrape.push(year);
-        } else {
-          console.warn(`Skipping invalid year argument: ${arg}`);
-        }
-      }
-    });
-  }
+  console.log(`Starting to scrape calendar data from BS year ${startYear} to ${endYear}.`);
 
   // Create the base 'data' directory if it doesn't exist
   const dataDir = './data';
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
+    console.log(`Created base data directory: ${dataDir}`);
   }
 
-  // Scrape full years
-  for (const year of yearsToScrape) {
-    console.log(`Scraping all months for year ${year}...`);
+  for (let year = startYear; year <= endYear; year++) {
+    console.log(`\nScraping all months for year ${year}...`);
     const yearDir = `${dataDir}/${year}`;
     if (!fs.existsSync(yearDir)) {
       fs.mkdirSync(yearDir, { recursive: true });
+      console.log(`Created directory for year ${year}: ${yearDir}`);
     }
     for (let month = 1; month <= 12; month++) {
-      await scrapeData(year, month);
+      // The scrapeData function itself logs "fetching year, month" and "Done year, month"
+      // or an error if one occurs.
+      try {
+        await scrapeData(year, month);
+      } catch (error) {
+        // scrapeData already logs its own errors, but we can log a general error here too
+        console.error(`An error occurred while trying to initiate scraping for ${year}/${month}:`, error.message);
+      }
     }
+    console.log(`Completed initiating scraping for all months in year ${year}.`);
   }
 
-  // Scrape specific year/month pairs
-  for (const pair of yearMonthPairs) {
-    console.log(`Scraping for ${pair.year}/${pair.month}...`);
-    const yearDir = `${dataDir}/${pair.year}`;
-    if (!fs.existsSync(yearDir)) {
-      fs.mkdirSync(yearDir, { recursive: true });
-    }
-    await scrapeData(pair.year, pair.month);
-  }
-
-  console.log("All scraping tasks initiated.");
-  console.log("Check console output above for status of each task.");
+  console.log("\nAll scraping tasks for the specified year range have been initiated.");
+  console.log("Please check the console output above for the status of each individual scraping task.");
+  console.log(`Data will be saved in the '${dataDir}' directory.`);
 }
 
 main().catch(error => {
-  console.error("Scraping process encountered an error:", error);
+  console.error("The main scraping process encountered an unhandled error:", error);
 });
