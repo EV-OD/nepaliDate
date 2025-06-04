@@ -22,7 +22,18 @@ export async function GET(
   if (monthData) {
     return NextResponse.json(monthData);
   } else {
-    const availableYears = Object.keys(bsCalendarData).map(k => k.split('/')[0]).filter((v, i, a) => a.indexOf(v) === i).sort().join(', ');
-    return NextResponse.json({ error: `Data not found for BS ${yearNum}/${monthNum}. Available mock data is limited. Loaded years: ${availableYears || 'None'}` }, { status: 404 });
+    // Dynamically get available years to provide a more helpful error message
+    const availableYearsArray: number[] = [];
+    if (bsCalendarData && Object.keys(bsCalendarData).length > 0) {
+        Object.keys(bsCalendarData).forEach(k => {
+            const y = parseInt(k.split('/')[0]);
+            if (!availableYearsArray.includes(y)) {
+                availableYearsArray.push(y);
+            }
+        });
+        availableYearsArray.sort((a, b) => a - b);
+    }
+    const availableYears = availableYearsArray.join(', ');
+    return NextResponse.json({ error: `Data not found for BS ${yearNum}/${monthNum}. Available mock data is limited. Loaded years: ${availableYears || 'None (or error loading data index)'}` }, { status: 404 });
   }
 }
