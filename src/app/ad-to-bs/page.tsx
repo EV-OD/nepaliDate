@@ -8,7 +8,7 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import type { ConversionResult } from '@/types';
 import { convertAdToBsWithEvents } from '@/app/actions';
 import { AdDateFormField, ResultDisplay } from '@/components/converters/DateConverterFormFields';

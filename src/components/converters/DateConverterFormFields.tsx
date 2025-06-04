@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Control, Controller } from "react-hook-form";
@@ -10,9 +11,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { NEPALI_MONTHS, ENGLISH_MONTHS } from "@/types";
-import { getBsYears } from "@/lib/date-converter";
-import { getDaysInBsMonth } from "@/lib/bsCalendarData";
+import { NEPALI_MONTHS, ENGLISH_MONTHS, CLIENT_SIDE_BS_YEARS, getClientSafeDaysInBsMonth } from "@/types"; // Updated imports
 import React from "react";
 
 interface BsDateFormFieldsProps {
@@ -20,18 +19,18 @@ interface BsDateFormFieldsProps {
   yearFieldName: string;
   monthFieldName: string;
   dayFieldName: string;
-  bsYearWatch?: number; // Watched value of BS Year for dynamic day count
-  bsMonthWatch?: number; // Watched value of BS Month for dynamic day count
+  bsYearWatch?: number; 
+  bsMonthWatch?: number;
 }
 
 export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFieldName, bsYearWatch, bsMonthWatch }: BsDateFormFieldsProps) {
-  const availableBsYears = React.useMemo(() => getBsYears(), []);
+  const availableBsYears = CLIENT_SIDE_BS_YEARS; // Use client-safe years
   
   const daysInSelectedBsMonth = React.useMemo(() => {
     if (bsYearWatch && bsMonthWatch) {
-      return getDaysInBsMonth(bsYearWatch, bsMonthWatch);
+      return getClientSafeDaysInBsMonth(bsYearWatch, bsMonthWatch); // Use client-safe function
     }
-    return 32; // Default max
+    return 32; // Default max if year/month not selected
   }, [bsYearWatch, bsMonthWatch]);
 
   return (
@@ -45,6 +44,7 @@ export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFi
             <Select
               onValueChange={(value) => field.onChange(parseInt(value))}
               defaultValue={field.value?.toString()}
+              value={field.value?.toString()} // Ensure value prop is also set for controlled component
             >
               <FormControl>
                 <SelectTrigger>
@@ -70,6 +70,7 @@ export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFi
             <Select
               onValueChange={(value) => field.onChange(parseInt(value))}
               defaultValue={field.value?.toString()}
+              value={field.value?.toString()} // Ensure value prop is also set
             >
               <FormControl>
                 <SelectTrigger>
@@ -94,7 +95,9 @@ export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFi
             <FormLabel>BS Day</FormLabel>
              <Select
               onValueChange={(value) => field.onChange(parseInt(value))}
+              // Ensure the field.value is string for defaultValue and value
               defaultValue={field.value?.toString()}
+              value={field.value?.toString()}
               disabled={!bsYearWatch || !bsMonthWatch}
             >
               <FormControl>
@@ -157,7 +160,8 @@ export function AdDateFormField({ control, fieldName, label }: AdDateFormFieldPr
                 selected={field.value}
                 onSelect={field.onChange}
                 disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
+                  // Adjusted min date slightly to ensure 1992 AD is selectable as it corresponds to BS 2049 (min BS year)
+                  date > new Date() || date < new Date("1935-01-01") 
                 }
                 initialFocus
               />

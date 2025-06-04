@@ -61,18 +61,45 @@ export const ENGLISH_MONTHS = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-// This constant is now primarily a fallback. 
-// The actual number of days should be derived from the loaded JSON data via getDaysInBsMonth in bsCalendarData.ts.
+// This constant is now primarily a fallback for client-side estimations.
+// The actual number of days should be derived from the loaded JSON data server-side.
 export const DAYS_IN_BS_MONTH: { [key: string]: number[] } = {
-  // Sample data for years where JSON files might be missing or for extreme fallbacks.
-  // It's recommended to have JSON files for all supported years.
   "1992": [30,31,31,32,31,31,30,30,29,30,29,30],
   "2076": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 29, 30], 
   "2077": [31, 31, 32, 31, 31, 30, 30, 29, 30, 29, 30, 30],
   "2078": [31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
   "2079": [30, 31, 32, 32, 31, 30, 30, 30, 29, 29,30,30],
-  "2080": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 30, 30], // Updated based on provided 2080 data files
+  "2080": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 30, 30],
   "2081": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
   "2082": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
   "2083": [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30]
 };
+
+// Static list of BS years for client-side dropdowns, based on scraped data range
+const MIN_BS_YEAR_CLIENT = 1992;
+const MAX_BS_YEAR_CLIENT = 2083; // Based on scraper end year
+export const CLIENT_SIDE_BS_YEARS: number[] = Array.from(
+  { length: MAX_BS_YEAR_CLIENT - MIN_BS_YEAR_CLIENT + 1 },
+  (_, i) => MIN_BS_YEAR_CLIENT + i
+);
+
+// Client-safe function to get days in a BS month
+export function getClientSafeDaysInBsMonth(year: number, month: number): number {
+  const yearStr = year.toString();
+  if (DAYS_IN_BS_MONTH[yearStr] && DAYS_IN_BS_MONTH[yearStr][month - 1]) {
+    return DAYS_IN_BS_MONTH[yearStr][month - 1];
+  }
+  // Fallback logic if year/month not in the detailed DAYS_IN_BS_MONTH map
+  // This is a general pattern for BS months
+  if (month >= 1 && month <= 6) { // Baishakh to Ashwin
+    return 31; // Or 32 for some, 30 for Ashwin in some years
+  } else if (month >= 7 && month <= 11) { // Kartik to Falgun
+    return 30; // Or 29
+  } else if (month === 12) { // Chaitra
+    return 30; // Or 29
+  }
+  // A more generic fallback (less accurate but prevents errors)
+  if (month === 2 || month === 4 ) return 32; // Jestha, Shrawan often 32
+  if ([1,3,5].includes(month)) return 31; // Baishakh, Ashadh, Bhadra often 31
+  return 30; // Default for others
+}

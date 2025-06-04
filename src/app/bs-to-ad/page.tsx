@@ -8,22 +8,24 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import type { ConversionResult } from '@/types';
 import { convertBsToAdWithEvents } from '@/app/actions';
 import { BsDateFormFields, ResultDisplay } from '@/components/converters/DateConverterFormFields';
 import EventSummaryDisplay from '@/components/converters/EventSummaryDisplay';
 import { Loader2 } from 'lucide-react';
-import { getDaysInBsMonth } from '@/lib/bsCalendarData';
+import { getClientSafeDaysInBsMonth, CLIENT_SIDE_BS_YEARS } from '@/types'; // Updated import
 
 const currentBsYear = new Date().getFullYear() + 56; // Rough estimate for default
+const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(currentBsYear) ? currentBsYear : CLIENT_SIDE_BS_YEARS[CLIENT_SIDE_BS_YEARS.length -1] || 2080;
+
 
 const formSchema = z.object({
-  bsYear: z.number().min(2000, "Year must be after 2000").max(2090, "Year must be before 2090"),
+  bsYear: z.number().min(CLIENT_SIDE_BS_YEARS[0]).max(CLIENT_SIDE_BS_YEARS[CLIENT_SIDE_BS_YEARS.length - 1]),
   bsMonth: z.number().min(1).max(12),
   bsDay: z.number().min(1).max(32),
 }).refine(data => {
-    const daysInMonth = getDaysInBsMonth(data.bsYear, data.bsMonth);
+    const daysInMonth = getClientSafeDaysInBsMonth(data.bsYear, data.bsMonth); // Use client-safe function
     return data.bsDay <= daysInMonth;
 }, {
     message: "Day is invalid for the selected month and year.",
@@ -46,7 +48,7 @@ export default function BsToAdPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      bsYear: currentBsYear,
+      bsYear: defaultBsYear,
       bsMonth: 1,
       bsDay: 1,
     },
@@ -56,7 +58,12 @@ export default function BsToAdPage() {
   const watchedBsMonth = form.watch("bsMonth");
 
   React.useEffect(() => {
-    form.setValue("bsDay", 1); 
+    // Reset day to 1 when year or month changes, if the current day is invalid for new selection
+    const currentDay = form.getValues("bsDay");
+    const daysInNewMonth = getClientSafeDaysInBsMonth(watchedBsYear, watchedBsMonth);
+    if (currentDay > daysInNewMonth) {
+      form.setValue("bsDay", 1); 
+    }
   }, [watchedBsYear, watchedBsMonth, form]);
 
 
