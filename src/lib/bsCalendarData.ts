@@ -1,152 +1,158 @@
-import type { BsCalendar } from '@/types';
 
-export const bsCalendarData: BsCalendar = {
-  "2076/1": { // Baishakh 2076
-    bs_year: 2076,
-    bs_month: 1,
-    metadata: { 
-      en: "Apr/May 2019", np: "बैशाख २०७६",
-      ad_year_start: 2019, ad_month_start: 4, // April
-      ad_year_end: 2019, ad_month_end: 5, // May
-    },
-    days: [
-      { n: "१", e: "14", t: "प्रतिपदा", f: "नयाँ वर्ष", h: true, d: 1 }, // Sun, Apr 14 2019
-      { n: "२", e: "15", t: "द्वितीया", f: "", h: false, d: 2 },
-      // ... fill more days
-      { n: "17", e: "30", t: "सप्तदशी", f: "", h: false, d: 3 }, // Tue, Apr 30 2019
-      { n: "18", e: "1", t: "अष्टमी", f: "मातातीर्थ औंसी", h: false, d: 4 }, // Wed, May 1 2019
-      // ... fill more days
-      { n: "31", e: "14", t: "औँसी", f: "", h: false, d: 3 }, // Tue, May 14 2019
-    ],
-    holiFest: ["१ गते नयाँ वर्ष", "१८ गते मातातीर्थ औंसी"],
-    marriage: ["५", "१५", "२५"], // Just numbers for simplicity in mock
-    bratabandha: ["१०", "२०"]
-  },
-  "2076/2": { // Jestha 2076
-    bs_year: 2076,
-    bs_month: 2,
-    metadata: { 
-      en: "May/Jun 2019", np: "जेष्ठ २०७६",
-      ad_year_start: 2019, ad_month_start: 5, // May
-      ad_year_end: 2019, ad_month_end: 6, // June
-    },
-    days: Array.from({ length: 32 }, (_, i) => {
-      const bsDay = i + 1;
-      const adDayStartsOn = 15; // Jestha 1, 2076 is May 15, 2019
-      let adDay = adDayStartsOn + i;
-      let adMonth = 5; // May
-      if (adDay > 31) { // Assuming May has 31 days
-        adDay = adDay - 31;
-        adMonth = 6; // June
-      }
-      return { 
-        n: bsDay.toString(), 
-        e: adDay.toString(), 
-        t: bsDay === 1 ? "एकादशी" : bsDay === 2 ? "द्वादशी" : bsDay === 3 ? "त्रयोदशी" : "अन्य तिथि", 
-        f: bsDay === 1 ? "मोहिनी एकादशी व्रत" : "", 
-        h: false, 
-        d: ((4 + i -1) % 7) + 1 // Jestha 1 is Wednesday (day 4 if Sun=1)
-      };
-    }),
-    holiFest: [
-        "१ गते मोहिनी एकादशी व्रत",
-        "४ गते चण्डी पुर्णिमा, किराँत, राई, लिम्बु जातिको उर्भ्यौली पर्व, गौतम बुद्ध जयन्ती",
-        "१५ गते गणतन्त्र दिवस",
-        "१६ गते अपरा एकादशी व्रत",
-        "२० गते हलो, निशि बार्ने, दर्श श्राद्द",
-        "२१ गते गोसाईकुण्ड स्नान आरम्भ",
-        "३० गते निर्जला एकादशी व्रत"
-    ],
-    marriage: [
-        "२", "३", "४", "५", "९", "१४", "१५", "१६", "२१", "२५", "२६", "२७", "२८", "२९", "३०", "३१", "३२"
-    ],
-    bratabandha: [
-        "९", "२९"
-    ]
-  },
-  "2076/3": { // Ashadh 2076
-    bs_year: 2076,
-    bs_month: 3,
-    metadata: { 
-      en: "Jun/Jul 2019", np: "असार २०७६",
-      ad_year_start: 2019, ad_month_start: 6, // June
-      ad_year_end: 2019, ad_month_end: 7, // July
-     },
-    days: Array.from({ length: 31 }, (_, i) => { // Ashadh 2076 had 31 days
-      const bsDay = i + 1;
-      // Jestha 32, 2076 was June 15, 2019. So Ashadh 1, 2076 is June 16, 2019
-      const adDayStartsOn = 16; 
-      let adDay = adDayStartsOn + i;
-      let adMonth = 6; // June
-      if (adDay > 30) { // June has 30 days
-        adDay = adDay - 30;
-        adMonth = 7; // July
-      }
-      return { 
-        n: bsDay.toString(), 
-        e: adDay.toString(), 
-        t: "तिथि", 
-        f: bsDay === 15 ? "धान दिवस" : "", 
-        h: false, 
-        d: ((1 + i -1) % 7) + 1 // Ashadh 1 is Sunday (day 1)
-      };
-    }),
-    holiFest: ["१५ गते धान दिवस", "हरिशयनी एकादशी"],
-    marriage: ["५", "१०", "१५", "२०", "२५"],
-    bratabandha: []
-  },
-  // Add a month for 2081 for testing range
-   "2081/1": { // Baishakh 2081
-    bs_year: 2081,
-    bs_month: 1,
-    metadata: { 
-      en: "Apr/May 2024", np: "बैशाख २०८१",
-      ad_year_start: 2024, ad_month_start: 4, // April
-      ad_year_end: 2024, ad_month_end: 5, // May
-    },
-    days: Array.from({ length: 31 }, (_, i) => { // Baishakh 2081 typically 30/31 days, assume 31
-      const bsDay = i + 1;
-      const adDayStartsOn = 13; // Baishakh 1, 2081 is April 13, 2024
-      let adDay = adDayStartsOn + i;
-      let adMonth = 4; // April
-      if (adDay > 30) { // April has 30 days
-        adDay = adDay - 30;
-        adMonth = 5; // May
-      }
-      return { 
-        n: bsDay.toString(), 
-        e: adDay.toString(), 
-        t: "तिथि", 
-        f: bsDay === 1 ? "नयाँ वर्ष २०८१" : "", 
-        h: bsDay === 1, 
-        d: ((7 + i -1) % 7) + 1 // April 13 2024 is Saturday (day 7)
-      };
-    }),
-    holiFest: ["१ गते नयाँ वर्ष २०८१"],
-    marriage: ["५", "१५", "२५"],
-    bratabandha: ["१०", "२०"]
-  },
+import fs from 'fs';
+import path from 'path';
+import type { BsCalendar, BsMonthData } from '@/types';
+
+// Cache for the loaded calendar data
+let loadedBsCalendarData: BsCalendar | null = null;
+
+const MONTH_NAME_TO_NUMBER: { [key: string]: number } = {
+  'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
+  'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12,
 };
 
-// Helper to get number of days in a BS month for a given year
-export function getDaysInBsMonth(year: number, month: number): number {
-  const yearStr = year.toString();
-  const monthIndex = month - 1;
+function parseEnglishMeta(enMeta: string): Omit<BsMonthData['metadata'], 'np'> {
+  // Examples: "Apr/May 2023", "Jan/Feb 2024", "Dec/Jan 2023/2024"
+  const parts = enMeta.split(' ');
+  const yearPart = parts.pop()!; 
+  const monthPart = parts.join(' '); 
+
+  const monthNames = monthPart.split('/');
+  const ad_month_start_name = monthNames[0];
+  const ad_month_end_name = monthNames.length > 1 ? monthNames[1] : ad_month_start_name;
+
+  let ad_year_start: number;
+  let ad_year_end: number;
+
+  if (yearPart.includes('/')) {
+    const [startYearStr, endYearStrSegment] = yearPart.split('/');
+    ad_year_start = parseInt(startYearStr);
+    // Handle cases like "2023/24" -> endYear should be 2024
+    ad_year_end = parseInt(endYearStrSegment.length === 2 ? `${startYearStr.substring(0,2)}${endYearStrSegment}` : endYearStrSegment);
+  } else {
+    ad_year_start = parseInt(yearPart);
+    ad_year_end = ad_year_start; 
+    // If month names span across year-end (e.g. Dec/Jan) but only one year is listed, adjust end year
+    if (MONTH_NAME_TO_NUMBER[ad_month_start_name] === 12 && MONTH_NAME_TO_NUMBER[ad_month_end_name] === 1) {
+      ad_year_end = ad_year_start + 1;
+    }
+  }
   
-  // Try to get from detailed bsCalendarData first
-  const monthData = bsCalendarData[`${year}/${month}`];
-  if (monthData) {
+  return {
+    en: enMeta,
+    // np will be filled from JSON
+    ad_year_start: ad_year_start,
+    ad_month_start: MONTH_NAME_TO_NUMBER[ad_month_start_name],
+    ad_year_end: ad_year_end,
+    ad_month_end: MONTH_NAME_TO_NUMBER[ad_month_end_name],
+  };
+}
+
+function loadCalendarDataFromFileSystem(): BsCalendar {
+  const dataDir = path.join(process.cwd(), 'data');
+  const calendar: BsCalendar = {};
+
+  try {
+    if (!fs.existsSync(dataDir)) {
+      console.warn(`Data directory not found: ${dataDir}. Calendar will be empty.`);
+      return {};
+    }
+    const yearDirs = fs.readdirSync(dataDir).filter(name => /^\d{4}$/.test(name) && fs.statSync(path.join(dataDir, name)).isDirectory());
+
+    for (const yearStr of yearDirs) {
+      const bsYear = parseInt(yearStr);
+      const yearPath = path.join(dataDir, yearStr);
+      const monthFiles = fs.readdirSync(yearPath).filter(file => file.endsWith('.json'));
+
+      for (const monthFile of monthFiles) {
+        const bsMonth = parseInt(path.basename(monthFile, '.json'));
+        if (isNaN(bsMonth) || bsMonth < 1 || bsMonth > 12) {
+            console.warn(`Skipping invalid month file: ${monthFile} in ${yearStr}`);
+            continue;
+        }
+        const filePath = path.join(yearPath, monthFile);
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const jsonData = JSON.parse(fileContent);
+        
+        const parsedMetaBase = parseEnglishMeta(jsonData.metadata.en);
+        
+        const monthKey = `${bsYear}/${bsMonth}`;
+        calendar[monthKey] = {
+          bs_year: bsYear,
+          bs_month: bsMonth,
+          metadata: {
+            ...parsedMetaBase,
+            np: jsonData.metadata.np, 
+          },
+          days: jsonData.days.map((d: any) => ({
+              n: d.n,
+              e: d.e,
+              t: d.t,
+              f: d.f,
+              h: d.h,
+              d: d.d
+          })),
+          holiFest: jsonData.holiFest || [],
+          marriage: jsonData.marriage || [],
+          bratabandha: jsonData.bratabandha || [],
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error loading calendar data from file system:", error);
+    return calendar; 
+  }
+  // console.log(`Loaded ${Object.keys(calendar).length} months of data.`);
+  return calendar;
+}
+
+export function getBsCalendarData(): BsCalendar {
+  if (!loadedBsCalendarData) {
+    loadedBsCalendarData = loadCalendarDataFromFileSystem();
+  }
+  return loadedBsCalendarData;
+}
+
+export function getDaysInBsMonth(year: number, month: number): number {
+  const calendar = getBsCalendarData();
+  const monthData = calendar[`${year}/${month}`];
+  if (monthData && monthData.days) {
     return monthData.days.length;
   }
   
-  // Fallback to DAYS_IN_BS_MONTH (less accurate, for UI population)
-  const daysArray =DAYS_IN_BS_MONTH[yearStr];
-  if (daysArray && daysArray[monthIndex] !== undefined) {
-    return daysArray[monthIndex];
+  console.warn(`Data not found for ${year}/${month} in getDaysInBsMonth. Using default fallback values.`);
+  // Fallback for robustness (from src/types/index.ts - DAYS_IN_BS_MONTH logic)
+  // This should ideally not be hit if data files are present for the queried range
+  const genericDays: { [key: number]: number[] } = {
+    2076: [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 29, 30],
+    2080: [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 29, 30], // Example year 2080
+    2081: [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
+    2082: [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30], // Example year 2082
+    // Add more years or a generic fallback
+  };
+  const yearDays = genericDays[year];
+  if(yearDays && yearDays[month-1]){
+    return yearDays[month-1];
   }
-  
-  // Default fallback if year or month data is missing
-  if (month === 2 || month === 4 ) return 32; // Jestha, Shrawan often 32
-  if ([1,3,5].includes(month)) return 31; // Baishakh, Ashadh, Bhadra often 31
+
+  if (month === 2 || month === 4 ) return 32; 
+  if ([1,3,5,7,8].includes(month)) return 31; // Common lengths
   return 30; // Default for others
+}
+
+export function getBsMonthDataForAi(bsYear: number, bsMonth: number): BsMonthData | null {
+  const calendar = getBsCalendarData();
+  const monthData = calendar[`${bsYear}/${bsMonth}`];
+  return monthData || null;
+}
+
+export function getBsYears(): number[] {
+  const calendar = getBsCalendarData();
+  const years = new Set<number>();
+  if (calendar) {
+    for (const key in calendar) {
+      years.add(parseInt(key.split('/')[0]));
+    }
+  }
+  return Array.from(years).sort((a,b) => a-b);
 }

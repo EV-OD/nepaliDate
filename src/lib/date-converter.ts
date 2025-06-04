@@ -1,52 +1,65 @@
-import { bsCalendarData } from './bsCalendarData';
+
+import { getBsCalendarData, getDaysInBsMonth as getDaysInMonthUtil, getBsYears } from './bsCalendarData';
 import type { NepaliDate, EnglishDate, ConversionResult, BsMonthData, BsDayData } from '@/types';
 import { NEPALI_MONTHS, ENGLISH_MONTHS } from '@/types';
 
-function getAdDateForBsDay(bsDayEntry: BsDayData, monthMetadata: BsMonthData['metadata']): EnglishDate {
+function getAdDateForBsDay(bsDayEntry: BsDayData, monthDataRef: BsMonthData): EnglishDate {
   let adDay = parseInt(bsDayEntry.e);
-  let adMonth = monthMetadata.ad_month_start;
-  let adYear = monthMetadata.ad_year_start;
+  let adMonth = monthDataRef.metadata.ad_month_start;
+  let adYear = monthDataRef.metadata.ad_year_start;
 
-  // Check if we crossed into the next AD month based on the start of the BS month
-  // This simplified logic assumes bsDayEntry.e resets to 1 when AD month changes.
-  // A more robust way is to track the previous AD day.
-  // For this mock, we assume the bsCalendarData has AD days that correctly increment across month boundaries.
+  // This logic determines the correct AD month/year for a given BS day's 'e' value
+  // by checking if the 'e' value indicates a rollover into the next AD month.
+  // It assumes bsDayEntry.e resets to 1 (or a low number) when the AD month changes within a BS month.
 
-  // Example: BS month starts in May (5), ends in June (6).
-  // If bsDayEntry.e is "30" and ad_month_start is 5, it's May 30.
-  // If bsDayEntry.e is "1" and ad_month_start is 5, but the *previous* BS day's AD 'e' was "31", then this must be June 1.
-  // This requires iterating through the days array up to the current one or having a pre-calculated AD month for each BS day.
+  // Find the index of the current bsDayEntry to compare its 'e' value
+  // with the 'e' value of the first day of the BS month.
+  const firstBsDayE = parseInt(monthDataRef.days[0].e);
+  
+  // If the bsDayEntry.e is numerically smaller than the first day's e,
+  // AND the start AD month is not December wrapping to January (already handled by year_end),
+  // it implies the AD month has advanced.
+  if (parseInt(bsDayEntry.e) < firstBsDayE && 
+      !(monthDataRef.metadata.ad_month_start === 12 && monthDataRef.metadata.ad_month_end === 1)) {
+    adMonth = monthDataRef.metadata.ad_month_end;
+    adYear = monthDataRef.metadata.ad_year_end; // Use ad_year_end if months span year
+  }
+  // If start is Dec and end is Jan, year_end is already correct.
+  // If start is e.g. Apr and end is May in same year, year_end is same as year_start.
+  // This simplified logic might need refinement if 'e' values don't strictly reset to 1.
+  // The refined logic in the thought process was better:
+  
+  // More robust iteration to determine AD month/year
+  let currentAdDayNumber = parseInt(monthDataRef.days[0].e);
+  let currentAdMonthValue = monthDataRef.metadata.ad_month_start;
+  let currentAdYearValue = monthDataRef.metadata.ad_year_start;
 
-  // Simplified: Iterate through days to determine AD month/year
-  // This is not efficient for direct lookup but ensures correctness with current data structure.
-  let currentAdDay = parseInt(bsCalendarData[`${monthMetadata.bs_year}/${monthMetadata.bs_month}`].days[0].e);
-  let currentAdMonth = monthMetadata.ad_month_start;
-  let currentAdYear = monthMetadata.ad_year_start;
-
-  for (const day of bsCalendarData[`${monthMetadata.bs_year}/${monthMetadata.bs_month}`].days) {
-    const parsedAdDay = parseInt(day.e);
-    if (parsedAdDay < currentAdDay && currentAdMonth === monthMetadata.ad_month_start) { // month changed from start_month to end_month
-        currentAdMonth = monthMetadata.ad_month_end;
-        if (monthMetadata.ad_year_end > monthMetadata.ad_year_start) {
-            currentAdYear = monthMetadata.ad_year_end;
+  for (const day of monthDataRef.days) {
+    const parsedAdDayInLoop = parseInt(day.e);
+    // Check if the English day number has reset (e.g., from 30 to 1),
+    // and we haven't already switched to the end month.
+    if (parsedAdDayInLoop < currentAdDayNumber && currentAdMonthValue === monthDataRef.metadata.ad_month_start) { 
+        currentAdMonthValue = monthDataRef.metadata.ad_month_end;
+        // Ensure year also updates if the AD month span crosses an AD year boundary
+        if (monthDataRef.metadata.ad_year_end > monthDataRef.metadata.ad_year_start) {
+            currentAdYearValue = monthDataRef.metadata.ad_year_end;
         }
     }
-    currentAdDay = parsedAdDay;
-    if (day.n === bsDayEntry.n) {
-        adDay = parsedAdDay;
-        adMonth = currentAdMonth;
-        adYear = currentAdYear;
+    currentAdDayNumber = parsedAdDayInLoop;
+    if (day.n === bsDayEntry.n) { // Found the target BS day
+        adDay = parsedAdDayInLoop;
+        adMonth = currentAdMonthValue;
+        adYear = currentAdYearValue;
         break;
     }
   }
-  
-  const dateObj = new Date(adYear, adMonth - 1, adDay);
 
+  const dateObj = new Date(adYear, adMonth - 1, adDay);
   return {
     year: adYear,
     month: adMonth,
     day: adDay,
-    monthName: ENGLISH_MONTHS[adMonth-1],
+    monthName: ENGLISH_MONTHS[adMonth - 1],
     dayOfWeek: dateObj.toLocaleDateString('en-US', { weekday: 'long' })
   };
 }
@@ -54,10 +67,13 @@ function getAdDateForBsDay(bsDayEntry: BsDayData, monthMetadata: BsMonthData['me
 
 export function convertBsToAd(bsDate: NepaliDate): ConversionResult {
   const { year, month, day } = bsDate;
-  const monthData = bsCalendarData[`${year}/${month}`];
+  const calendar = getBsCalendarData();
+  const monthData = calendar[`${year}/${month}`];
 
   if (!monthData) {
-    return { error: `Data for BS ${year}/${month} not found in our records. Please try a year between 2076 and 2081.` };
+    const availableYears = getBsYears().join(', ');
+    const message = `Data for BS ${year}/${month} not found. Available years in data: ${availableYears || 'None loaded'}. Ensure data files exist in the 'data' directory and are correctly formatted.`;
+    return { error: message };
   }
 
   const dayData = monthData.days.find(d => parseInt(d.n) === day);
@@ -66,38 +82,42 @@ export function convertBsToAd(bsDate: NepaliDate): ConversionResult {
     return { error: `Invalid day ${day} for BS ${NEPALI_MONTHS[month-1]} ${year}. This month has ${monthData.days.length} days.` };
   }
   
-  const adFullDate = getAdDateForBsDay(dayData, {...monthData.metadata, bs_year: year, bs_month: month});
+  const adFullDate = getAdDateForBsDay(dayData, monthData);
 
   return { 
     adDate: adFullDate,
     bsDate: {
       ...bsDate,
       monthName: NEPALI_MONTHS[month-1],
+      dayOfWeek: adFullDate.dayOfWeek 
     }
   };
 }
 
 export function convertAdToBs(adDate: EnglishDate): ConversionResult {
   const { year, month, day } = adDate;
+  const calendar = getBsCalendarData();
 
-  for (const key in bsCalendarData) {
-    const monthData = bsCalendarData[key];
-    let currentAdDayTracker = parseInt(monthData.days[0].e);
-    let currentAdMonthTracker = monthData.metadata.ad_month_start;
-    let currentAdYearTracker = monthData.metadata.ad_year_start;
+  for (const key in calendar) {
+    const monthData = calendar[key];
+    
+    // Iterate through each day of the BS month to find a match for the AD date
+    let currentAdDayNumber = parseInt(monthData.days[0].e);
+    let currentAdMonthValue = monthData.metadata.ad_month_start;
+    let currentAdYearValue = monthData.metadata.ad_year_start;
 
     for (const bsDayEntry of monthData.days) {
       const parsedEntryAdDay = parseInt(bsDayEntry.e);
 
-      if (parsedEntryAdDay < currentAdDayTracker && currentAdMonthTracker === monthData.metadata.ad_month_start) {
-        currentAdMonthTracker = monthData.metadata.ad_month_end;
+      if (parsedEntryAdDay < currentAdDayNumber && currentAdMonthValue === monthData.metadata.ad_month_start) {
+        currentAdMonthValue = monthData.metadata.ad_month_end;
         if (monthData.metadata.ad_year_end > monthData.metadata.ad_year_start) {
-            currentAdYearTracker = monthData.metadata.ad_year_end;
+            currentAdYearValue = monthData.metadata.ad_year_end;
         }
       }
-      currentAdDayTracker = parsedEntryAdDay;
+      currentAdDayNumber = parsedEntryAdDay;
 
-      if (currentAdYearTracker === year && currentAdMonthTracker === month && parseInt(bsDayEntry.e) === day) {
+      if (currentAdYearValue === year && currentAdMonthValue === month && parsedEntryAdDay === day) {
         const dateObj = new Date(year, month - 1, day);
         return {
           bsDate: {
@@ -105,7 +125,7 @@ export function convertAdToBs(adDate: EnglishDate): ConversionResult {
             month: monthData.bs_month,
             day: parseInt(bsDayEntry.n),
             monthName: NEPALI_MONTHS[monthData.bs_month-1],
-            dayOfWeek: dateObj.toLocaleDateString('en-US', { weekday: 'long' }) // Day of week based on AD date
+            dayOfWeek: dateObj.toLocaleDateString('en-US', { weekday: 'long' })
           },
           adDate: {
             ...adDate,
@@ -117,18 +137,11 @@ export function convertAdToBs(adDate: EnglishDate): ConversionResult {
     }
   }
 
-  return { error: `BS date for AD ${day}/${month}/${year} not found in our records. Data is limited to BS 2076-2081.` };
+  const availableYears = getBsYears().join(', ');
+  return { error: `BS date for AD ${day}/${month}/${year} not found. Available BS years in loaded data: ${availableYears || 'None loaded'}.` };
 }
 
-export function getBsMonthDataForAi(bsYear: number, bsMonth: number): BsMonthData | null {
-  const monthData = bsCalendarData[`${bsYear}/${bsMonth}`];
-  return monthData || null;
-}
-
-export function getBsYears(): number[] {
-  const years = new Set<number>();
-  for (const key in bsCalendarData) {
-    years.add(parseInt(key.split('/')[0]));
-  }
-  return Array.from(years).sort((a,b) => a-b);
-}
+// Exporting getDaysInMonthUtil as getDaysInBsMonth to maintain consistency for form validation.
+export { getDaysInMonthUtil as getDaysInBsMonth };
+// getBsMonthDataForAi and getBsYears are now imported directly from bsCalendarData.ts where needed
+// or used via getBsCalendarData() if access to the whole calendar is required by other functions.

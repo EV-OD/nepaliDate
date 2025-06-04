@@ -10,12 +10,12 @@ export interface BsDayData {
 
 export interface BsMonthData {
   metadata: {
-    en: string; // e.g., "May/Jun 2019"
+    en: string; // e.g., "May/Jun 2019" or "Dec/Jan 2023/2024"
     np: string; // e.g., "जेष्ठ २०७६"
     ad_year_start: number; // e.g. 2019
-    ad_month_start: number; // e.g. 5 (May) for "May/Jun 2019"
-    ad_year_end: number; // e.g. 2019
-    ad_month_end: number; // e.g. 6 (Jun) for "May/Jun 2019"
+    ad_month_start: number; // e.g. 5 (May)
+    ad_year_end: number; // e.g. 2019 (or 2024 for "Dec/Jan 2023/2024")
+    ad_month_end: number; // e.g. 6 (Jun)
   };
   days: BsDayData[];
   holiFest: string[];
@@ -61,13 +61,18 @@ export const ENGLISH_MONTHS = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+// This constant is now primarily a fallback. 
+// The actual number of days should be derived from the loaded JSON data via getDaysInBsMonth in bsCalendarData.ts.
 export const DAYS_IN_BS_MONTH: { [key: string]: number[] } = {
-  // Sample data, actual days vary per year. This is a rough guide.
-  // Used for populating day dropdowns and basic validation if full calendar data isn't available for a year.
+  // Sample data for years where JSON files might be missing or for extreme fallbacks.
+  // It's recommended to have JSON files for all supported years.
+  "1992": [30,31,31,32,31,31,30,30,29,30,29,30],
   "2076": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 29, 30], 
   "2077": [31, 31, 32, 31, 31, 30, 30, 29, 30, 29, 30, 30],
   "2078": [31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
   "2079": [30, 31, 32, 32, 31, 30, 30, 30, 29, 29,30,30],
-  "2080": [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30],
-  "2081": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30] 
+  "2080": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 30, 30], // Updated based on provided 2080 data files
+  "2081": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
+  "2082": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
+  "2083": [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30]
 };
