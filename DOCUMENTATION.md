@@ -32,7 +32,7 @@
     *   `/api/calendar/info`: Provides detailed API documentation for the Bikram Sambat calendar data. Requires an API key.
     *   `/api/calendar/{YYYY}`: Fetches all calendar data for a specific BS year (YYYY). Requires an API key.
     *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM). Requires an API key.
-*   **API Playground:** Interactive UI to test all available Nepali Calendar API endpoints (`/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`), including a field to input the required API key. Provides a link to the "Get API Key" page.
+*   **API Playground:** Interactive UI to test all available Nepali Calendar API endpoints (`/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`), including a field to input the required API key. Displays request and response details, including headers and body. Provides example code snippets in JavaScript, Python, and Node.js for the selected endpoint and parameters. Provides a link to the "Get API Key" page.
 *   **Get API Key Page:** A dedicated page (`/get-api-key`) providing instructions on how to request an API key by emailing `contact@sevenx.com.np`.
 *   **Responsive Design:** The application is designed to work across various screen sizes.
 *   **SEO Friendly:** Metadata is implemented for better search engine visibility, focusing on keywords like "BS to AD converter," "AD to BS converter," and "Nepali Calendar API."
@@ -99,7 +99,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Includes `typescript.ignoreBuildErrors` and `eslint.ignoreDuringBuilds` (used cautiously).
     *   Configures `images.remotePatterns` to allow placeholder images from `placehold.co`.
 *   **`package.json`**:
-    *   Lists project dependencies (e.g., `next`, `react`, `tailwindcss`, `lucide-react`, `genkit`, ShadCN UI components, `date-fns`, `zod`).
+    *   Lists project dependencies (e.g., `next`, `react`, `tailwindcss`, `lucide-react`, `genkit`, ShadCN UI components, `date-fns`, `zod`). `axios` is in devDependencies for API Playground snippet example.
     *   Defines scripts for development (`dev`), building (`build`), starting (`start`), linting (`lint`), type checking (`typecheck`), and running the data scraper (`scrape`) for Bikram Sambat data.
 *   **`tailwind.config.ts`**:
     *   Configures Tailwind CSS, including dark mode settings, content paths, and theme extensions.
@@ -134,7 +134,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `convertBsToAdWithEvents(bsDate)`: Converts BS to AD. Internally calls the app's API-key-protected `/api/calendar/{YYYY}/{MM}` endpoint to fetch associated events (Nepali holidays, marriage, bratabandha) for the target BS month.
     *   `convertAdToBsWithEvents(adDate)`: Converts AD to BS. Internally calls the app's API-key-protected `/api/calendar/{YYYY}/{MM}` endpoint to fetch associated events for the resulting BS month.
     *   `fetchEventData(bsYear, bsMonth)`: A helper function that now makes an authenticated internal API call to retrieve event data.
-    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests by the application's frontend. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. The data these actions consume (event data) is now fetched from API-key-protected endpoints. For truly "website-only" execution of the actions themselves, more advanced techniques like strict CSRF token validation beyond Next.js defaults, session-based checks (if users were authenticated), or WAF rules would be needed.
+    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests by the application's frontend. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. The event data these actions consume is fetched from API-key-protected endpoints. For truly "website-only" execution of the actions themselves, more advanced techniques like strict CSRF token validation beyond Next.js defaults, session-based checks (if users were authenticated), or WAF rules would be needed. Rate limiting is a recommended general security measure.
 
 ### 5.3. Page Routes (`src/app/.../page.tsx`)
 
@@ -222,7 +222,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Error: "Conversion Error", "{error_message}"
 
 #### 5.3.4. `src/app/api-info/page.tsx` (Route: `/api-info`)
-*   Server Component that fetches API documentation details from `/api/calendar/info`.
+*   Server Component that fetches API documentation details from `/api/calendar/info` using the server-configured API key.
 *   Displays detailed information about the Nepali Calendar API, including endpoints, data structures, data coverage for Bikram Sambat years, usage notes, and API key authentication requirements.
 *   Uses ShadCN `Card`, `Accordion`, `Badge`, and custom table rendering for a structured and readable documentation page.
 *   Provides links to the API Playground and the "Get API Key" page.
@@ -272,10 +272,11 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Client component (`'use client'`).
 *   Provides an interactive interface for users to test the Nepali Calendar API endpoints: `/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`.
 *   Users can select the endpoint and relevant BS Year/Month.
-*   **Includes an input field for the `X-API-Key`.**
-*   Dynamically displays the request URL and allows users to send the request (with the API key in headers).
-*   Shows the API response status code and the JSON response body.
-*   Uses `react-hook-form`, `zod`, ShadCN components (including `RadioGroup` for endpoint selection, `Input` for API key).
+*   Includes an input field for the `X-API-Key`.
+*   Dynamically displays the request URL, request headers (including API key), and allows users to send the request.
+*   Shows the API response status code, response headers, and the JSON response body.
+*   Provides example code snippets in JavaScript (Fetch), Python (requests), and Node.js (axios) for the selected endpoint and parameters, with a copy-to-clipboard feature.
+*   Uses `react-hook-form`, `zod`, ShadCN components (including `RadioGroup` for endpoint selection, `Input` for API key, `Tabs` for code snippets).
 *   This page does not export its own `metadata` or `generateMetadata` function due to being a client component. It inherits metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "API Playground," "Nepali Calendar API," and "Bikram Sambat." Links to `/api-info` and `/get-api-key`.
 
 ##### Key Page Content (for SEO Analysis):
@@ -291,27 +292,33 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Form Labels (conditional):**
     *   "Bikram Sambat Year (YYYY)"
     *   "Bikram Sambat Month (MM)"
-    *   "Request URL for API:"
+*   **Request Details Section (Dynamic):**
+    *   "Request URL for API:" (followed by the URL)
+    *   "Request Headers:" (showing `X-API-Key` usage)
 *   **Button Texts:**
     *   "Send API Request"
     *   "Open" (next to request URL, to open in new tab)
-*   **Section Title (Dynamic):** "API Response" (appears after request)
-*   **Dynamic Content Placeholders:**
-    *   The actual request URL (changes based on selection).
-    *   "Status: {statusCode}" (e.g., "Status: 200" or "Status: 401")
+*   **API Response Section (Dynamic):**
+    *   "API Response" (section title)
+    *   "Status: {statusCode}"
+    *   "Response Headers:" (listing key headers like Content-Type)
     *   "Error: {errorMessage}" (if an error occurs)
     *   "Response Body:" (followed by JSON data or error object)
+*   **Code Snippets Section (Dynamic):**
+    *   "Code Snippets" (section title)
+    *   Tabs for JavaScript, Python, Node.js with copy buttons.
 *   **Toast Messages (Dynamic, on action):**
     *   Success: "Success", "API request successful."
     *   Error: "Error: {statusCode}", "{error_message}" or "Fetch Error", "{error_message}"
     *   URL Error: "Error", "Could not construct request URL. Please select valid parameters."
     *   API Key Error: "Error", "API Key is required."
-*   **Icons:** `TestTube2` (main title), `Code` (response section title), `PlayCircle` (button), `ExternalLink` (button), `FileText`, `List`, `CalendarClock` (endpoint selection), `KeyRound` (API Key label).
+    *   Copy Snippet: "Copied!", "Snippet copied to clipboard."
+*   **Icons:** `TestTube2` (main title), `Code` (response section title), `CodeXml` (snippets section title), `PlayCircle` (button), `ExternalLink` (button), `FileText`, `List`, `CalendarClock` (endpoint selection), `KeyRound` (API Key label), `Copy` (copy button).
 
-#### 5.3.6. `src/app/get-api-key/page.tsx` (Route: `/get-api-key`) (New Page)
+#### 5.3.6. `src/app/get-api-key/page.tsx` (Route: `/get-api-key`)
 *   Server Component.
 *   Provides detailed instructions on how to request an API key by emailing `contact@sevenx.com.np`.
-*   Outlines required information for the request (name, use case, etc.).
+*   Outlines required information for the request (name, use case, etc., excluding expected volume).
 *   Includes SEO metadata optimized for "get api key," "NepaliDate API key," etc.
 *   Uses ShadCN `Card`, `Button`, and relevant icons for a clear, user-friendly layout.
 
@@ -336,19 +343,19 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 *   **`src/app/api/calendar/info/route.ts`**:
     *   `GET` handler that returns a JSON object containing detailed API documentation for the Nepali Calendar API.
-    *   **Now checks for a valid `X-API-Key` header.** Returns 401 if invalid/missing.
+    *   Checks for a valid `X-API-Key` header. Returns 401 if invalid/missing.
     *   Dynamically fetches available BS years using `getBsYears()` to include in the documentation.
     *   Constructs example request URLs based on the current request's origin.
     *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API". Contact email is `contact@sevenx.com.np`. Mentions API key requirement.
 *   **`src/app/api/calendar/[year]/route.ts`**:
     *   `GET` handler for fetching all calendar data for a specific BS year.
-    *   **Now checks for a valid `X-API-Key` header.** Returns 401 if invalid/missing.
+    *   Checks for a valid `X-API-Key` header. Returns 401 if invalid/missing.
     *   Extracts the `year` from the dynamic path parameter.
     *   Uses `getBsCalendarData()` and filters for the specific year.
     *   Returns an array of `BsMonthData` objects for the year, or a 404 if no data.
 *   **`src/app/api/calendar/[...params]/route.ts`**:
     *   `GET` handler for fetching calendar data for a specific BS year and month.
-    *   **Now checks for a valid `X-API-Key` header.** Returns 401 if invalid/missing.
+    *   Checks for a valid `X-API-Key` header. Returns 401 if invalid/missing.
     *   Extracts year and month from the dynamic path parameters.
     *   Uses `getBsCalendarData()` to retrieve the data.
     *   Returns the specific `BsMonthData` if found, or a 404 error with available years if not.
@@ -387,6 +394,8 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `ResultDisplay`: Component to display converted dates.
 *   **`src/components/converters/EventSummaryDisplay.tsx`**:
     *   Responsible for displaying Nepali holidays and events. Uses `_::_` delimiter to parse `holiFest` data. Groups events by day for clarity.
+*   **`src/components/playground/CodeSnippetDisplay.tsx` (New)**:
+    *   Client component for displaying dynamic code snippets (JS, Python, Node.js) for API calls in the API Playground. Includes copy-to-clipboard functionality.
 
 ### 5.7. TypeScript Types (`src/types/index.ts`)
 

@@ -14,7 +14,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input'; 
 import { useToast } from '@/hooks/use-toast';
 import { CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types';
-import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2, FileText, List, CalendarClock, KeyRound, Send } from 'lucide-react';
+import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2, FileText, List, CalendarClock, KeyRound, Send, CaseSensitive, ServerIcon } from 'lucide-react';
+import CodeSnippetDisplay from '@/components/playground/CodeSnippetDisplay';
 
 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 56) 
@@ -41,6 +42,7 @@ function JsonCodeBlock({ data, maxHeight = "30rem" }: { data: any, maxHeight?: s
 export default function ApiPlaygroundPage() {
   const [isPending, startTransition] = useTransition();
   const [apiResponse, setApiResponse] = useState<any>(null);
+  const [responseHeaders, setResponseHeaders] = useState<Headers | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [statusCode, setStatusCode] = useState<number | null>(null);
   const [requestUrl, setRequestUrl] = useState<string>('');
@@ -59,6 +61,7 @@ export default function ApiPlaygroundPage() {
 
   const watchedYear = form.watch('year');
   const watchedMonth = form.watch('month');
+  const watchedApiKey = form.watch('apiKey');
 
   useEffect(() => {
     let newUrl = '';
@@ -77,6 +80,7 @@ export default function ApiPlaygroundPage() {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setApiResponse(null);
+    setResponseHeaders(null);
     setError(null);
     setStatusCode(null);
 
@@ -99,6 +103,7 @@ export default function ApiPlaygroundPage() {
           },
         });
         setStatusCode(res.status);
+        setResponseHeaders(res.headers);
         const data = await res.json();
 
         if (!res.ok) {
@@ -122,9 +127,20 @@ export default function ApiPlaygroundPage() {
     (selectedEndpoint === 'year' && !watchedYear) ||
     (selectedEndpoint === 'yearMonth' && (!watchedYear || !watchedMonth));
 
+  const getDisplayHeaders = () => {
+    if (!responseHeaders) return null;
+    const headersToShow: Record<string, string> = {};
+    const commonHeaders = ['content-type', 'date', 'content-length', 'server', 'connection'];
+    responseHeaders.forEach((value, key) => {
+        if(commonHeaders.includes(key.toLowerCase())) {
+            headersToShow[key] = value;
+        }
+    });
+    return headersToShow;
+  }
 
   return (
-    <div className="max-w-4xl mx-auto py-8">
+    <div className="max-w-4xl mx-auto py-8 space-y-6">
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-headline flex items-center gap-2">
@@ -255,15 +271,24 @@ export default function ApiPlaygroundPage() {
               )}
 
               {requestUrl && (
-                <div className="space-y-1.5">
-                  <FormLabel>Request URL for API:</FormLabel>
-                  <div className="flex items-center gap-2">
-                    <code className="text-sm bg-muted p-2 rounded-md block overflow-x-auto flex-grow break-all">{requestUrl}</code>
-                    <Button variant="outline" size="sm" asChild disabled={!requestUrl}>
-                        <a href={requestUrl} target="_blank" rel="noopener noreferrer">
-                            Open <ExternalLink className="ml-1.5 h-3.5 w-3.5"/>
-                        </a>
-                    </Button>
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <FormLabel className="flex items-center gap-1.5"><ServerIcon className="h-4 w-4 text-muted-foreground"/> Request URL</FormLabel>
+                    <div className="flex items-center gap-2 mt-1">
+                        <code className="text-sm bg-muted p-2 rounded-md block overflow-x-auto flex-grow break-all">{requestUrl}</code>
+                        <Button variant="outline" size="sm" asChild disabled={!requestUrl}>
+                            <a href={requestUrl} target="_blank" rel="noopener noreferrer" aria-label="Open request URL in new tab">
+                                Open <ExternalLink className="ml-1.5 h-3.5 w-3.5"/>
+                            </a>
+                        </Button>
+                    </div>
+                  </div>
+                  <div>
+                    <FormLabel className="flex items-center gap-1.5"><CaseSensitive className="h-4 w-4 text-muted-foreground"/> Request Headers</FormLabel>
+                    <div className="text-xs bg-muted p-2 mt-1 rounded-md">
+                        <p><span className="font-semibold">X-API-Key:</span> {watchedApiKey || <span className="italic text-muted-foreground">YOUR_API_KEY (Enter above)</span>}</p>
+                        {/* Add other common request headers if needed */}
+                    </div>
                   </div>
                 </div>
               )}
@@ -278,23 +303,33 @@ export default function ApiPlaygroundPage() {
       </Card>
 
       {(apiResponse !== null || error || statusCode !== null) && (
-        <Card className="mt-6 shadow-lg">
+        <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl font-headline flex items-center gap-2">
               <Code className="h-6 w-6 text-primary" /> API Response
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
             {statusCode && (
-              <p className="mb-2 text-sm">
+              <p className="text-sm">
                 <strong>Status:</strong> 
                 <span className={`ml-1.5 font-semibold ${statusCode >= 200 && statusCode < 300 ? 'text-green-600' : 'text-red-600'}`}>
                   {statusCode}
                 </span>
               </p>
             )}
+             {getDisplayHeaders() && Object.keys(getDisplayHeaders()!).length > 0 && (
+                <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Response Headers:</h3>
+                    <div className="text-xs bg-muted p-2 rounded-md space-y-0.5">
+                        {Object.entries(getDisplayHeaders()!).map(([key, value]) => (
+                            <p key={key} className="break-all"><span className="font-semibold">{key}:</span> {value}</p>
+                        ))}
+                    </div>
+                </div>
+            )}
             {error && (
-              <div className="mt-4 p-3 border rounded-md bg-destructive/10 text-destructive text-sm">
+              <div className="mt-2 p-3 border rounded-md bg-destructive/10 text-destructive text-sm">
                 <p className="font-semibold mb-1">Error:</p>
                 <p>{error}</p>
               </div>
@@ -308,6 +343,7 @@ export default function ApiPlaygroundPage() {
           </CardContent>
         </Card>
       )}
+      <CodeSnippetDisplay requestUrl={requestUrl} apiKey={watchedApiKey} />
     </div>
   );
 }

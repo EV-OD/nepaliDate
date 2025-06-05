@@ -120,7 +120,7 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Type:** `API Key`
     *   **Header Name:** `X-API-Key`
     *   **Description:** "A valid API key must be provided in the 'X-API-Key' request header for all /api/calendar/* endpoints."
-*   **Contact Information (Dynamic from API):** "Contact: <a href='mailto:{apiInfoData.contactEmail}'>{contact@sevenx.com.np}</a>"
+*   **Contact Information (Dynamic from API):** "Contact: <a href='mailto:{contact@sevenx.com.np}'>{contact@sevenx.com.np}</a>"
 *   **Buttons to Other Pages:**
     *   **Text:** "Go to API Playground" (Accompanied by `PlayCircle` icon, links to `/api-playground`)
     *   **Text:** "Request an API Key" (Accompanied by `Send` icon, links to `/get-api-key`)
@@ -184,21 +184,27 @@ This document provides a detailed breakdown of the textual content on each key p
 *   **Form Fields & Labels (Conditional):**
     *   **Label:** "Bikram Sambat Year (YYYY)" (Associated with a `Select` for BS Year, shown for `/api/calendar/[YYYY]` and `/api/calendar/[YYYY]/[MM]`)
     *   **Label:** "Bikram Sambat Month (MM)" (Associated with a `Select` for BS Month, shown for `/api/calendar/[YYYY]/[MM]`)
-*   **Request URL Display:**
-    *   **Label:** "Request URL for API:"
-    *   **URL (Dynamic):** `"{baseUrl}/api/calendar/{selected_endpoint_and_params}"`
+*   **Request Details Display (Dynamic):**
+    *   **Label:** "Request URL" (followed by the URL)
+    *   **Label:** "Request Headers" (showing `X-API-Key` usage)
 *   **Buttons:**
     *   **Button 1 Text:** "Send API Request" (Triggers API call, accompanied by `PlayCircle` or `Loader2` icon)
     *   **Button 2 Text:** "Open" (Opens request URL in new tab, accompanied by `ExternalLink` icon)
 *   **API Response Section (Dynamic, appears after request):**
     *   **Section Heading:** "API Response" (Accompanied by `Code` icon)
     *   **Status Display:** "Status: {statusCode}" (e.g., "Status: 200" or "Status: 401")
+    *   **Response Headers Display:** Key-value pairs of selected response headers (e.g., `Content-Type`).
     *   **Error Display (if error):**
         *   **Error Heading:** "Error:"
         *   **Error Message:** `{errorMessage}`
     *   **Response Body Display (if successful or error with body):**
         *   **Body Heading:** "Response Body:"
         *   **Content:** JSON data rendered in a code block.
+*   **Code Snippets Section (Dynamic, appears after request or when URL/API Key changes):**
+    *   **Section Heading:** "Code Snippets" (Accompanied by `CodeXml` icon)
+    *   **Tabs:** For JavaScript (Fetch), Python (requests), Node.js (axios).
+    *   **Content:** Dynamically generated code snippets for the selected API endpoint, parameters, and API key.
+    *   **Copy Button:** For each snippet to copy code to clipboard.
 *   **Toast Messages (Dynamic, on action):**
     *   **Success Toast Title:** "Success"
     *   **Success Toast Description:** "API request successful."
@@ -210,6 +216,8 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **URL Error Toast Description:** "Could not construct request URL. Please select valid parameters."
     *   **API Key Error Toast Title:** "Error"
     *   **API Key Error Toast Description:** "API Key is required."
+    *   **Copy Snippet Toast Title:** "Copied!"
+    *   **Copy Snippet Toast Description:** "{Language} code snippet copied to clipboard."
 
 ---
 
@@ -249,4 +257,5 @@ This document provides a detailed breakdown of the textual content on each key p
 
 ---
 This provides a comprehensive overview of the textual content present on the main pages of the NepaliDate application for SEO analysis.
+
 
