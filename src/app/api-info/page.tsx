@@ -3,35 +3,81 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Code, Info, Server, ExternalLink, Database, AlertCircle } from "lucide-react";
+import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree } from "lucide-react";
 
 async function getApiInfo() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
-  // Fetch from the new API info endpoint
   const res = await fetch(`${baseUrl}/api/calendar/info`, { cache: 'no-store' }); 
   if (!res.ok) {
     const errorText = await res.text();
     console.error("API Info Fetch Error:", res.status, errorText);
-    throw new Error(`Failed to fetch API info. Status: ${res.status}. ${errorText.substring(0,100)}`);
+    throw new Error(`Failed to fetch API info. Status: ${res.status}. Response: ${errorText.substring(0,200)}...`);
   }
   try {
     return await res.json();
   } catch (e) {
     console.error("API Info JSON Parse Error:", e);
-    throw new Error("Failed to parse API info JSON.");
+    const responseText = await res.text(); // Attempt to get text if JSON parse fails
+    console.error("Response text that failed to parse:", responseText.substring(0, 500));
+    throw new Error(`Failed to parse API info JSON. Error: ${(e as Error).message}`);
   }
 }
 
-function JsonCodeBlock({ data }: { data: any }) {
+function JsonCodeBlock({ data, maxHeight = "20rem" }: { data: any, maxHeight?: string }) {
   return (
-    <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto max-h-80">
+    <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto" style={{ maxHeight }}>
       <code>{JSON.stringify(data, null, 2)}</code>
     </pre>
   );
 }
 
+interface DataStructureField {
+  name: string;
+  type: string;
+  description: string;
+  fields?: DataStructureField[]; // For nested objects
+}
+
+function DataStructureTable({ fields }: { fields: DataStructureField[] }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-border text-xs">
+        <thead className="bg-muted/50">
+          <tr>
+            <th className="px-3 py-2 text-left font-semibold text-foreground">Field Name</th>
+            <th className="px-3 py-2 text-left font-semibold text-foreground">Type</th>
+            <th className="px-3 py-2 text-left font-semibold text-foreground">Description</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border bg-background">
+          {fields.map((field, index) => (
+            <React.Fragment key={index}>
+              <tr>
+                <td className="px-3 py-2 font-mono text-primary align-top">{field.name}</td>
+                <td className="px-3 py-2 text-muted-foreground align-top whitespace-nowrap">{field.type}</td>
+                <td className="px-3 py-2 text-foreground/80 align-top">{field.description}</td>
+              </tr>
+              {field.fields && field.fields.length > 0 && (
+                <tr>
+                  <td colSpan={3} className="py-0 pl-6 pr-2 bg-muted/30">
+                    <div className="my-1.5">
+                       <p className="text-xs font-semibold text-muted-foreground mb-1">Nested fields for <code className="text-primary">{field.name}</code>:</p>
+                       <DataStructureTable fields={field.fields} />
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+
 export default async function ApiInfoPage() {
-  let apiInfoData;
+  let apiInfoData: any; // Use any for now, or define a more specific type later
   let error = null;
 
   try {
@@ -42,7 +88,7 @@ export default async function ApiInfoPage() {
 
   if (error) {
     return (
-      <Alert variant="destructive" className="max-w-4xl mx-auto">
+      <Alert variant="destructive" className="max-w-4xl mx-auto my-8">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Error Fetching API Information</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
@@ -53,128 +99,167 @@ export default async function ApiInfoPage() {
   if (!apiInfoData) {
     return (
         <div className="flex justify-center items-center h-64">
-            <Server className="h-8 w-8 animate-spin mr-2" />
+            <Server className="h-8 w-8 animate-spin mr-2 text-primary" />
             <p className="text-lg text-muted-foreground">Loading API information...</p>
         </div>
     );
   }
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto">
-      <header className="text-center py-8">
+    <div className="space-y-10 max-w-5xl mx-auto py-8 px-4">
+      <header className="text-center pb-8 border-b border-border">
         <h1 className="text-5xl font-bold font-headline text-primary">{apiInfoData.apiName}</h1>
-        <p className="text-xl text-muted-foreground mt-2">{apiInfoData.description}</p>
-        <div className="mt-4 flex justify-center items-center space-x-4">
-            <Badge variant="secondary">Version: {apiInfoData.version}</Badge>
-            <Badge variant={apiInfoData.status === "Operational" ? "default" : "destructive"} className={apiInfoData.status === "Operational" ? "bg-green-500 text-white" : ""}>
+        <p className="text-xl text-muted-foreground mt-3 max-w-3xl mx-auto">{apiInfoData.description}</p>
+        <div className="mt-6 flex justify-center items-center space-x-4">
+            <Badge variant="secondary" className="text-sm px-3 py-1">Version: {apiInfoData.version}</Badge>
+            <Badge variant={apiInfoData.status === "Operational" ? "default" : "destructive"} className={`text-sm px-3 py-1 ${apiInfoData.status === "Operational" ? "bg-green-600 text-white" : ""}`}>
                 Status: {apiInfoData.status}
             </Badge>
         </div>
-        {apiInfoData.contactEmail && <p className="text-sm text-muted-foreground mt-3">Contact: <a href={`mailto:${apiInfoData.contactEmail}`} className="text-primary hover:underline">{apiInfoData.contactEmail}</a></p>}
+        {apiInfoData.contactEmail && <p className="text-sm text-muted-foreground mt-4">Contact: <a href={`mailto:${apiInfoData.contactEmail}`} className="text-primary hover:underline">{apiInfoData.contactEmail}</a></p>}
       </header>
 
-      <Card className="shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl font-headline">
-            <Server className="h-6 w-6 text-accent" />
-            API Endpoints
-          </CardTitle>
-          <CardDescription>Detailed information about each available API endpoint.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            {apiInfoData.endpoints.map((endpoint: any, index: number) => (
-              <AccordionItem value={`item-${index}`} key={index}>
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex items-center gap-3">
-                    <Badge variant={endpoint.method === "GET" ? "secondary" : "default"} className="w-20 justify-center">{endpoint.method}</Badge>
-                    <span className="font-mono text-primary text-base">{endpoint.path}</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="space-y-4 pl-2 pt-3">
-                  <p className="text-sm text-muted-foreground">{endpoint.description}</p>
-                  {endpoint.parameters && endpoint.parameters.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-sm mb-1">Parameters:</h4>
-                      <ul className="list-disc list-inside pl-2 space-y-1 text-xs">
-                        {endpoint.parameters.map((param: any, pIndex: number) => (
-                          <li key={pIndex}>
-                            <code className="bg-muted p-0.5 rounded-sm text-primary">{param.name}</code> ({param.type}, {param.in}): {param.description} {param.required && <span className="text-destructive font-medium">(required)</span>}
-                          </li>
-                        ))}
-                      </ul>
+      <section id="endpoints">
+        <Card className="shadow-lg border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-2xl font-headline">
+              <Network className="h-7 w-7 text-accent" />
+              API Endpoints
+            </CardTitle>
+            <CardDescription>Detailed information about each available API endpoint.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="single" collapsible className="w-full">
+              {apiInfoData.endpoints.map((endpoint: any, index: number) => (
+                <AccordionItem value={`item-${index}`} key={index} className="border-border">
+                  <AccordionTrigger className="hover:no-underline py-4">
+                    <div className="flex items-center gap-3 w-full">
+                      <Badge variant={endpoint.method === "GET" ? "secondary" : "default"} className="w-20 justify-center py-1">{endpoint.method}</Badge>
+                      <span className="font-mono text-primary text-base flex-grow text-left">{endpoint.path}</span>
                     </div>
-                  )}
-                  <div>
-                    <h4 className="font-semibold text-sm mb-1">Example Request:</h4>
-                    <code className="text-xs bg-muted p-2 rounded-md block overflow-x-auto">{endpoint.exampleRequest}</code>
-                  </div>
-                   {endpoint.exampleResponse && (
-                     <div>
-                        <h4 className="font-semibold text-sm mb-1">Example Response:</h4>
-                        {typeof endpoint.exampleResponse === 'string' ? (
-                            <p className="text-xs bg-muted p-2 rounded-md">{endpoint.exampleResponse}</p>
-                        ) : (
-                            <JsonCodeBlock data={endpoint.exampleResponse} />
-                        )}
-                     </div>
-                    )}
-                    {endpoint.errorResponses && endpoint.errorResponses.length > 0 && (
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-5 pl-2 pt-3 pb-4 bg-background/50 rounded-b-md">
+                    <p className="text-sm text-muted-foreground">{endpoint.description}</p>
+                    {endpoint.parameters && endpoint.parameters.length > 0 && (
                       <div>
-                        <h4 className="font-semibold text-sm mb-1">Possible Error Responses:</h4>
-                        <ul className="list-disc list-inside pl-2 space-y-1 text-xs">
-                          {endpoint.errorResponses.map((err: any, eIndex: number) => (
-                            <li key={eIndex}>
-                              <Badge variant="destructive" className="mr-1.5">{err.statusCode}</Badge> {err.description}
+                        <h4 className="font-semibold text-sm mb-2 text-foreground">Parameters:</h4>
+                        <ul className="list-none pl-2 space-y-2 text-xs">
+                          {endpoint.parameters.map((param: any, pIndex: number) => (
+                            <li key={pIndex} className="border-l-2 border-accent pl-3 py-1">
+                              <code className="bg-muted p-1 rounded-sm text-primary font-semibold">{param.name}</code>
+                              <span className="text-muted-foreground ml-1">({param.type}, in {param.in})</span>: {param.description} {param.required && <span className="text-destructive font-medium ml-1">(required)</span>}
                             </li>
                           ))}
                         </ul>
                       </div>
                     )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </CardContent>
-      </Card>
+                    <div>
+                      <h4 className="font-semibold text-sm mb-2 text-foreground">Example Request:</h4>
+                      <code className="text-xs bg-muted p-2 rounded-md block overflow-x-auto">{endpoint.exampleRequest}</code>
+                    </div>
+                    {endpoint.exampleResponse && (
+                       <div>
+                          <h4 className="font-semibold text-sm mb-2 text-foreground">Example Response:</h4>
+                          {typeof endpoint.exampleResponse === 'string' ? (
+                              <p className="text-xs bg-muted p-2 rounded-md">{endpoint.exampleResponse}</p>
+                          ) : (
+                              <JsonCodeBlock data={endpoint.exampleResponse} />
+                          )}
+                       </div>
+                      )}
+                      {endpoint.exampleResponseSummary && (
+                        <div>
+                          <h4 className="font-semibold text-sm mb-2 text-foreground">Example Response Summary:</h4>
+                          <p className="text-xs bg-muted p-2 rounded-md">{endpoint.exampleResponseSummary}</p>
+                        </div>
+                      )}
+                      {endpoint.detailedFieldDescriptionsUrl && (
+                        <p className="text-xs text-muted-foreground">
+                            For detailed field descriptions, see the <a href={endpoint.detailedFieldDescriptionsUrl} className="text-primary hover:underline">Data Structures section</a>.
+                        </p>
+                      )}
+                      {endpoint.errorResponses && endpoint.errorResponses.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-sm mt-3 mb-2 text-foreground">Possible Error Responses:</h4>
+                          <ul className="list-none pl-2 space-y-1.5 text-xs">
+                            {endpoint.errorResponses.map((err: any, eIndex: number) => (
+                              <li key={eIndex} className="flex items-center">
+                                <Badge variant="destructive" className="mr-2 py-0.5 px-1.5">{err.statusCode}</Badge> <span className="text-foreground/90">{err.description}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+      </section>
       
-      <Card className="shadow-lg">
-        <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl font-headline">
-                <Database className="h-6 w-6 text-accent"/>
-                Data Coverage & Notes
+      <section id="data-structures">
+        <Card className="shadow-lg border-accent/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-2xl font-headline">
+              <ListTree className="h-7 w-7 text-accent" />
+              Data Structures
             </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div>
-                <h3 className="text-lg font-semibold mb-1">Available BS Years in Data:</h3>
-                <p className="text-sm text-muted-foreground">{apiInfoData.dataCoverage.bsYears}</p>
-            </div>
-             <Alert variant="default" className="bg-secondary/30">
-                <Info className="h-4 w-4 text-primary" />
-                <AlertTitle>Data Source & Accuracy</AlertTitle>
-                <AlertDescription>
-                {apiInfoData.dataCoverage.note}
-                </AlertDescription>
-            </Alert>
-            {apiInfoData.notes && apiInfoData.notes.length > 0 && (
-                <div>
-                    <h3 className="text-lg font-semibold mt-4 mb-2">Important Notes:</h3>
-                    <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
-                        {apiInfoData.notes.map((note: string, index: number) => (
-                        <li key={index}>{note}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-        </CardContent>
-        <CardFooter>
-            <p className="text-xs text-muted-foreground">
-                API Documentation last updated: {new Date().toLocaleDateString()}.
-            </p>
-        </CardFooter>
-      </Card>
+            <CardDescription>Explanation of the JSON data structures returned by the API.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {apiInfoData.dataStructures && Object.entries(apiInfoData.dataStructures).map(([key, structure]: [string, any]) => (
+              <div key={key}>
+                <h3 className="text-lg font-semibold text-primary mb-1.5 font-mono">{key}</h3>
+                <p className="text-sm text-muted-foreground mb-3">{structure.description}</p>
+                <DataStructureTable fields={structure.fields} />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="data-coverage">
+        <Card className="shadow-lg border-muted/50">
+          <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-2xl font-headline">
+                  <Database className="h-7 w-7 text-accent"/>
+                  Data Coverage & Notes
+              </CardTitle>
+              <CardDescription>Information about the data provided by the API.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5">
+              <div>
+                  <h3 className="text-lg font-semibold mb-1.5 text-foreground">Available Bikram Sambat Years in Data:</h3>
+                  <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded-md">{apiInfoData.dataCoverage.bsYears}</p>
+              </div>
+              <Alert variant="default" className="bg-secondary/30 border-secondary">
+                  <Info className="h-5 w-5 text-primary" />
+                  <AlertTitle className="font-semibold text-foreground">Data Source & Accuracy</AlertTitle>
+                  <AlertDescription className="text-foreground/80">
+                  {apiInfoData.dataCoverage.note}
+                  </AlertDescription>
+              </Alert>
+              {apiInfoData.notes && apiInfoData.notes.length > 0 && (
+                  <div>
+                      <h3 className="text-lg font-semibold mt-5 mb-2.5 text-foreground">Important Notes:</h3>
+                      <ul className="list-disc space-y-2.5 pl-5 text-sm text-muted-foreground">
+                          {apiInfoData.notes.map((note: string, index: number) => (
+                          <li key={index}>{note}</li>
+                          ))}
+                      </ul>
+                  </div>
+              )}
+          </CardContent>
+          <CardFooter>
+              <p className="text-xs text-muted-foreground">
+                  API Documentation last updated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}.
+              </p>
+          </CardFooter>
+        </Card>
+      </section>
 
     </div>
   );
 }
+
