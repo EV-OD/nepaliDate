@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
-import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle, KeyRound } from "lucide-react";
+import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle, KeyRound, Send } from "lucide-react";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -58,7 +58,6 @@ async function getApiInfo() {
     return await res.json();
   } catch (e) {
     console.error("API Info JSON Parse Error:", e);
-    // If parsing fails, try to get the text to see what was returned
     const responseText = await res.text().catch(() => "Could not read response text after JSON parse failure.");
     console.error("Response text that failed to parse:", responseText.substring(0, 500));
     throw new Error(`Failed to parse API info JSON. Error: ${(e as Error).message}`);
@@ -161,10 +160,15 @@ export default async function ApiInfoPage() {
             </Badge>
         </div>
         {apiInfoData.contactEmail && <p className="text-sm text-muted-foreground mt-4">Contact: <a href={`mailto:${apiInfoData.contactEmail}`} className="text-primary hover:underline">{apiInfoData.contactEmail}</a></p>}
-         <div className="mt-6">
+         <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button asChild size="lg">
                 <Link href="/api-playground" className="flex items-center gap-2">
                     <PlayCircle className="h-5 w-5" /> Go to API Playground
+                </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+                <Link href="/get-api-key" className="flex items-center gap-2">
+                    <Send className="h-5 w-5" /> Request an API Key
                 </Link>
             </Button>
         </div>
@@ -177,6 +181,10 @@ export default async function ApiInfoPage() {
                      <CardTitle className="flex items-center gap-3 text-2xl font-headline">
                          <KeyRound className="h-7 w-7 text-accent"/> Authentication
                      </CardTitle>
+                     <CardDescription>
+                        All API endpoints require an API key for access. 
+                        If you don't have one, you can <Link href="/get-api-key" className="text-primary hover:underline font-medium">request an API key here</Link>.
+                     </CardDescription>
                  </CardHeader>
                  <CardContent>
                      <p className="text-sm text-muted-foreground">Type: <Badge variant="outline">{apiInfoData.authentication.type}</Badge></p>
@@ -316,7 +324,7 @@ export default async function ApiInfoPage() {
                           <li key={index}>{note}</li>
                           ))}
                           {apiInfoData.authentication && (
-                            <li>To access any of the <code className="bg-muted p-0.5 rounded-sm text-xs">/api/calendar/*</code> endpoints, you must include your API key in the <code className="bg-muted p-0.5 rounded-sm text-xs">{apiInfoData.authentication.headerName}</code> request header.</li>
+                            <li>To access any of the <code className="bg-muted p-0.5 rounded-sm text-xs">/api/calendar/*</code> endpoints, you must include your API key in the <code className="bg-muted p-0.5 rounded-sm text-xs">{apiInfoData.authentication.headerName}</code> request header. If you need a key, please <Link href="/get-api-key" className="text-primary hover:underline font-medium">request one here</Link>.</li>
                           )}
                       </ul>
                   </div>
@@ -333,6 +341,3 @@ export default async function ApiInfoPage() {
     </div>
   );
 }
-
-
-    

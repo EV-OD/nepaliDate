@@ -9,6 +9,7 @@ This document provides a detailed breakdown of the textual content on each key p
 3.  [AD to BS Converter (`/ad-to-bs`)](#ad-to-bs-converter--ad-to-bs)
 4.  [API Information Page (`/api-info`)](#api-information-page--api-info)
 5.  [API Playground (`/api-playground`)](#api-playground--api-playground)
+6.  [Get API Key Page (`/get-api-key`)](#get-api-key-page--get-api-key)
 
 ---
 
@@ -114,14 +115,15 @@ This document provides a detailed breakdown of the textual content on each key p
     *   "Version: {apiInfoData.version}"
     *   "Status: {apiInfoData.status}" (Styled based on status)
 *   **Authentication Information Section (Dynamic from API):**
-    *   **Section Title (Implicit):** "Authentication" (Often placed near API description or as a general note)
+    *   **Section Title:** "Authentication" (CardTitle, H2 Equivalent)
+    *   **Description (CardDescription):** "All API endpoints require an API key for access. If you don't have one, you can <Link href='/get-api-key' class='text-primary hover:underline font-medium'>request an API key here</Link>."
     *   **Type:** `API Key`
     *   **Header Name:** `X-API-Key`
     *   **Description:** "A valid API key must be provided in the 'X-API-Key' request header for all /api/calendar/* endpoints."
 *   **Contact Information (Dynamic from API):** "Contact: <a href='mailto:{apiInfoData.contactEmail}'>{contact@sevenx.com.np}</a>"
-*   **Button to Playground:**
-    *   **Text:** "Go to API Playground" (Accompanied by `PlayCircle` icon)
-    *   **Link:** `/api-playground`
+*   **Buttons to Other Pages:**
+    *   **Text:** "Go to API Playground" (Accompanied by `PlayCircle` icon, links to `/api-playground`)
+    *   **Text:** "Request an API Key" (Accompanied by `Send` icon, links to `/get-api-key`)
 *   **Section 1: API Endpoints**
     *   **Heading (H2 Equivalent - CardTitle):** "Nepali Calendar API Endpoints" (Accompanied by `Network` icon)
     *   **Description (CardDescription):** "Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events. All endpoints require API Key authentication."
@@ -157,7 +159,7 @@ This document provides a detailed breakdown of the textual content on each key p
         *   **Title (AlertTitle):** "Data Source & Accuracy" (Accompanied by `Info` icon)
         *   **Description (AlertDescription):** `apiInfoData.dataCoverage.note`
     *   **Important Notes Heading:** "Important Notes for API Users:"
-    *   **Notes List (Dynamic from `apiInfoData.notes`):** List items for each note, including API key usage instructions.
+    *   **Notes List (Dynamic from `apiInfoData.notes`):** List items for each note, including API key usage instructions and link to `/get-api-key`.
 *   **Footer Note (Static + Dynamic):** "Nepali Calendar API Documentation last updated: {new Date().toLocaleDateString(...)}"
 *   **Loading State:** "Loading API information..." (with spinner)
 *   **Error State (if API info fetch fails):**
@@ -170,7 +172,7 @@ This document provides a detailed breakdown of the textual content on each key p
 
 *   **Route:** `/api-playground`
 *   **Main Card Heading (H1 Equivalent - CardTitle):** "Nepali Calendar API Playground" (Accompanied by `TestTube2` icon)
-*   **Main Card Description (CardDescription):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint, provide parameters and your API key. View the full <Link href='/api-info' class='text-primary hover:underline'>Nepali Calendar API documentation here</Link>."
+*   **Main Card Description (CardDescription):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint, provide parameters and your API key. View the full <Link href='/api-info' class='text-primary hover:underline'>Nepali Calendar API documentation here</Link>, or <Link href='/get-api-key' class='text-primary hover:underline'>request an API key</Link> if you don't have one."
 *   **API Key Input Section:**
     *   **Label:** "API Key" (Accompanied by `KeyRound` icon)
     *   **Input Placeholder:** "Enter your API Key"
@@ -210,4 +212,42 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **API Key Error Toast Description:** "API Key is required."
 
 ---
+
+## 6. Get API Key Page (`/get-api-key`)
+
+*   **Route:** `/get-api-key`
+*   **Main Heading (H1 Equivalent - CardTitle):** "Request Your NepaliDate API Key" (Accompanied by `Mail` icon)
+*   **Description (CardDescription):** "Unlock access to our comprehensive Bikram Sambat calendar data by requesting your personal API key."
+*   **Section Heading 1:** "How to Request an API Key" (Accompanied by `Send` icon)
+    *   **Introductory Paragraph:** "To obtain an API key for the NepaliDate service, please send an email to our support team with the following details. This helps us understand your needs and provide the best service."
+    *   **Step 1 Block:**
+        *   **Heading:** "Step 1: Compose Your Email" (Accompanied by `Info` icon)
+        *   **Paragraph:** "Open your preferred email client and start a new message."
+    *   **Step 2 Block:**
+        *   **Heading:** "Step 2: Recipient & Subject" (Accompanied by `Mail` icon)
+        *   **Paragraph:** "Address the email to: <strong class='text-primary'>contact@sevenx.com.np</strong>"
+        *   **Paragraph:** "Use the subject line: <strong class='text-primary'>API Key Request for NepaliDate</strong>"
+    *   **Step 3 Block:**
+        *   **Heading:** "Step 3: Provide Required Information" (Accompanied by `FileText` icon)
+        *   **Introductory Paragraph:** "Please include the following in the body of your email:"
+        *   **List Items:**
+            *   "<strong class='text-foreground'>Your Name / Company Name:</strong> For identification."
+            *   "<strong class='text-foreground'>Contact Email:</strong> Where we should send the API key and updates."
+            *   "<strong class='text-foreground'>Intended Use Case:</strong> Briefly describe how you plan to use the API (e.g., personal project, commercial application, research)."
+            *   "<strong class='text-foreground'>Application/Website URL (if applicable):</strong> Where the API will be integrated."
+            *   "<strong class='text-foreground'>Expected Request Volume (Optional):</strong> An estimate (e.g., low, medium, high, or specific numbers if known) helps us plan capacity."
+*   **Section Heading 2:** "What to Expect" (Accompanied by `ShieldCheck` icon)
+    *   **List Items:**
+        *   "We aim to review API key requests and respond within <strong class='text-foreground'>2-3 business days</strong>."
+        *   "Once approved, your unique API key and any relevant usage instructions will be sent to the contact email you provided."
+        *   "Please ensure our emails are not going to your spam folder."
+*   **Button (Call to Action):**
+    *   **Text:** "Request API Key Now" (Accompanied by `Send` icon)
+    *   **Action:** Opens mail client with pre-filled `mailto:contact@sevenx.com.np?subject=API%20Key%20Request%20for%20NepaliDate`.
+*   **Footer Text:**
+    *   "If you have any questions about the API or the request process, feel free to include them in your email or contact us separately."
+    *   "Looking for technical details? Visit the <Link href='/api-info' class='text-primary hover:underline'>API Documentation page</Link>."
+
+---
 This provides a comprehensive overview of the textual content present on the main pages of the NepaliDate application for SEO analysis.
+

@@ -11,10 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Input } from '@/components/ui/input'; // Import Input component
+import { Input } from '@/components/ui/input'; 
 import { useToast } from '@/hooks/use-toast';
 import { CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types';
-import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2, FileText, List, CalendarClock, KeyRound } from 'lucide-react';
+import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2, FileText, List, CalendarClock, KeyRound, Send } from 'lucide-react';
 
 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 56) 
@@ -132,7 +132,8 @@ export default function ApiPlaygroundPage() {
           </CardTitle>
           <CardDescription>
             Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint, provide parameters and your API key.
-            View the full <Link href="/api-info" className="text-primary hover:underline">Nepali Calendar API documentation here</Link>.
+            View the full <Link href="/api-info" className="text-primary hover:underline">Nepali Calendar API documentation here</Link>,
+            or <Link href="/get-api-key" className="text-primary hover:underline">request an API key</Link> if you don't have one.
           </CardDescription>
         </CardHeader>
         <CardContent>
