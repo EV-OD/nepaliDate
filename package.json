@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "scrape:example": "node scripts/run-scraper.js 2076 1"
+    "scrape": "node scripts/run-scraper.js"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.8.0",

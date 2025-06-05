@@ -3,7 +3,7 @@ const { scrapeData } = require('./calendar-scraper.js');
 const fs = require('fs');
 
 async function main() {
-  const startYear = 1992;
+  const startYear = 2076;
   const endYear = 2083;
 
   console.log(`Starting to scrape calendar data from BS year ${startYear} to ${endYear}.`);

@@ -5,12 +5,12 @@ const { JSDOM } = require("jsdom");
 
 const DAYS = ["आईतवार", "सोमवार", "मंगलवार", "बुधवार", "बिहीवार", "शुक्रवार", "शनिवार"];
 
-const NEPALI_TO_ENGLISH_NUMERAL_MAP: { [key: string]: string } = {
+const NEPALI_TO_ENGLISH_NUMERAL_MAP = {
     '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
     '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
 };
 
-function nepaliToEnglishNumerals(nepaliString: string): string {
+function nepaliToEnglishNumerals(nepaliString) {
     if (!nepaliString) return "";
     return nepaliString.split('').map(char => NEPALI_TO_ENGLISH_NUMERAL_MAP[char] || char).join('');
 }
