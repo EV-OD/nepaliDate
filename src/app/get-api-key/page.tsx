@@ -84,7 +84,6 @@ export default function GetApiKeyPage() {
                   <li><strong className="text-foreground">Contact Email:</strong> Where we should send the API key and updates.</li>
                   <li><strong className="text-foreground">Intended Use Case:</strong> Briefly describe how you plan to use the API (e.g., personal project, commercial application, research).</li>
                   <li><strong className="text-foreground">Application/Website URL (if applicable):</strong> Where the API will be integrated.</li>
-                  <li><strong className="text-foreground">Expected Request Volume (Optional):</strong> An estimate (e.g., low, medium, high, or specific numbers if known) helps us plan capacity.</li>
                 </ul>
               </div>
             </div>

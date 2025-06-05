@@ -326,7 +326,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
         *   Text: "Address the email to: {contact@sevenx.com.np}"
         *   Text: "Use the subject line: {API Key Request for NepaliDate}"
     *   Step 3 Heading: "Step 3: Provide Required Information" (Icon: `FileText`)
-        *   List items: "Your Name / Company Name", "Contact Email", "Intended Use Case", "Application/Website URL (if applicable)", "Expected Request Volume (Optional)"
+        *   List items: "Your Name / Company Name", "Contact Email", "Intended Use Case", "Application/Website URL (if applicable)"
 *   **Section Heading 2:** "What to Expect" (Accompanied by `ShieldCheck` icon)
     *   List items: "We aim to review API key requests and respond within 2-3 business days.", "Once approved, your unique API key... will be sent...", "Please ensure our emails are not going to your spam folder."
 *   **Button Text (Call to Action):** "Request API Key Now" (Links to mailto: `contact@sevenx.com.np` with pre-filled subject)

@@ -235,7 +235,6 @@ This document provides a detailed breakdown of the textual content on each key p
             *   "<strong class='text-foreground'>Contact Email:</strong> Where we should send the API key and updates."
             *   "<strong class='text-foreground'>Intended Use Case:</strong> Briefly describe how you plan to use the API (e.g., personal project, commercial application, research)."
             *   "<strong class='text-foreground'>Application/Website URL (if applicable):</strong> Where the API will be integrated."
-            *   "<strong class='text-foreground'>Expected Request Volume (Optional):</strong> An estimate (e.g., low, medium, high, or specific numbers if known) helps us plan capacity."
 *   **Section Heading 2:** "What to Expect" (Accompanied by `ShieldCheck` icon)
     *   **List Items:**
         *   "We aim to review API key requests and respond within <strong class='text-foreground'>2-3 business days</strong>."
