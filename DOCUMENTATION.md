@@ -126,20 +126,22 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Includes page-specific SEO metadata for title, description, keywords, Open Graph, and Twitter cards.
 
 ##### Key Page Content (for SEO Analysis):
-*   **Headings:**
-    *   "Welcome to Date Bliss"
+*   **Route:** `/`
+*   **Main Heading (H1):** "Welcome to Date Bliss"
+*   **Main Paragraph/Description:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar."
+*   **Section Headings (Card Titles - H2 equivalent):**
     *   "BS to AD Converter"
     *   "AD to BS Converter"
     *   "Nepali Calendar API"
-*   **Paragraphs/Descriptions:**
-    *   "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar."
+*   **Section Descriptions (Card Descriptions):**
     *   "Convert Bikram Sambat dates to Gregorian dates and see relevant Nepali calendar events."
     *   "Convert Gregorian dates to Bikram Sambat dates and explore Nepali Patro events."
     *   "Explore our API for Bikram Sambat calendar data, holidays, and events."
 *   **Button Texts:**
-    *   "Go to BS to AD Converter"
-    *   "Go to AD to BS Converter"
-    *   "View API Details"
+    *   "Go to BS to AD Converter" (Links to `/bs-to-ad`)
+    *   "Go to AD to BS Converter" (Links to `/ad-to-bs`)
+    *   "View API Details" (Links to `/api-info`)
+*   **Icon:** `CalendarDays` icon used above main heading.
 
 #### 5.3.2. `src/app/bs-to-ad/page.tsx` (Route: `/bs-to-ad`)
 *   Client component (`'use client'`).
@@ -152,19 +154,24 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Inherits SEO metadata from `layout.tsx` (as `generateMetadata` was removed due to client component restrictions).
 
 ##### Key Page Content (for SEO Analysis):
-*   **Headings:**
-    *   "Bikram Sambat (BS) to Gregorian (AD)"
-*   **Paragraphs/Descriptions:**
-    *   "Enter a BS date to convert it to AD and see relevant Nepali calendar events."
+*   **Route:** `/bs-to-ad`
+*   **Main Heading (Card Title - H1 equivalent):** "Bikram Sambat (BS) to Gregorian (AD)"
+*   **Description (Card Description):** "Enter a BS date to convert it to AD and see relevant Nepali calendar events."
 *   **Form Labels:**
     *   "BS Year"
     *   "BS Month"
     *   "BS Day"
-*   **Button Text:**
-    *   "Convert to AD"
-*   **Dynamic Content Placeholders:**
-    *   Result Display Label: "Gregorian (AD) Date"
-    *   Event Summary Title: "Events & Holidays: {MonthName} {BSYear}" (e.g., "Events & Holidays: Baishakh 2080")
+*   **Button Text:** "Convert to AD"
+*   **Result Display (Dynamic):**
+    *   Label: "Gregorian (AD) Date"
+    *   Content: "{AD_Day} {AD_Month_Name} {AD_Year}", "{AD_Day_Of_Week}" (e.g., "14 April 2024", "Sunday")
+*   **Event Summary Display (Dynamic):**
+    *   Title: "Events & Holidays: {BS_Month_Name} {BS_Year}" (e.g., "Events & Holidays: Baishakh 2080")
+    *   Section Titles: "Holidays & Festivals", "Auspicious Marriage Dates", "Auspicious Bratabandha Dates"
+    *   Event Items: Dynamically populated based on selected BS month.
+*   **Toast Messages (Dynamic, on action):**
+    *   Success: "Conversion Successful", "Converted BS {Day}/{Month}/{Year} to AD."
+    *   Error: "Conversion Error", "{error_message}"
 
 #### 5.3.3. `src/app/ad-to-bs/page.tsx` (Route: `/ad-to-bs`)
 *   Client component (`'use client'`).
@@ -176,17 +183,21 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Inherits SEO metadata from `layout.tsx` (as `generateMetadata` was removed due to client component restrictions).
 
 ##### Key Page Content (for SEO Analysis):
-*   **Headings:**
-    *   "Gregorian (AD) to Bikram Sambat (BS)"
-*   **Paragraphs/Descriptions:**
-    *   "Enter an AD date to convert it to BS and see relevant Nepali calendar events."
-*   **Form Labels:**
-    *   "AD Date"
-*   **Button Text:**
-    *   "Convert to BS"
-*   **Dynamic Content Placeholders:**
-    *   Result Display Label: "Bikram Sambat (BS) Date"
-    *   Event Summary Title: "Events & Holidays: {MonthName} {BSYear}" (e.g., "Events & Holidays: Baishakh 2080")
+*   **Route:** `/ad-to-bs`
+*   **Main Heading (Card Title - H1 equivalent):** "Gregorian (AD) to Bikram Sambat (BS)"
+*   **Description (Card Description):** "Enter an AD date to convert it to BS and see relevant Nepali calendar events."
+*   **Form Label:** "AD Date" (associated with a Calendar popover)
+*   **Button Text:** "Convert to BS"
+*   **Result Display (Dynamic):**
+    *   Label: "Bikram Sambat (BS) Date"
+    *   Content: "{BS_Day} {BS_Month_Name} {BS_Year}", "{BS_Day_Of_Week}" (e.g., "1 Baishakh 2080", "Friday")
+*   **Event Summary Display (Dynamic):**
+    *   Title: "Events & Holidays: {BS_Month_Name} {BS_Year}" (e.g., "Events & Holidays: Baishakh 2080")
+    *   Section Titles: "Holidays & Festivals", "Auspicious Marriage Dates", "Auspicious Bratabandha Dates"
+    *   Event Items: Dynamically populated based on converted BS month.
+*   **Toast Messages (Dynamic, on action):**
+    *   Success: "Conversion Successful", "Converted AD {Day}/{Month}/{Year} to BS."
+    *   Error: "Conversion Error", "{error_message}"
 
 #### 5.3.4. `src/app/api-info/page.tsx` (Route: `/api-info`)
 *   Server Component that fetches API documentation details from `/api/calendar/info`.
@@ -196,36 +207,38 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Includes page-specific SEO metadata for title, description, keywords, Open Graph, and Twitter cards.
 
 ##### Key Page Content (for SEO Analysis):
-*   **Main Title (Dynamic):** e.g., "Date Bliss Calendar API"
-*   **Main Description (Dynamic):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
-*   **Badges (Dynamic):** "Version: {version}", "Status: {status}"
-*   **Contact (Dynamic):** "Contact: {email}"
-*   **Button Text:** "Go to API Playground"
-*   **Section Titles:**
+*   **Route:** `/api-info`
+*   **Main Title (H1, Dynamic from API):** e.g., "Date Bliss Calendar API"
+*   **Main Description (Dynamic from API):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
+*   **Badges (Dynamic from API):** "Version: {version}", "Status: {status}"
+*   **Contact (Dynamic from API):** "Contact: {email}" (with mailto link)
+*   **Button Text:** "Go to API Playground" (Links to `/api-playground`)
+*   **Section Titles (H2/Card Titles):**
     *   "API Endpoints"
     *   "Data Structures"
     *   "Data Coverage & Notes"
 *   **Endpoint Accordion Triggers (Dynamic):**
-    *   "GET /api/calendar/info"
-    *   "GET /api/calendar/{YYYY}/{MM}"
-*   **Key Descriptions within Endpoints (Dynamic, examples):**
+    *   `GET /api/calendar/info`
+    *   `GET /api/calendar/{YYYY}/{MM}`
+*   **Key Descriptions within Endpoints (Dynamic from API, examples):**
     *   "Provides detailed information about the API..."
     *   "Retrieves Bikram Sambat calendar data for a specific BS year (YYYY) and month (MM, 1-12)."
     *   Parameter names and descriptions (e.g., "YYYY", "MM")
-    *   "Example Request:", "Example Response:", "Example Response Summary:", "Possible Error Responses:"
-*   **Data Structure Titles (Dynamic):**
+    *   "Example Request:", "Example Response:", "Example Response Summary:", "Possible Error Responses:" (followed by code blocks or lists)
+*   **Data Structure Titles (H3, Dynamic from API):**
     *   "BsMonthData"
     *   "BsDayData"
-*   **Data Structure Descriptions (Dynamic):**
+*   **Data Structure Descriptions (Dynamic from API):**
     *   "Represents all data for a specific Bikram Sambat month."
     *   "Represents data for a single day in the Bikram Sambat calendar."
-    *   Field names and descriptions within tables (e.g., "bs_year", "metadata", "days", "holiFest", "n", "ne", "e", "t", "f", "h", "d")
-*   **Data Coverage Section (Dynamic):**
+    *   Field names and descriptions within tables (e.g., "bs_year", "metadata", "days", "holiFest", "n", "ne", "e", "t", "f", "h", "d", "ad_year_start", "ad_month_start", etc.)
+*   **Data Coverage Section (Dynamic from API):**
     *   "Available Bikram Sambat Years in Data: {list of years}"
     *   "Data Source & Accuracy" (Alert title)
     *   "The data is sourced from publicly available Nepali calendar information..." (Alert description)
-    *   "Important Notes:"
-*   **Footer Note (Dynamic):** "API Documentation last updated: {current date}"
+    *   "Important Notes:" (followed by a list of notes, dynamic from API)
+*   **Footer Note (Dynamic):** "API Documentation last updated: {current date}" (generated on page render)
+*   **Icons:** `Network`, `ListTree`, `Database`, `Info`, `AlertCircle` are used with section titles.
 
 #### 5.3.5. `src/app/api-playground/page.tsx` (Route: `/api-playground`)
 *   Client component (`'use client'`).
@@ -237,10 +250,9 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Inherits SEO metadata from `layout.tsx` (as `generateMetadata` was removed due to client component restrictions).
 
 ##### Key Page Content (for SEO Analysis):
-*   **Headings:**
-    *   "API Playground"
-*   **Paragraphs/Descriptions:**
-    *   "Test the /api/calendar/[YYYY]/[MM] endpoint. View the full API documentation here." (with "here" being a link to /api-info)
+*   **Route:** `/api-playground`
+*   **Main Heading (Card Title - H1 equivalent):** "API Playground"
+*   **Description (Card Description):** "Test the /api/calendar/[YYYY]/[MM] endpoint. View the full API documentation here." (with "here" being a link to `/api-info`)
 *   **Form Labels:**
     *   "Bikram Sambat Year (YYYY)"
     *   "Bikram Sambat Month (MM)"
@@ -248,12 +260,16 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Button Texts:**
     *   "Send Request"
     *   "Open" (next to request URL, to open in new tab)
-*   **Section Title (Dynamic):** "API Response"
+*   **Section Title (Dynamic):** "API Response" (appears after request)
 *   **Dynamic Content Placeholders:**
-    *   The actual request URL.
-    *   "Status: {statusCode}"
-    *   "Error: {errorMessage}"
-    *   "Response Body:" (followed by JSON)
+    *   The actual request URL: `{baseUrl}/api/calendar/{selected_year}/{selected_month}`
+    *   "Status: {statusCode}" (e.g., "Status: 200" or "Status: 404")
+    *   "Error: {errorMessage}" (if an error occurs)
+    *   "Response Body:" (followed by JSON data or error object)
+*   **Toast Messages (Dynamic, on action):**
+    *   Success: "Success", "API request successful."
+    *   Error: "Error: {statusCode}", "{error_message}" or "Fetch Error", "{error_message}"
+*   **Icons:** `TestTube2` (main title), `Code` (response section title), `PlayCircle` (button), `ExternalLink` (button).
 
 ### 5.4. API Route Handlers (`src/app/api/.../route.ts`)
 
