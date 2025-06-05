@@ -2,7 +2,7 @@
 
 /**
  * @fileOverview Analyzes and summarizes relevant holiday, marriage, and bratabandha dates for a given Bikram Sambat (BS) month using AI.
- *
+ * This flow is part of the NepaliDate application.
  * - summarizeRelevantBsEvents - A function that handles the summarization process.
  * - SummarizeRelevantBsEventsInput - The input type for the summarizeRelevantBsEvents function.
  * - SummarizeRelevantBsEventsOutput - The return type for the summarizeRelevantBsEvents function.

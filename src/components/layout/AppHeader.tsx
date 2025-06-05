@@ -18,7 +18,7 @@ export default function AppHeader() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <CalendarDays className="h-7 w-7 text-primary" />
-          <span className="text-2xl font-bold font-headline text-foreground">Date Bliss</span>
+          <span className="text-2xl font-bold font-headline text-foreground">NepaliDate</span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
@@ -43,7 +43,7 @@ export default function AppHeader() {
             <SheetContent side="right" className="w-[280px] sm:w-[320px]">
               <div className="flex items-center gap-2 border-b pb-4 mb-4">
                 <CalendarDays className="h-6 w-6 text-primary" />
-                <span className="text-xl font-bold font-headline text-foreground">Date Bliss</span>
+                <span className="text-xl font-bold font-headline text-foreground">NepaliDate</span>
               </div>
               <nav className="flex flex-col space-y-2">
                 {navItems.map((item) => (

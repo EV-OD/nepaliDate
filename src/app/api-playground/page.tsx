@@ -104,7 +104,7 @@ export default function ApiPlaygroundPage() {
             <TestTube2 className="h-8 w-8 text-primary" /> Nepali Calendar API Playground
           </CardTitle>
           <CardDescription>
-            Test the Date Bliss <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. 
+            Test the NepaliDate <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. 
             View the full <Link href="/api-info" className="text-primary hover:underline">Nepali Calendar API documentation here</Link>.
           </CardDescription>
         </CardHeader>

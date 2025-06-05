@@ -1,7 +1,7 @@
 
-# Date Bliss Application - Page Content Analysis
+# NepaliDate Application - Page Content Analysis
 
-This document provides a detailed breakdown of the textual content on each key page of the Date Bliss application. It is intended for SEO analysis, content strategy, and ensuring keyword alignment with terms like "BS to AD converter," "AD to BS converter," "Nepali calendar API," "Bikram Sambat," and "Nepali holidays."
+This document provides a detailed breakdown of the textual content on each key page of the NepaliDate application. It is intended for SEO analysis, content strategy, and ensuring keyword alignment with terms like "BS to AD converter," "AD to BS converter," "Nepali calendar API," "Bikram Sambat," and "Nepali holidays."
 
 ## Table of Contents
 1.  [Homepage (`/`)](#homepage--)
@@ -15,7 +15,7 @@ This document provides a detailed breakdown of the textual content on each key p
 ## 1. Homepage (`/`)
 
 *   **Route:** `/`
-*   **Main Heading (H1 Equivalent - Visual):** "Welcome to Date Bliss" (Accompanied by `CalendarDays` icon)
+*   **Main Heading (H1 Equivalent - Visual):** "Welcome to NepaliDate" (Accompanied by `CalendarDays` icon)
 *   **Main Descriptive Paragraph:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar. Use our BS to AD converter, AD to BS converter, or explore the Nepali Calendar API."
 *   **Section Cards:**
     *   **Card 1: BS to AD Converter**
@@ -108,7 +108,7 @@ This document provides a detailed breakdown of the textual content on each key p
 ## 4. API Information Page (`/api-info`)
 
 *   **Route:** `/api-info`
-*   **Main Page Title (H1 - Dynamic from API):** `apiInfoData.apiName` (e.g., "Date Bliss: Nepali Calendar & Bikram Sambat API")
+*   **Main Page Title (H1 - Dynamic from API):** `apiInfoData.apiName` (e.g., "NepaliDate: Nepali Calendar & Bikram Sambat API")
 *   **Main Page Description (Paragraph - Dynamic from API):** `apiInfoData.description` (e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data...")
 *   **Badges (Dynamic from API):**
     *   "Version: {apiInfoData.version}"
@@ -165,7 +165,7 @@ This document provides a detailed breakdown of the textual content on each key p
 
 *   **Route:** `/api-playground`
 *   **Main Card Heading (H1 Equivalent - CardTitle):** "Nepali Calendar API Playground" (Accompanied by `TestTube2` icon)
-*   **Main Card Description (CardDescription):** "Test the Date Bliss <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
+*   **Main Card Description (CardDescription):** "Test the NepaliDate <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
 *   **Form Fields & Labels:**
     *   **Label:** "Bikram Sambat Year (YYYY)" (Associated with a `Select` for BS Year)
     *   **Label:** "Bikram Sambat Month (MM)" (Associated with a `Select` for BS Month)
@@ -194,4 +194,4 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **URL Error Toast Description:** "Could not construct request URL."
 
 ---
-This provides a comprehensive overview of the textual content present on the main pages of the Date Bliss application for SEO analysis.
+This provides a comprehensive overview of the textual content present on the main pages of the NepaliDate application for SEO analysis.

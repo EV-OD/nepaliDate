@@ -10,11 +10,11 @@ export async function GET(request: NextRequest) {
   const exampleBsMonthName = NEPALI_MONTHS[exampleMonth -1];
 
   const apiInfo = {
-    apiName: "Date Bliss: Nepali Calendar & Bikram Sambat API",
+    apiName: "NepaliDate: Nepali Calendar & Bikram Sambat API",
     version: "1.2.0", 
     status: "Operational",
     description: "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data. Provides detailed daily information, including Nepali holidays, festivals, tithis (lunar days), and auspicious dates for marriage (vivah) and bratabandha for a given BS month. Ideal for integrating Nepali Patro data into your applications.",
-    contactEmail: "api-support@datebliss.example.com",
+    contactEmail: "api-support@nepalidate.example.com",
     documentationUrl: request.nextUrl.origin + "/api-info",
     endpoints: [
       {

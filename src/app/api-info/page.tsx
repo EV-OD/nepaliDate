@@ -9,26 +9,26 @@ import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookO
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Nepali Calendar API Documentation | Date Bliss Bikram Sambat API",
-  description: "Explore the Date Bliss API for Bikram Sambat (BS) calendar data, including date conversions, Nepali holidays, festivals, and auspicious dates. Detailed endpoint and data structure information for your application.",
-  keywords: ["Nepali Calendar API", "Bikram Sambat API", "Date Bliss API", "Nepali Patro API", "API Documentation", "Nepal Date API", "BS Calendar Data", "Nepali event API"],
+  title: "Nepali Calendar API Documentation | NepaliDate Bikram Sambat API",
+  description: "Explore the NepaliDate API for Bikram Sambat (BS) calendar data, including date conversions, Nepali holidays, festivals, and auspicious dates. Detailed endpoint and data structure information for your application.",
+  keywords: ["Nepali Calendar API", "Bikram Sambat API", "NepaliDate API", "Nepali Patro API", "API Documentation", "Nepal Date API", "BS Calendar Data", "Nepali event API"],
   openGraph: {
-    title: "Date Bliss Nepali Calendar API: Documentation & Integration",
-    description: "Access comprehensive Bikram Sambat (BS) calendar data via the Date Bliss API. Details on endpoints, data structures, and examples for integrating Nepali dates and events.",
+    title: "NepaliDate Nepali Calendar API: Documentation & Integration",
+    description: "Access comprehensive Bikram Sambat (BS) calendar data via the NepaliDate API. Details on endpoints, data structures, and examples for integrating Nepali dates and events.",
     url: "/api-info",
     images: [
       {
-        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+API+Docs',
+        url: 'https://placehold.co/1200x630.png?text=NepaliDate+API+Docs',
         width: 1200,
         height: 630,
-        alt: 'Date Bliss API Documentation - Nepali Calendar and Bikram Sambat Data',
+        alt: 'NepaliDate API Documentation - Nepali Calendar and Bikram Sambat Data',
         'data-ai-hint': 'api documentation code',
       }
     ]
   },
   twitter: {
-    title: "Date Bliss API Documentation: Integrate Nepali Calendar Data",
-    description: "Full documentation for the Date Bliss Nepali Calendar API. Learn how to integrate BS date conversions, Nepali holidays, and event data into your applications.",
+    title: "NepaliDate API Documentation: Integrate Nepali Calendar Data",
+    description: "Full documentation for the NepaliDate Nepali Calendar API. Learn how to integrate BS date conversions, Nepali holidays, and event data into your applications.",
   },
 };
 

@@ -1,9 +1,9 @@
 
-# Date Bliss Application Documentation
+# NepaliDate Application Documentation
 
 ## 1. Project Overview
 
-**App Name:** Date Bliss
+**App Name:** NepaliDate
 
 **Core Mission:** To provide a user-friendly and reliable tool for converting dates between Bikram Sambat (BS) and Gregorian (AD) calendars, and to offer information about Nepali holidays and events for specific BS months. The application also exposes a Nepali Calendar API for programmatic access to this Bikram Sambat calendar data.
 
@@ -32,7 +32,7 @@
     *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM).
 *   **API Playground:** Interactive UI to test the `/api/calendar/{YYYY}/{MM}` endpoint of the Nepali Calendar API.
 *   **Responsive Design:** The application is designed to work across various screen sizes.
-*   **SEO Friendly:** Metadata is implemented for better search engine visibility, focusing on keywords like "BS to AD converter", "AD to BS converter", and "Nepali Calendar API".
+*   **SEO Friendly:** Metadata is implemented for better search engine visibility, focusing on keywords like "BS to AD converter," "AD to BS converter," and "Nepali Calendar API."
 
 ## 3. Styling Guidelines (Implemented)
 
@@ -105,7 +105,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Sets up the `<html>` and `<body>` tags.
     *   Imports global CSS (`globals.css`) and custom fonts ('Inter' and 'Alegreya').
     *   Includes `<AppHeader />`, `<AppFooter />`, and `<Toaster />` for consistent layout and notifications.
-    *   Defines global SEO metadata (title, description, keywords, Open Graph, Twitter cards) that can be overridden by individual pages. It sets `metadataBase` for correct Open Graph URL generation. Keywords include "BS to AD converter", "AD to BS converter", "Nepali Calendar", "Bikram Sambat".
+    *   Defines global SEO metadata (title, description, keywords, Open Graph, Twitter cards) that can be overridden by individual pages. It sets `metadataBase` for correct Open Graph URL generation. Keywords include "BS to AD converter", "AD to BS converter", "Nepali Calendar", "Bikram Sambat", "NepaliDate".
     *   Configures the viewport theme color.
 *   **`src/app/globals.css`**:
     *   Imports Tailwind CSS base, components, and utilities.
@@ -127,7 +127,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/`
-*   **Main Heading (H1):** "Welcome to Date Bliss"
+*   **Main Heading (H1):** "Welcome to NepaliDate"
 *   **Main Paragraph/Description:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar. Use our BS to AD converter, AD to BS converter, or explore the Nepali Calendar API."
 *   **Section Headings (Card Titles - H2 equivalent):**
     *   "BS to AD Converter"
@@ -168,7 +168,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Event Summary Display (Dynamic):**
     *   Title: "Events & Holidays: {BS_Month_Name} {BS_Year}" (e.g., "Events & Holidays: Baishakh 2080")
     *   Section Titles: "Holidays & Festivals", "Auspicious Marriage Dates", "Auspicious Bratabandha Dates"
-    *   Event Items: Dynamically populated based on selected BS month.
+    *   Event Items: Dynamically populated based on selected BS month. Grouped by day for "Holidays & Festivals".
 *   **Toast Messages (Dynamic, on action):**
     *   Success: "Conversion Successful", "Converted BS {Day}/{Month}/{Year} to AD."
     *   Error: "Conversion Error", "{error_message}"
@@ -194,7 +194,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Event Summary Display (Dynamic):**
     *   Title: "Events & Holidays: {BS_Month_Name} {BS_Year}" (e.g., "Events & Holidays: Baishakh 2080")
     *   Section Titles: "Holidays & Festivals", "Auspicious Marriage Dates", "Auspicious Bratabandha Dates"
-    *   Event Items: Dynamically populated based on converted BS month.
+    *   Event Items: Dynamically populated based on converted BS month. Grouped by day for "Holidays & Festivals".
 *   **Toast Messages (Dynamic, on action):**
     *   Success: "Conversion Successful", "Converted AD {Day}/{Month}/{Year} to BS."
     *   Error: "Conversion Error", "{error_message}"
@@ -208,7 +208,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/api-info`
-*   **Main Title (H1, Dynamic from API):** e.g., "Date Bliss: Nepali Calendar & Bikram Sambat API"
+*   **Main Title (H1, Dynamic from API):** e.g., "NepaliDate: Nepali Calendar & Bikram Sambat API"
 *   **Main Description (Dynamic from API):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
 *   **Badges (Dynamic from API):** "Version: {version}", "Status: {status}"
 *   **Contact (Dynamic from API):** "Contact: {email}" (with mailto link)
@@ -252,7 +252,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/api-playground`
 *   **Main Heading (Card Title - H1 equivalent):** "Nepali Calendar API Playground"
-*   **Description (Card Description):** "Test the Date Bliss <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
+*   **Description (Card Description):** "Test the NepaliDate <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
 *   **Form Labels:**
     *   "Bikram Sambat Year (YYYY)"
     *   "Bikram Sambat Month (MM)"
@@ -278,7 +278,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `GET` handler that returns a JSON object containing detailed API documentation for the Nepali Calendar API.
     *   Dynamically fetches available BS years using `getBsYears()` to include in the documentation.
     *   Constructs example request URLs based on the current request's origin.
-    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data".
+    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API".
 *   **`src/app/api/calendar/[...params]/route.ts`**:
     *   `GET` handler for fetching calendar data for a specific BS year and month.
     *   Extracts year and month from the dynamic path parameters.
@@ -310,9 +310,9 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **`src/components/ui/`**:
     *   Contains all the ShadCN UI components.
 *   **`src/components/layout/AppHeader.tsx`**:
-    *   Renders the main application header with "Date Bliss" title and navigation links, including "API Playground."
+    *   Renders the main application header with "NepaliDate" title and navigation links, including "API Playground."
 *   **`src/components/layout/AppFooter.tsx`**:
-    *   Renders the application footer.
+    *   Renders the application footer with "NepaliDate" copyright.
 *   **`src/components/converters/DateConverterFormFields.tsx`**:
     *   `BsDateFormFields`: Reusable component for BS date input.
     *   `AdDateFormField`: Reusable component for AD date input.
@@ -341,7 +341,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 ### 5.11. AI Integration (Genkit - `src/ai/`)
 
 *   **`src/ai/genkit.ts`**: Initializes Genkit.
-*   **`src/ai/flows/holiday-event-analyzer.ts`**: Defines a Genkit flow for summarizing BS events (currently not integrated into main UI).
+*   **`src/ai/flows/holiday-event-analyzer.ts`**: Defines a Genkit flow for summarizing BS events (currently not integrated into main UI). Mentions "NepaliDate application" in comments.
 *   **`src/ai/dev.ts`**: Development entry point for Genkit.
 
-This detailed breakdown should provide a good understanding of the Date Bliss application's architecture, features, and codebase, with a focus on its date conversion capabilities and Nepali Calendar API.
+This detailed breakdown should provide a good understanding of the NepaliDate application's architecture, features, and codebase, with a focus on its date conversion capabilities and Nepali Calendar API.
