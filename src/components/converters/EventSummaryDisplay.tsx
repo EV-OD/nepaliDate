@@ -18,6 +18,69 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
     return null;
   }
   const IconComponent = icon;
+
+  if (title === "Holidays & Festivals") {
+    const processedHolidayEvents: { dayBadge?: string; description: string; key: string }[] = [];
+    events.forEach((item, originalIndex) => {
+      const dayMatch = item.match(/^(\S+)\s+(.*)/); // Match non-space characters for day, then rest
+      let dayBadgeContent: string | undefined = undefined;
+      let eventDescriptionsString = item;
+
+      if (dayMatch) {
+        const potentialDay = dayMatch[1];
+        // Check if the first part looks like a day (contains a digit or common Nepali numeral/range format)
+        // and is not overly long.
+        if (/([०-९\d]+(?:-[०-९\d]+)?)/.test(potentialDay) && potentialDay.length <= 5) { 
+          dayBadgeContent = potentialDay;
+          eventDescriptionsString = dayMatch[2];
+        }
+      }
+
+      if (eventDescriptionsString.includes(',')) {
+        const subEvents = eventDescriptionsString.split(',').map(s => s.trim());
+        subEvents.forEach((subEvent, subIndex) => {
+          if (subEvent) { // Ensure subEvent is not empty after trim
+            processedHolidayEvents.push({ 
+              dayBadge: dayBadgeContent, 
+              description: subEvent, 
+              key: `${originalIndex}-${subIndex}` 
+            });
+          }
+        });
+      } else {
+        processedHolidayEvents.push({ 
+          dayBadge: dayBadgeContent, 
+          description: eventDescriptionsString, 
+          key: `${originalIndex}-0` 
+        });
+      }
+    });
+
+    return (
+      <div className="mt-5">
+        <h4 className="flex items-center gap-2 text-lg font-semibold text-primary mb-3">
+          <IconComponent className="h-5 w-5 text-accent" />
+          {title}
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {processedHolidayEvents.map(({ dayBadge, description, key }) => (
+            <div key={key} className="bg-background/80 p-3.5 rounded-lg border border-border shadow-md flex items-start gap-2.5 transition-all hover:shadow-lg">
+              {dayBadge && (
+                <Badge variant="default" className="text-xs bg-primary text-primary-foreground px-2.5 py-1 h-fit whitespace-nowrap shadow">
+                  {dayBadge}
+                </Badge>
+              )}
+              <p className={`text-sm text-foreground/90 flex-grow pt-0.5 ${!dayBadge ? 'pl-0' : ''}`}>
+                {description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Original logic for Marriage and Bratabandha
   return (
     <div className="mt-5">
       <h4 className="flex items-center gap-2 text-lg font-semibold text-primary mb-3">
@@ -25,38 +88,11 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
         {title}
       </h4>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {events.map((item, index) => {
-          if (title === "Holidays & Festivals") {
-            const match = item.match(/^(\d+)\s+(.*)/);
-            if (match) {
-              const day = match[1];
-              const description = match[2];
-              return (
-                <div key={index} className="bg-background/80 p-3.5 rounded-lg border border-border shadow-md flex items-start gap-2.5 transition-all hover:shadow-lg">
-                  <Badge variant="default" className="text-xs bg-primary text-primary-foreground px-2.5 py-1 h-fit whitespace-nowrap shadow">
-                    {day}
-                  </Badge>
-                  <p className="text-sm text-foreground/90 flex-grow pt-0.5">{description}</p>
-                </div>
-              );
-            } else {
-              // Fallback for holiday items that don't match the pattern (e.g., general notes)
-              return (
-                <div key={index} className="bg-background/80 p-3.5 rounded-lg border border-border text-sm text-foreground/90 shadow-md transition-all hover:shadow-lg">
-                  {item}
-                </div>
-              );
-            }
-          } else {
-            // For Marriage and Bratabandha dates
-            return (
-              <div key={index} className="bg-background/80 p-3.5 rounded-lg border border-border text-sm text-foreground/90 shadow-md transition-all hover:shadow-lg">
-                {/* Original logic for marriage/bratabandha: if 'गते' is already present or suffix is empty, use item, else append suffix */}
-                {(item.includes("गते") || item.includes("मुर्हुत छैन") || itemSuffix === "") ? item : `${item}${itemSuffix}`}
-              </div>
-            );
-          }
-        })}
+        {events.map((item, index) => (
+          <div key={index} className="bg-background/80 p-3.5 rounded-lg border border-border text-sm text-foreground/90 shadow-md transition-all hover:shadow-lg">
+            {(item.includes("गते") || item.includes("मुर्हुत छैन") || !itemSuffix || itemSuffix === "") ? item : `${item}${itemSuffix}`}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -125,7 +161,6 @@ export default function EventSummaryDisplay({
     );
   }
 
-  // Only render the card if we have a year and month, and there's data to show or it's not loading/error
   if (!bsYear || !bsMonthName) {
     return null; 
   }
@@ -152,11 +187,9 @@ export default function EventSummaryDisplay({
           </div>
         )}
         <EventSection title="Holidays & Festivals" icon={Sparkles} events={holiFest} />
-        {/* Only show marriage/bratabandha sections if there are actual dates, not just "no events" messages */}
         {hasMarriage && <EventSection title="Auspicious Marriage Dates" icon={Heart} events={marriageEvents} itemSuffix=" गते" />}
         {hasBratabandha && <EventSection title="Auspicious Bratabandha Dates" icon={Milestone} events={bratabandhaEvents} itemSuffix=" गते" />}
         
-        {/* Handle cases where there are "no event" messages specifically for marriage/bratabandha but other events exist */}
         {marriageEvents && marriageEvents.length === 1 && marriageEvents[0].includes("मुर्हुत छैन") && !hasMarriage && hasAnyEventData && (
            <div className="mt-5">
             <h4 className="flex items-center gap-2 text-lg font-semibold text-primary mb-3">
