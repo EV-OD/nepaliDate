@@ -18,23 +18,30 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
     return null;
   }
   const IconComponent = icon;
+  const delimiter = "_::_";
 
   if (title === "Holidays & Festivals") {
     const processedHolidayEvents: { dayBadge?: string; description: string; key: string }[] = [];
     events.forEach((item, originalIndex) => {
-      const dayMatch = item.match(/^(\S+)\s+(.*)/); // Match non-space characters for day, then space, then rest
+      const parts = item.split(delimiter);
       let dayBadgeContent: string | undefined = undefined;
-      let eventDescriptionsString = item;
+      let eventDescriptionsString = "";
 
-      if (dayMatch) {
-        const potentialDay = dayMatch[1];
-        // Check if the first part looks like a day (contains a digit or common Nepali numeral/range format, or is '•')
-        // and is not overly long.
-        if ((/([०-९\d]+(?:-[०-९\d]+)?)/.test(potentialDay) && potentialDay.length <= 5) || potentialDay === "•") { 
-          dayBadgeContent = potentialDay;
-          eventDescriptionsString = dayMatch[2];
+      if (parts.length === 2) {
+        dayBadgeContent = parts[0].trim() || undefined; // Handle if day part is empty after trim
+        eventDescriptionsString = parts[1].trim();
+        if (dayBadgeContent === "•") { // Special handling for bullet point as day
+             // Keep dayBadgeContent as "•"
+        } else if (dayBadgeContent && !(/([०-९\d]+(?:-[०-९\d]+)?)/.test(dayBadgeContent) && dayBadgeContent.length <= 5)) {
+            // If dayBadgeContent is not a typical day numeral/range or "•", assume it's part of description
+            eventDescriptionsString = `${dayBadgeContent} ${eventDescriptionsString}`.trim();
+            dayBadgeContent = undefined;
         }
+      } else {
+        eventDescriptionsString = item.trim(); // No delimiter found, treat whole string as description
       }
+      
+      if (!dayBadgeContent && eventDescriptionsString === "") return; // Skip if both parts are empty
 
       if (eventDescriptionsString.includes(',')) {
         const subEvents = eventDescriptionsString.split(',').map(s => s.trim());
@@ -47,7 +54,7 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
             });
           }
         });
-      } else {
+      } else if (eventDescriptionsString) { // Only push if there's a description
         processedHolidayEvents.push({ 
           dayBadge: dayBadgeContent, 
           description: eventDescriptionsString, 
@@ -55,6 +62,8 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
         });
       }
     });
+
+    if (processedHolidayEvents.length === 0) return null;
 
     return (
       <div className="mt-5">
@@ -177,7 +186,7 @@ export default function EventSummaryDisplay({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {!hasAnyEventData && (
+        {!hasAnyEventData && !(marriageEvents && marriageEvents.some(e => e.includes("मुर्हुत छैन"))) && !(bratabandhaEvents && bratabandhaEvents.some(e => e.includes("मुर्हुत छैन"))) && (
           <div className="flex flex-col items-center justify-center text-center p-6 bg-muted/30 rounded-md border border-dashed border-border">
             <Info className="h-10 w-10 text-muted-foreground mb-3" />
             <p className="font-semibold text-foreground">No Specific Events Found</p>
@@ -190,7 +199,7 @@ export default function EventSummaryDisplay({
         {hasMarriage && <EventSection title="Auspicious Marriage Dates" icon={Heart} events={marriageEvents} itemSuffix=" गते" />}
         {hasBratabandha && <EventSection title="Auspicious Bratabandha Dates" icon={Milestone} events={bratabandhaEvents} itemSuffix=" गते" />}
         
-        {marriageEvents && marriageEvents.length === 1 && marriageEvents[0].includes("मुर्हुत छैन") && !hasMarriage && hasAnyEventData && (
+        {marriageEvents && marriageEvents.length === 1 && marriageEvents[0].includes("मुर्हुत छैन") && !hasMarriage && (
            <div className="mt-5">
             <h4 className="flex items-center gap-2 text-lg font-semibold text-primary mb-3">
               <Heart className="h-5 w-5 text-accent" />
@@ -201,7 +210,7 @@ export default function EventSummaryDisplay({
             </div>
           </div>
         )}
-        {bratabandhaEvents && bratabandhaEvents.length === 1 && bratabandhaEvents[0].includes("मुर्हुत छैन") && !hasBratabandha && hasAnyEventData && (
+        {bratabandhaEvents && bratabandhaEvents.length === 1 && bratabandhaEvents[0].includes("मुर्हुत छैन") && !hasBratabandha && (
            <div className="mt-5">
             <h4 className="flex items-center gap-2 text-lg font-semibold text-primary mb-3">
               <Milestone className="h-5 w-5 text-accent" />
@@ -217,3 +226,4 @@ export default function EventSummaryDisplay({
     </Card>
   );
 }
+

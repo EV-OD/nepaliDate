@@ -50,6 +50,8 @@ const _fetchData = async (year, month) => {
         // holidays & festivals
         let holiFest = [];
         const holiCTable = dom.window.document.querySelector("#holiC table tbody");
+        const delimiter = "_::_"; // Define the delimiter
+
         if (holiCTable) {
             const rows = holiCTable.querySelectorAll("tr");
             rows.forEach(row => {
@@ -59,9 +61,9 @@ const _fetchData = async (year, month) => {
                     let descPart = cells[1].textContent.trim().replace(/\s\s+/g, ' '); // Replace multiple spaces/newlines
                     
                     if (dayPart && descPart) {
-                        holiFest.push(`${dayPart} ${descPart}`);
-                    } else if (descPart) { // Handle cases where dayPart might be empty (though unlikely for this structure)
-                        holiFest.push(descPart);
+                        holiFest.push(`${dayPart}${delimiter}${descPart}`);
+                    } else if (descPart) { // Handle cases where dayPart might be empty
+                        holiFest.push(`${delimiter}${descPart}`); // Prepend delimiter if day is empty
                     }
                 }
             });
@@ -75,7 +77,16 @@ const _fetchData = async (year, month) => {
                 const holiAElement = holiElementRoot.querySelector("a");
                 if (holiAElement) holiAElement.remove();
                 const holiContentElement = dom.window.document.querySelector("#holiC") || holiElementRoot; // Prefer #holiC if available
-                holiFest = holiContentElement.textContent.trim().split('\n').map(s => s.trim().replace(/\s\s+/g, ' ')).filter(s => s && s !== "See Calendar in English Language");
+                const rawHoliFest = holiContentElement.textContent.trim().split('\n').map(s => s.trim().replace(/\s\s+/g, ' ')).filter(s => s && s !== "See Calendar in English Language");
+                // Attempt to apply delimiter for fallback if possible, though structure is less predictable
+                rawHoliFest.forEach(item => {
+                    const dayMatch = item.match(/^([०-९\d•]+(?:-[०-९\d]+)?)\s+(.*)/);
+                    if (dayMatch) {
+                        holiFest.push(`${dayMatch[1]}${delimiter}${dayMatch[2]}`);
+                    } else {
+                        holiFest.push(`${delimiter}${item}`); // Prepend delimiter if no clear day part
+                    }
+                });
             }
         }
 
@@ -107,8 +118,6 @@ const _fetchData = async (year, month) => {
                 return; 
             }
 
-            // Re-parse individual cell for cleaner access to its direct children
-            // This avoids carrying over context from previous JSDOM initializations if any issue.
             const cellDom = new JSDOM(cell.innerHTML); 
             
             const ndayNode = cellDom.window.document.querySelector('#nday');
@@ -151,3 +160,4 @@ const scrapeData = async (year, month) => {
 }
 
 module.exports = { scrapeData };
+
