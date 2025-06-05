@@ -21,49 +21,36 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
   const delimiter = "_::_";
 
   if (title === "Holidays & Festivals") {
-    const processedHolidayEvents: { dayBadge?: string; description: string; key: string }[] = [];
-    events.forEach((item, originalIndex) => {
+    const groupedByDay: Record<string, string[]> = {};
+    const NO_BADGE_PREFIX = '___NO_BADGE_ITEM___';
+
+    events.forEach((item, index) => {
       const parts = item.split(delimiter);
-      let dayBadgeContent: string | undefined = undefined;
-      let eventDescriptionsString = "";
+      let dayKey: string;
+      let eventDescriptionsString: string;
 
       if (parts.length === 2) {
-        dayBadgeContent = parts[0].trim() || undefined; // Handle if day part is empty after trim
+        const dayPart = parts[0].trim();
         eventDescriptionsString = parts[1].trim();
-        if (dayBadgeContent === "•") { // Special handling for bullet point as day
-             // Keep dayBadgeContent as "•"
-        } else if (dayBadgeContent && !(/([०-९\d]+(?:-[०-९\d]+)?)/.test(dayBadgeContent) && dayBadgeContent.length <= 5)) {
-            // If dayBadgeContent is not a typical day numeral/range or "•", assume it's part of description
-            eventDescriptionsString = `${dayBadgeContent} ${eventDescriptionsString}`.trim();
-            dayBadgeContent = undefined;
-        }
+        // Assign a unique key for items that shouldn't have a shared badge (e.g., "•" or empty day part)
+        // These will render as individual items, each in their own "day group" visually.
+        dayKey = (dayPart === "" || dayPart === "•") ? `${NO_BADGE_PREFIX}_${index}` : dayPart;
       } else {
-        eventDescriptionsString = item.trim(); // No delimiter found, treat whole string as description
+        eventDescriptionsString = item.trim();
+        dayKey = `${NO_BADGE_PREFIX}_${index}`; // Item without delimiter, also gets a unique key
       }
-      
-      if (!dayBadgeContent && eventDescriptionsString === "") return; // Skip if both parts are empty
 
-      if (eventDescriptionsString.includes(',')) {
-        const subEvents = eventDescriptionsString.split(',').map(s => s.trim());
-        subEvents.forEach((subEvent, subIndex) => {
-          if (subEvent) { 
-            processedHolidayEvents.push({ 
-              dayBadge: dayBadgeContent, 
-              description: subEvent, 
-              key: `${originalIndex}-${subIndex}` 
-            });
-          }
-        });
-      } else if (eventDescriptionsString) { // Only push if there's a description
-        processedHolidayEvents.push({ 
-          dayBadge: dayBadgeContent, 
-          description: eventDescriptionsString, 
-          key: `${originalIndex}-0` 
-        });
+      if (!eventDescriptionsString) return; // Skip if there's no description
+
+      const subEvents = eventDescriptionsString.split(',').map(s => s.trim()).filter(Boolean);
+
+      if (!groupedByDay[dayKey]) {
+        groupedByDay[dayKey] = [];
       }
+      groupedByDay[dayKey].push(...subEvents);
     });
-
-    if (processedHolidayEvents.length === 0) return null;
+    
+    if (Object.keys(groupedByDay).length === 0) return null;
 
     return (
       <div className="mt-5">
@@ -72,18 +59,36 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
           {title}
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {processedHolidayEvents.map(({ dayBadge, description, key }) => (
-            <div key={key} className="bg-background/80 p-3.5 rounded-lg border border-border shadow-md flex items-start gap-2.5 transition-all hover:shadow-lg">
-              {dayBadge && (
-                <Badge variant="default" className="text-xs bg-primary text-primary-foreground px-2.5 py-1 h-fit whitespace-nowrap shadow">
-                  {dayBadge}
-                </Badge>
-              )}
-              <p className={`text-sm text-foreground/90 flex-grow pt-0.5 ${!dayBadge ? 'pl-0' : ''}`}>
-                {description}
-              </p>
-            </div>
-          ))}
+          {Object.entries(groupedByDay).map(([dayKey, descriptions]) => {
+            const isNoBadgeItem = dayKey.startsWith(NO_BADGE_PREFIX);
+            const displayBadge = isNoBadgeItem ? null : dayKey;
+
+            return (
+              <div 
+                key={dayKey} 
+                className="bg-background/80 p-3.5 rounded-lg border border-border shadow-md flex items-start gap-x-3 transition-all hover:shadow-lg"
+              >
+                {displayBadge && (
+                  <Badge 
+                    variant="default" 
+                    className="text-xs bg-primary text-primary-foreground px-2.5 py-1 h-fit whitespace-nowrap shadow mt-0.5 shrink-0"
+                  >
+                    {displayBadge}
+                  </Badge>
+                )}
+                <div className={`flex-grow ${!displayBadge ? 'pl-0' : ''}`}>
+                  {descriptions.map((desc, descIndex) => (
+                    <p 
+                      key={descIndex} 
+                      className={`text-sm text-foreground/90 ${descriptions.length > 1 && descIndex < descriptions.length - 1 ? 'mb-1.5' : ''}`}
+                    >
+                      {desc}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
