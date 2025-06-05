@@ -5,7 +5,7 @@
 
 **App Name:** NepaliDate
 
-**Core Mission:** To provide a user-friendly and reliable tool for converting dates between Bikram Sambat (BS) and Gregorian (AD) calendars, and to offer information about Nepali holidays and events for specific BS months. The application also exposes a Nepali Calendar API for programmatic access to this Bikram Sambat calendar data.
+**Core Mission:** To provide a user-friendly and reliable tool for converting dates between Bikram Sambat (BS) and Gregorian (AD) calendars, and to offer information about Nepali holidays and events for specific BS months. The application also exposes a Nepali Calendar API (protected by an API key) for programmatic access to this Bikram Sambat calendar data.
 
 **Tech Stack:**
 *   **Framework:** Next.js (with App Router)
@@ -18,20 +18,20 @@
 
 ## 2. Core Features
 
-*   **Date Conversion:**
-    *   Bikram Sambat (BS) to Gregorian (AD) Converter
-    *   Gregorian (AD) to Bikram Sambat (BS) Converter
+*   **Date Conversion (Website Use Only):**
+    *   Bikram Sambat (BS) to Gregorian (AD) Converter (Implemented via Server Actions, intended for website UI use)
+    *   Gregorian (AD) to Bikram Sambat (BS) Converter (Implemented via Server Actions, intended for website UI use)
 *   **Date Validation:** Input validation notifies users of impossible date inputs (e.g., BS day exceeding days in the month).
 *   **Date Picker:** User-friendly date picker components for easy date selection in both BS and AD converters.
 *   **Event Display:** For a selected/converted BS month, the application displays Nepali holidays and events:
     *   Holidays and Festivals (`holiFest`) from the Nepali Patro
     *   Auspicious Marriage Dates (`marriage`)
     *   Auspicious Bratabandha Dates (`bratabandha`)
-*   **Nepali Calendar API Access:**
-    *   `/api/calendar/info`: Provides detailed API documentation for the Bikram Sambat calendar data.
-    *   `/api/calendar/{YYYY}`: Fetches all calendar data for a specific BS year (YYYY).
-    *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM).
-*   **API Playground:** Interactive UI to test all available Nepali Calendar API endpoints (`/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`).
+*   **Nepali Calendar API Access (API Key Protected):**
+    *   `/api/calendar/info`: Provides detailed API documentation for the Bikram Sambat calendar data. Requires an API key.
+    *   `/api/calendar/{YYYY}`: Fetches all calendar data for a specific BS year (YYYY). Requires an API key.
+    *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM). Requires an API key.
+*   **API Playground:** Interactive UI to test all available Nepali Calendar API endpoints (`/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`), including a field to input the required API key.
 *   **Responsive Design:** The application is designed to work across various screen sizes.
 *   **SEO Friendly:** Metadata is implemented for better search engine visibility, focusing on keywords like "BS to AD converter," "AD to BS converter," and "Nepali Calendar API."
 
@@ -48,12 +48,16 @@
 
 These colors are configured in `src/app/globals.css` using HSL CSS variables for ShadCN's theming system.
 
-## 4. API Endpoints (Nepali Calendar API)
+## 4. API Endpoints (Nepali Calendar API - API Key Protected)
+
+All `/api/calendar/*` endpoints require a valid API key to be sent in the `X-API-Key` request header.
+The API key can be set in the `.env` file as `API_KEY_NEPALIDATE="your_secret_api_key_here"`.
 
 ### 4.1. API Information
 
 *   **Route:** `/api/calendar/info`
 *   **Method:** `GET`
+*   **Authentication:** Requires `X-API-Key` header.
 *   **Description:** Provides comprehensive documentation about the Bikram Sambat Calendar API, including endpoint details, data structures, data coverage, and usage notes.
 *   **Implementation:** `src/app/api/calendar/info/route.ts`
 
@@ -61,6 +65,7 @@ These colors are configured in `src/app/globals.css` using HSL CSS variables for
 *   **Route:** `/api/calendar/{YYYY}`
     *   `{YYYY}`: Bikram Sambat year (e.g., 2079)
 *   **Method:** `GET`
+*   **Authentication:** Requires `X-API-Key` header.
 *   **Description:** Retrieves all calendar data for the specified BS year, including all 12 months. Each month's data includes daily details, Nepali holidays, festivals, and other events.
 *   **Response:** An array of `BsMonthData` objects, one for each month of the specified year.
 *   **Implementation:** `src/app/api/calendar/[year]/route.ts`
@@ -71,6 +76,7 @@ These colors are configured in `src/app/globals.css` using HSL CSS variables for
     *   `{YYYY}`: Bikram Sambat year (e.g., 2079)
     *   `{MM}`: Bikram Sambat month (1 for Baishakh, 12 for Chaitra)
 *   **Method:** `GET`
+*   **Authentication:** Requires `X-API-Key` header.
 *   **Description:** Retrieves detailed calendar data for the specified BS year and month, including Nepali holidays and events.
 *   **Response:** A JSON object (`BsMonthData`) containing metadata, list of days with their AD equivalents, tithis, festivals, holidays, and auspicious dates.
 *   **Implementation:** `src/app/api/calendar/[...params]/route.ts`
@@ -103,7 +109,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **`apphosting.yaml`**:
     *   Configuration for Firebase App Hosting, e.g., `runConfig.maxInstances`.
 *   **`.env`**:
-    *   Used for environment variables (e.g., `NEXT_PUBLIC_APP_URL`).
+    *   Used for environment variables (e.g., `NEXT_PUBLIC_APP_URL`, `API_KEY_NEPALIDATE`).
 *   **`.vscode/settings.json`**:
     *   VSCode editor settings, enabling IDX AI features.
 
@@ -125,6 +131,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `convertBsToAdWithEvents(bsDate)`: Converts BS to AD and fetches associated events (Nepali holidays, marriage, bratabandha) for the target BS month.
     *   `convertAdToBsWithEvents(adDate)`: Converts AD to BS and fetches associated events for the resulting BS month.
     *   `fetchEventData(bsYear, bsMonth)`: A helper function to retrieve event data from the loaded `bsCalendarData`.
+    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. For truly "website-only" execution, more advanced techniques like strict CSRF token validation, session-based checks (if users were authenticated), or WAF rules would be needed. The current implementation relies on standard Next.js Server Action behavior.
 
 ### 5.3. Page Routes (`src/app/.../page.tsx`)
 
@@ -210,7 +217,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 #### 5.3.4. `src/app/api-info/page.tsx` (Route: `/api-info`)
 *   Server Component that fetches API documentation details from `/api/calendar/info`.
-*   Displays detailed information about the Nepali Calendar API, including endpoints, data structures, data coverage for Bikram Sambat years, and usage notes.
+*   Displays detailed information about the Nepali Calendar API, including endpoints, data structures, data coverage for Bikram Sambat years, usage notes, and API key authentication requirements.
 *   Uses ShadCN `Card`, `Accordion`, `Badge`, and custom table rendering for a structured and readable documentation page.
 *   Provides a link to the API Playground.
 *   Includes page-specific SEO metadata for title, description, keywords (e.g., "Nepali Calendar API", "Bikram Sambat API", "API Documentation"), Open Graph, and Twitter cards. Content is optimized for these terms.
@@ -220,6 +227,10 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Main Title (H1, Dynamic from API):** e.g., "NepaliDate: Nepali Calendar & Bikram Sambat API"
 *   **Main Description (Dynamic from API):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
 *   **Badges (Dynamic from API):** "Version: {version}", "Status: {status}"
+*   **Authentication Section (Dynamic from API):**
+    *   Type: `API Key`
+    *   Header Name: `X-API-Key`
+    *   Description: "A valid API key must be provided in the 'X-API-Key' request header for all /api/calendar/* endpoints."
 *   **Contact (Dynamic from API):** "Contact: {contact@sevenx.com.np}" (with mailto link)
 *   **Button Text:** "Go to API Playground" (Links to `/api-playground`)
 *   **Section Titles (H2/Card Titles):**
@@ -231,11 +242,11 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `GET /api/calendar/{YYYY}`
     *   `GET /api/calendar/{YYYY}/{MM}`
 *   **Key Descriptions within Endpoints (Dynamic from API, examples):**
-    *   "Provides detailed information about the Nepali Calendar API..."
-    *   "Retrieves all Bikram Sambat (BS) calendar data for a specific BS year (YYYY), including all 12 months."
-    *   "Retrieves Bikram Sambat (BS) calendar data for a specific BS year (YYYY) and month (MM, 1-12). Includes daily details, Nepali holidays, festivals, and other events."
+    *   "Provides detailed information about the Nepali Calendar API..." (mentions API Key requirement)
+    *   "Retrieves all Bikram Sambat (BS) calendar data for a specific BS year (YYYY), including all 12 months. Requires API Key."
+    *   "Retrieves Bikram Sambat (BS) calendar data for a specific BS year (YYYY) and month (MM, 1-12). Includes daily details, Nepali holidays, festivals, and other events. Requires API Key."
     *   Parameter names and descriptions (e.g., "YYYY", "MM")
-    *   "Example Request:", "Example Response:", "Example Response Summary:", "Possible Error Responses:" (followed by code blocks or lists)
+    *   "Example Request:", "Example Response:", "Example Response Summary:", "Possible Error Responses:" (followed by code blocks or lists, error responses include 401 Unauthorized)
 *   **Data Structure Titles (H3, Dynamic from API):**
     *   "BsMonthData"
     *   "BsDayData"
@@ -247,23 +258,25 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   "Available Bikram Sambat Years in Data:"
     *   "Data Source & Accuracy" (Alert title)
     *   "The data for this Nepali Calendar API is sourced from publicly available Nepali calendar information..." (Alert description)
-    *   "Important Notes for API Users:" (followed by a list of notes, dynamic from API)
+    *   "Important Notes for API Users:" (followed by a list of notes, dynamic from API, now including API key usage)
 *   **Footer Note (Dynamic):** "Nepali Calendar API Documentation last updated: {current date}" (generated on page render)
-*   **Icons:** `Network`, `ListTree`, `Database`, `Info`, `AlertCircle` are used with section titles.
+*   **Icons:** `Network`, `ListTree`, `Database`, `Info`, `AlertCircle`, `KeyRound` (for authentication) are used with section titles.
 
 #### 5.3.5. `src/app/api-playground/page.tsx` (Route: `/api-playground`)
 *   Client component (`'use client'`).
 *   Provides an interactive interface for users to test the Nepali Calendar API endpoints: `/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`.
 *   Users can select the endpoint and relevant BS Year/Month.
-*   Dynamically displays the request URL and allows users to send the request.
+*   **Includes an input field for the `X-API-Key`.**
+*   Dynamically displays the request URL and allows users to send the request (with the API key in headers).
 *   Shows the API response status code and the JSON response body.
-*   Uses `react-hook-form`, `zod`, ShadCN components (including `RadioGroup` for endpoint selection).
+*   Uses `react-hook-form`, `zod`, ShadCN components (including `RadioGroup` for endpoint selection, `Input` for API key).
 *   Inherits SEO metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "API Playground," "Nepali Calendar API," and "Bikram Sambat."
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/api-playground`
 *   **Main Heading (Card Title - H1 equivalent):** "Nepali Calendar API Playground"
-*   **Description (Card Description):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint and provide parameters if needed. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
+*   **Description (Card Description):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint, provide parameters and your API key. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
+*   **Form Label:** "API Key" (Associated with an `Input` field for X-API-Key)
 *   **Endpoint Selection Label:** "Select API Endpoint:"
 *   **Endpoint Radio Options & Labels:**
     *   `/api/calendar/info`
@@ -279,29 +292,33 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Section Title (Dynamic):** "API Response" (appears after request)
 *   **Dynamic Content Placeholders:**
     *   The actual request URL (changes based on selection).
-    *   "Status: {statusCode}" (e.g., "Status: 200" or "Status: 404")
+    *   "Status: {statusCode}" (e.g., "Status: 200" or "Status: 401")
     *   "Error: {errorMessage}" (if an error occurs)
     *   "Response Body:" (followed by JSON data or error object)
 *   **Toast Messages (Dynamic, on action):**
     *   Success: "Success", "API request successful."
     *   Error: "Error: {statusCode}", "{error_message}" or "Fetch Error", "{error_message}"
     *   URL Error: "Error", "Could not construct request URL. Please select valid parameters."
-*   **Icons:** `TestTube2` (main title), `Code` (response section title), `PlayCircle` (button), `ExternalLink` (button), `FileText`, `List`, `CalendarClock` (endpoint selection).
+    *   API Key Error: "Error", "API Key is required."
+*   **Icons:** `TestTube2` (main title), `Code` (response section title), `PlayCircle` (button), `ExternalLink` (button), `FileText`, `List`, `CalendarClock` (endpoint selection), `KeyRound` (API Key label).
 
 ### 5.4. API Route Handlers (`src/app/api/.../route.ts`)
 
 *   **`src/app/api/calendar/info/route.ts`**:
     *   `GET` handler that returns a JSON object containing detailed API documentation for the Nepali Calendar API.
+    *   **Now checks for a valid `X-API-Key` header.** Returns 401 if invalid/missing.
     *   Dynamically fetches available BS years using `getBsYears()` to include in the documentation.
     *   Constructs example request URLs based on the current request's origin.
-    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API". Contact email is `contact@sevenx.com.np`.
+    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API". Contact email is `contact@sevenx.com.np`. Mentions API key requirement.
 *   **`src/app/api/calendar/[year]/route.ts`**:
     *   `GET` handler for fetching all calendar data for a specific BS year.
+    *   **Now checks for a valid `X-API-Key` header.** Returns 401 if invalid/missing.
     *   Extracts the `year` from the dynamic path parameter.
     *   Uses `getBsCalendarData()` and filters for the specific year.
     *   Returns an array of `BsMonthData` objects for the year, or a 404 if no data.
 *   **`src/app/api/calendar/[...params]/route.ts`**:
     *   `GET` handler for fetching calendar data for a specific BS year and month.
+    *   **Now checks for a valid `X-API-Key` header.** Returns 401 if invalid/missing.
     *   Extracts year and month from the dynamic path parameters.
     *   Uses `getBsCalendarData()` to retrieve the data.
     *   Returns the specific `BsMonthData` if found, or a 404 error with available years if not.
@@ -366,5 +383,4 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **`src/ai/dev.ts`**: Development entry point for Genkit.
 
 This detailed breakdown should provide a good understanding of the NepaliDate application's architecture, features, and codebase, with a focus on its date conversion capabilities and Nepali Calendar API.
-
     

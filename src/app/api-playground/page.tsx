@@ -11,9 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Input } from '@/components/ui/input'; // Import Input component
 import { useToast } from '@/hooks/use-toast';
 import { CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types';
-import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2, FileText, List, CalendarClock } from 'lucide-react';
+import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2, FileText, List, CalendarClock, KeyRound } from 'lucide-react';
 
 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 56) 
@@ -23,6 +24,7 @@ const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 5
 const formSchema = z.object({
   year: z.number().min(CLIENT_SIDE_BS_YEARS[0]).max(CLIENT_SIDE_BS_YEARS[CLIENT_SIDE_BS_YEARS.length - 1]).optional(),
   month: z.number().min(1).max(12).optional(),
+  apiKey: z.string().trim().min(1, "API Key is required."),
 });
 
 type ApiEndpoint = 'info' | 'year' | 'yearMonth';
@@ -51,6 +53,7 @@ export default function ApiPlaygroundPage() {
     defaultValues: {
       year: defaultBsYear,
       month: 1,
+      apiKey: '',
     },
   });
 
@@ -81,10 +84,20 @@ export default function ApiPlaygroundPage() {
         toast({ variant: "destructive", title: "Error", description: "Could not construct request URL. Please select valid parameters." });
         return;
     }
+    if (!values.apiKey) {
+        form.setError("apiKey", { type: "manual", message: "API Key is required." });
+        toast({ variant: "destructive", title: "Error", description: "API Key is required to make requests." });
+        return;
+    }
+
 
     startTransition(async () => {
       try {
-        const res = await fetch(requestUrl);
+        const res = await fetch(requestUrl, {
+          headers: {
+            'X-API-Key': values.apiKey,
+          },
+        });
         setStatusCode(res.status);
         const data = await res.json();
 
@@ -118,13 +131,29 @@ export default function ApiPlaygroundPage() {
             <TestTube2 className="h-8 w-8 text-primary" /> Nepali Calendar API Playground
           </CardTitle>
           <CardDescription>
-            Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint and provide parameters if needed.
+            Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint, provide parameters and your API key.
             View the full <Link href="/api-info" className="text-primary hover:underline">Nepali Calendar API documentation here</Link>.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="apiKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="apiKey" className="flex items-center gap-1.5">
+                      <KeyRound className="h-4 w-4 text-muted-foreground" /> API Key
+                    </FormLabel>
+                    <FormControl>
+                      <Input id="apiKey" placeholder="Enter your API Key" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
               <FormField
                 name="endpoint"
                 render={({ field }) => (
@@ -238,7 +267,7 @@ export default function ApiPlaygroundPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
+              <Button type="submit" className="w-full" disabled={isSubmitDisabled || !form.formState.isValid}>
                 {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="mr-2 h-4 w-4" />}
                 Send API Request
               </Button>
@@ -281,5 +310,3 @@ export default function ApiPlaygroundPage() {
     </div>
   );
 }
-
-    

@@ -109,21 +109,26 @@ This document provides a detailed breakdown of the textual content on each key p
 
 *   **Route:** `/api-info`
 *   **Main Page Title (H1 - Dynamic from API):** `apiInfoData.apiName` (e.g., "NepaliDate: Nepali Calendar & Bikram Sambat API")
-*   **Main Page Description (Paragraph - Dynamic from API):** `apiInfoData.description` (e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data...")
+*   **Main Page Description (Paragraph - Dynamic from API):** `apiInfoData.description` (e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data... Requires API Key authentication via 'X-API-Key' header.")
 *   **Badges (Dynamic from API):**
     *   "Version: {apiInfoData.version}"
     *   "Status: {apiInfoData.status}" (Styled based on status)
+*   **Authentication Information Section (Dynamic from API):**
+    *   **Section Title (Implicit):** "Authentication" (Often placed near API description or as a general note)
+    *   **Type:** `API Key`
+    *   **Header Name:** `X-API-Key`
+    *   **Description:** "A valid API key must be provided in the 'X-API-Key' request header for all /api/calendar/* endpoints."
 *   **Contact Information (Dynamic from API):** "Contact: <a href='mailto:{apiInfoData.contactEmail}'>{contact@sevenx.com.np}</a>"
 *   **Button to Playground:**
     *   **Text:** "Go to API Playground" (Accompanied by `PlayCircle` icon)
     *   **Link:** `/api-playground`
 *   **Section 1: API Endpoints**
     *   **Heading (H2 Equivalent - CardTitle):** "Nepali Calendar API Endpoints" (Accompanied by `Network` icon)
-    *   **Description (CardDescription):** "Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events."
+    *   **Description (CardDescription):** "Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events. All endpoints require API Key authentication."
     *   **Accordion Items (Dynamic from `apiInfoData.endpoints`):**
         *   **Trigger Text:** "{HTTP_METHOD} {ENDPOINT_PATH}" (e.g., "GET /api/calendar/info", "GET /api/calendar/{YYYY}", "GET /api/calendar/{YYYY}/{MM}")
         *   **Content:**
-            *   **Description:** `endpoint.description`
+            *   **Description:** `endpoint.description` (will mention API key requirement)
             *   **Parameters Heading:** "Parameters:"
                 *   **Parameter Item Format:** "`{param.name}` ({param.type}, in {param.in}): {param.description} (required)"
             *   **Example Request Heading:** "Example Request:"
@@ -132,7 +137,7 @@ This document provides a detailed breakdown of the textual content on each key p
             *   **Example Response JSON/Text:** `endpoint.exampleResponse` or `endpoint.exampleResponseSummary` (Rendered in a code block)
             *   **Link to Data Structures:** "For detailed field descriptions, see the Data Structures section."
             *   **Possible Error Responses Heading:** "Possible Error Responses:"
-                *   **Error Item Format:** Badge "{err.statusCode}" + `err.description`
+                *   **Error Item Format:** Badge "{err.statusCode}" + `err.description` (Now includes 401 for API Key errors)
 *   **Section 2: Data Structures**
     *   **Heading (H2 Equivalent - CardTitle):** "API Data Structures (BS Calendar)" (Accompanied by `ListTree` icon)
     *   **Description (CardDescription):** "Explanation of the JSON data structures, such as `BsMonthData` and `BsDayData`, returned by the Bikram Sambat Calendar API."
@@ -152,7 +157,7 @@ This document provides a detailed breakdown of the textual content on each key p
         *   **Title (AlertTitle):** "Data Source & Accuracy" (Accompanied by `Info` icon)
         *   **Description (AlertDescription):** `apiInfoData.dataCoverage.note`
     *   **Important Notes Heading:** "Important Notes for API Users:"
-    *   **Notes List (Dynamic from `apiInfoData.notes`):** List items for each note.
+    *   **Notes List (Dynamic from `apiInfoData.notes`):** List items for each note, including API key usage instructions.
 *   **Footer Note (Static + Dynamic):** "Nepali Calendar API Documentation last updated: {new Date().toLocaleDateString(...)}"
 *   **Loading State:** "Loading API information..." (with spinner)
 *   **Error State (if API info fetch fails):**
@@ -165,7 +170,10 @@ This document provides a detailed breakdown of the textual content on each key p
 
 *   **Route:** `/api-playground`
 *   **Main Card Heading (H1 Equivalent - CardTitle):** "Nepali Calendar API Playground" (Accompanied by `TestTube2` icon)
-*   **Main Card Description (CardDescription):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint and provide parameters if needed. View the full <Link href='/api-info' class='text-primary hover:underline'>Nepali Calendar API documentation here</Link>."
+*   **Main Card Description (CardDescription):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint, provide parameters and your API key. View the full <Link href='/api-info' class='text-primary hover:underline'>Nepali Calendar API documentation here</Link>."
+*   **API Key Input Section:**
+    *   **Label:** "API Key" (Accompanied by `KeyRound` icon)
+    *   **Input Placeholder:** "Enter your API Key"
 *   **Endpoint Selection Section:**
     *   **Label:** "Select API Endpoint:"
     *   **Radio Option 1:** (Icon `FileText`) `/api/calendar/info`
@@ -182,7 +190,7 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Button 2 Text:** "Open" (Opens request URL in new tab, accompanied by `ExternalLink` icon)
 *   **API Response Section (Dynamic, appears after request):**
     *   **Section Heading:** "API Response" (Accompanied by `Code` icon)
-    *   **Status Display:** "Status: {statusCode}" (e.g., "Status: 200" or "Status: 404")
+    *   **Status Display:** "Status: {statusCode}" (e.g., "Status: 200" or "Status: 401")
     *   **Error Display (if error):**
         *   **Error Heading:** "Error:"
         *   **Error Message:** `{errorMessage}`
@@ -192,14 +200,14 @@ This document provides a detailed breakdown of the textual content on each key p
 *   **Toast Messages (Dynamic, on action):**
     *   **Success Toast Title:** "Success"
     *   **Success Toast Description:** "API request successful."
-    *   **Error Toast Title (from response):** "Error: {statusCode}"
-    *   **Error Toast Description (from response):** `{error_message_from_api}`
+    *   **Error Toast Title (from response):** "Error: {statusCode}" (e.g. "Error: 401")
+    *   **Error Toast Description (from response):** `{error_message_from_api}` (e.g. "Unauthorized: Invalid or missing API Key.")
     *   **Fetch Error Toast Title:** "Fetch Error"
     *   **Fetch Error Toast Description:** `{error_message_from_fetch_exception}`
     *   **URL Error Toast Title:** "Error"
     *   **URL Error Toast Description:** "Could not construct request URL. Please select valid parameters."
+    *   **API Key Error Toast Title:** "Error"
+    *   **API Key Error Toast Description:** "API Key is required."
 
 ---
 This provides a comprehensive overview of the textual content present on the main pages of the NepaliDate application for SEO analysis.
-
-    

@@ -4,10 +4,17 @@ import type { NextRequest } from 'next/server';
 import { getBsCalendarData, getBsYears } from '@/lib/bsCalendarData';
 import type { BsMonthData } from '@/types';
 
+const VALID_API_KEY = process.env.API_KEY_NEPALIDATE;
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { year: string } }
 ) {
+  const apiKey = request.headers.get('X-API-Key');
+  if (!VALID_API_KEY || apiKey !== VALID_API_KEY) {
+    return NextResponse.json({ error: "Unauthorized: Invalid or missing API Key. Provide it in 'X-API-Key' header." }, { status: 401 });
+  }
+
   const yearStr = params.year;
   const yearNum = parseInt(yearStr);
 
