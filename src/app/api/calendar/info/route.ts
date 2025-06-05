@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getBsYears } from '@/lib/bsCalendarData';
@@ -11,9 +12,9 @@ export async function GET(request: NextRequest) {
 
   const apiInfo = {
     apiName: "NepaliDate: Nepali Calendar & Bikram Sambat API",
-    version: "1.2.0", 
+    version: "1.3.0", // Incremented version
     status: "Operational",
-    description: "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data. Provides detailed daily information, including Nepali holidays, festivals, tithis (lunar days), and auspicious dates for marriage (vivah) and bratabandha for a given BS month. Ideal for integrating Nepali Patro data into your applications.",
+    description: "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data. Provides detailed daily information, including Nepali holidays, festivals, tithis (lunar days), and auspicious dates for marriage (vivah) and bratabandha for a given BS month or entire BS year. Ideal for integrating Nepali Patro data into your applications.",
     contactEmail: "contact@sevenx.com.np",
     documentationUrl: request.nextUrl.origin + "/api-info",
     endpoints: [
@@ -24,6 +25,43 @@ export async function GET(request: NextRequest) {
         parameters: [],
         exampleRequest: `${request.nextUrl.origin}/api/calendar/info`,
         exampleResponseSummary: "The current JSON response you are viewing, detailing the Bikram Sambat API capabilities.",
+      },
+      {
+        path: "/api/calendar/{YYYY}",
+        method: "GET",
+        description: "Retrieves all Bikram Sambat (BS) calendar data for a specific BS year (YYYY), including all 12 months. Each month's data includes daily details, Nepali holidays, festivals, and other events.",
+        parameters: [
+          { name: "YYYY", type: "integer", in: "path", required: true, description: `The Bikram Sambat year (e.g., ${exampleYear}). Currently, data is available for years: ${availableYears.join(', ')}.` }
+        ],
+        exampleRequest: `${request.nextUrl.origin}/api/calendar/${exampleYear}`,
+        exampleResponse: [ // Example: Array of BsMonthData, showing first month
+          {
+            bs_year: exampleYear,
+            bs_month: 1, // Baishakh
+            metadata: {
+              en: `Apr/May ${exampleYear - 57}`, 
+              np: `${NEPALI_MONTHS[0]} ${exampleYear}`,
+              ad_year_start: exampleYear - 57, 
+              ad_month_start: 4,          
+              ad_year_end: exampleYear - 57,  
+              ad_month_end: 5            
+            },
+            days: [
+              { n: "१", ne: "1", e: "14", t: "नवमी", f: `नव वर्ष ${exampleYear} आरम्भ`, h: true, d: 2 },
+              // ... other days for Baishakh ...
+            ],
+            holiFest: [`१_::_नव वर्ष ${exampleYear} आरम्भ`],
+            marriage: [`२, ४, ५ गते`],
+            bratabandha: [`यो महिना को लागी ब्रतबन्ध मुर्हुत छैन ।`]
+          },
+          // ... BsMonthData for Jestha (month 2) ...
+          // ... up to Chaitra (month 12) ...
+        ],
+        detailedFieldDescriptionsUrl: `${request.nextUrl.origin}/api-info#data-structures`, 
+        errorResponses: [
+          { statusCode: 400, description: "Invalid year format (e.g., year not numeric) for Bikram Sambat query." },
+          { statusCode: 404, description: `Data not found for the specified Bikram Sambat (BS) year. Available mock data years for Nepali Calendar: ${availableYears.join(', ')}.` }
+        ]
       },
       {
         path: "/api/calendar/{YYYY}/{MM}",

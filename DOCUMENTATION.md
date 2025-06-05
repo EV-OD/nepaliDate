@@ -29,6 +29,7 @@
     *   Auspicious Bratabandha Dates (`bratabandha`)
 *   **Nepali Calendar API Access:**
     *   `/api/calendar/info`: Provides detailed API documentation for the Bikram Sambat calendar data.
+    *   `/api/calendar/{YYYY}`: Fetches all calendar data for a specific BS year (YYYY).
     *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM).
 *   **API Playground:** Interactive UI to test the `/api/calendar/{YYYY}/{MM}` endpoint of the Nepali Calendar API.
 *   **Responsive Design:** The application is designed to work across various screen sizes.
@@ -56,7 +57,15 @@ These colors are configured in `src/app/globals.css` using HSL CSS variables for
 *   **Description:** Provides comprehensive documentation about the Bikram Sambat Calendar API, including endpoint details, data structures, data coverage, and usage notes.
 *   **Implementation:** `src/app/api/calendar/info/route.ts`
 
-### 4.2. Get BS Month Data (Nepali Patro Data)
+### 4.2. Get BS Year Data (Nepali Patro Data for entire year)
+*   **Route:** `/api/calendar/{YYYY}`
+    *   `{YYYY}`: Bikram Sambat year (e.g., 2079)
+*   **Method:** `GET`
+*   **Description:** Retrieves all calendar data for the specified BS year, including all 12 months. Each month's data includes daily details, Nepali holidays, festivals, and other events.
+*   **Response:** An array of `BsMonthData` objects, one for each month of the specified year.
+*   **Implementation:** `src/app/api/calendar/[year]/route.ts`
+
+### 4.3. Get BS Month Data (Nepali Patro Data for specific month)
 
 *   **Route:** `/api/calendar/{YYYY}/{MM}`
     *   `{YYYY}`: Bikram Sambat year (e.g., 2079)
@@ -66,7 +75,7 @@ These colors are configured in `src/app/globals.css` using HSL CSS variables for
 *   **Response:** A JSON object (`BsMonthData`) containing metadata, list of days with their AD equivalents, tithis, festivals, holidays, and auspicious dates.
 *   **Implementation:** `src/app/api/calendar/[...params]/route.ts`
 
-### 4.3. Deprecated API Endpoints
+### 4.4. Deprecated API Endpoints
 The following endpoints are deprecated and will return a 410 Gone status with a message pointing to the new Nepali Calendar API endpoints:
 *   `/api/data/info` (Replaced by `/api/calendar/info`)
 *   `/api/data/{YYYY}/{MM}` (Replaced by `/api/calendar/{YYYY}/{MM}`)
@@ -105,7 +114,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Sets up the `<html>` and `<body>` tags.
     *   Imports global CSS (`globals.css`) and custom fonts ('Inter' and 'Alegreya').
     *   Includes `<AppHeader />`, `<AppFooter />`, and `<Toaster />` for consistent layout and notifications.
-    *   Defines global SEO metadata (title, description, keywords, Open Graph, Twitter cards) that can be overridden by individual pages. It sets `metadataBase` for correct Open Graph URL generation. Keywords include "BS to AD converter", "AD to BS converter", "Nepali Calendar", "Bikram Sambat", "NepaliDate".
+    *   Defines global SEO metadata (title, description, keywords, Open Graph, Twitter cards) that can be overridden by individual pages. It sets `metadataBase` for correct Open Graph URL generation. Keywords include "BS to AD converter," "AD to BS converter," "Nepali Calendar," "Bikram Sambat," "NepaliDate."
     *   Configures the viewport theme color.
 *   **`src/app/globals.css`**:
     *   Imports Tailwind CSS base, components, and utilities.
@@ -219,9 +228,11 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   "Data Coverage & Notes (Nepali Patro)"
 *   **Endpoint Accordion Triggers (Dynamic):**
     *   `GET /api/calendar/info`
+    *   `GET /api/calendar/{YYYY}`
     *   `GET /api/calendar/{YYYY}/{MM}`
 *   **Key Descriptions within Endpoints (Dynamic from API, examples):**
     *   "Provides detailed information about the Nepali Calendar API..."
+    *   "Retrieves all Bikram Sambat (BS) calendar data for a specific BS year (YYYY), including all 12 months."
     *   "Retrieves Bikram Sambat (BS) calendar data for a specific BS year (YYYY) and month (MM, 1-12). Includes daily details, Nepali holidays, festivals, and other events."
     *   Parameter names and descriptions (e.g., "YYYY", "MM")
     *   "Example Request:", "Example Response:", "Example Response Summary:", "Possible Error Responses:" (followed by code blocks or lists)
@@ -279,6 +290,11 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Dynamically fetches available BS years using `getBsYears()` to include in the documentation.
     *   Constructs example request URLs based on the current request's origin.
     *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API". Contact email is `contact@sevenx.com.np`.
+*   **`src/app/api/calendar/[year]/route.ts`**:
+    *   `GET` handler for fetching all calendar data for a specific BS year.
+    *   Extracts the `year` from the dynamic path parameter.
+    *   Uses `getBsCalendarData()` and filters for the specific year.
+    *   Returns an array of `BsMonthData` objects for the year, or a 404 if no data.
 *   **`src/app/api/calendar/[...params]/route.ts`**:
     *   `GET` handler for fetching calendar data for a specific BS year and month.
     *   Extracts year and month from the dynamic path parameters.

@@ -121,7 +121,7 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Heading (H2 Equivalent - CardTitle):** "Nepali Calendar API Endpoints" (Accompanied by `Network` icon)
     *   **Description (CardDescription):** "Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events."
     *   **Accordion Items (Dynamic from `apiInfoData.endpoints`):**
-        *   **Trigger Text:** "{HTTP_METHOD} {ENDPOINT_PATH}" (e.g., "GET /api/calendar/info")
+        *   **Trigger Text:** "{HTTP_METHOD} {ENDPOINT_PATH}" (e.g., "GET /api/calendar/info", "GET /api/calendar/{YYYY}", "GET /api/calendar/{YYYY}/{MM}")
         *   **Content:**
             *   **Description:** `endpoint.description`
             *   **Parameters Heading:** "Parameters:"
