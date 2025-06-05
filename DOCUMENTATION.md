@@ -30,6 +30,7 @@
 *   **API Access:**
     *   `/api/calendar/info`: Provides detailed API documentation and information.
     *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM).
+*   **API Playground:** Interactive UI to test the `/api/calendar/{YYYY}/{MM}` endpoint.
 *   **Responsive Design:** The application is designed to work across various screen sizes.
 *   **SEO Friendly:** Metadata is implemented for better search engine visibility.
 
@@ -104,7 +105,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Sets up the `<html>` and `<body>` tags.
     *   Imports global CSS (`globals.css`) and custom fonts ('Inter' and 'Alegreya').
     *   Includes `<AppHeader />`, `<AppFooter />`, and `<Toaster />` for consistent layout and notifications.
-    *   Defines global SEO metadata (title, description, keywords, Open Graph, Twitter cards) that can be overridden by individual pages.
+    *   Defines global SEO metadata (title, description, keywords, Open Graph, Twitter cards) that can be overridden by individual pages. It sets `metadataBase` for correct Open Graph URL generation.
     *   Configures the viewport theme color.
 *   **`src/app/globals.css`**:
     *   Imports Tailwind CSS base, components, and utilities.
@@ -118,42 +119,141 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 ### 5.3. Page Routes (`src/app/.../page.tsx`)
 
-*   **`src/app/page.tsx` (Route: `/`)**:
-    *   The homepage of the application.
-    *   Provides a welcoming message and navigation links to the BS-to-AD and AD-to-BS converters, and the API documentation.
-    *   Uses ShadCN `Card` and `Button` components for layout.
-    *   Includes page-specific SEO metadata.
-*   **`src/app/bs-to-ad/page.tsx` (Route: `/bs-to-ad`)**:
-    *   Client component (`'use client'`).
-    *   Allows users to input a Bikram Sambat date (year, month, day) using `Select` components.
-    *   Uses `react-hook-form` and `zod` for form handling and validation.
-    *   The Zod schema includes a `refine` function to validate that the selected day is valid for the chosen BS month and year using `getClientSafeDaysInBsMonth`.
-    *   On submission, calls the `convertBsToAdWithEvents` server action.
-    *   Displays the converted AD date and relevant events using `ResultDisplay` and `EventSummaryDisplay` components.
-    *   Handles loading states (`useTransition`) and displays errors using `toast`.
-    *   Inherits SEO metadata from `layout.tsx`.
-*   **`src/app/ad-to-bs/page.tsx` (Route: `/ad-to-bs`)**:
-    *   Client component (`'use client'`).
-    *   Allows users to select a Gregorian date using the ShadCN `Calendar` component within a `Popover`.
-    *   Uses `react-hook-form` and `zod` for form handling.
-    *   On submission, calls the `convertAdToBsWithEvents` server action.
-    *   Displays the converted BS date and relevant events.
-    *   Handles loading states and errors similarly to the BS-to-AD page.
-    *   Inherits SEO metadata from `layout.tsx`.
-*   **`src/app/api-info/page.tsx` (Route: `/api-info`)**:
-    *   Server Component that fetches API documentation details from `/api/calendar/info`.
-    *   Displays detailed information about the API, including endpoints, data structures, data coverage, and usage notes.
-    *   Uses ShadCN `Card`, `Accordion`, `Badge`, and custom table rendering for a structured and readable documentation page.
-    *   Provides a link to the API Playground.
-    *   Includes page-specific SEO metadata.
-*   **`src/app/api-playground/page.tsx` (Route: `/api-playground`)**:
-    *   Client component (`'use client'`).
-    *   Provides an interactive interface for users to test the `/api/calendar/{YYYY}/{MM}` endpoint.
-    *   Users can select BS Year and Month.
-    *   Dynamically displays the request URL and allows users to send the request.
-    *   Shows the API response status code and the JSON response body.
-    *   Uses `react-hook-form`, `zod`, and ShadCN components.
-    *   Inherits SEO metadata from `layout.tsx`.
+#### 5.3.1. `src/app/page.tsx` (Route: `/`)
+*   The homepage of the application.
+*   Provides a welcoming message and navigation links to the BS-to-AD and AD-to-BS converters, and the API documentation.
+*   Uses ShadCN `Card` and `Button` components for layout.
+*   Includes page-specific SEO metadata for title, description, keywords, Open Graph, and Twitter cards.
+
+##### Key Page Content (for SEO Analysis):
+*   **Headings:**
+    *   "Welcome to Date Bliss"
+    *   "BS to AD Converter"
+    *   "AD to BS Converter"
+    *   "Nepali Calendar API"
+*   **Paragraphs/Descriptions:**
+    *   "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar."
+    *   "Convert Bikram Sambat dates to Gregorian dates and see relevant Nepali calendar events."
+    *   "Convert Gregorian dates to Bikram Sambat dates and explore Nepali Patro events."
+    *   "Explore our API for Bikram Sambat calendar data, holidays, and events."
+*   **Button Texts:**
+    *   "Go to BS to AD Converter"
+    *   "Go to AD to BS Converter"
+    *   "View API Details"
+
+#### 5.3.2. `src/app/bs-to-ad/page.tsx` (Route: `/bs-to-ad`)
+*   Client component (`'use client'`).
+*   Allows users to input a Bikram Sambat date (year, month, day) using `Select` components.
+*   Uses `react-hook-form` and `zod` for form handling and validation.
+*   The Zod schema includes a `refine` function to validate that the selected day is valid for the chosen BS month and year using `getClientSafeDaysInBsMonth`.
+*   On submission, calls the `convertBsToAdWithEvents` server action.
+*   Displays the converted AD date and relevant events using `ResultDisplay` and `EventSummaryDisplay` components.
+*   Handles loading states (`useTransition`) and displays errors using `toast`.
+*   Inherits SEO metadata from `layout.tsx` (as `generateMetadata` was removed due to client component restrictions).
+
+##### Key Page Content (for SEO Analysis):
+*   **Headings:**
+    *   "Bikram Sambat (BS) to Gregorian (AD)"
+*   **Paragraphs/Descriptions:**
+    *   "Enter a BS date to convert it to AD and see relevant Nepali calendar events."
+*   **Form Labels:**
+    *   "BS Year"
+    *   "BS Month"
+    *   "BS Day"
+*   **Button Text:**
+    *   "Convert to AD"
+*   **Dynamic Content Placeholders:**
+    *   Result Display Label: "Gregorian (AD) Date"
+    *   Event Summary Title: "Events & Holidays: {MonthName} {BSYear}" (e.g., "Events & Holidays: Baishakh 2080")
+
+#### 5.3.3. `src/app/ad-to-bs/page.tsx` (Route: `/ad-to-bs`)
+*   Client component (`'use client'`).
+*   Allows users to select a Gregorian date using the ShadCN `Calendar` component within a `Popover`.
+*   Uses `react-hook-form` and `zod` for form handling.
+*   On submission, calls the `convertAdToBsWithEvents` server action.
+*   Displays the converted BS date and relevant events.
+*   Handles loading states and errors similarly to the BS-to-AD page.
+*   Inherits SEO metadata from `layout.tsx` (as `generateMetadata` was removed due to client component restrictions).
+
+##### Key Page Content (for SEO Analysis):
+*   **Headings:**
+    *   "Gregorian (AD) to Bikram Sambat (BS)"
+*   **Paragraphs/Descriptions:**
+    *   "Enter an AD date to convert it to BS and see relevant Nepali calendar events."
+*   **Form Labels:**
+    *   "AD Date"
+*   **Button Text:**
+    *   "Convert to BS"
+*   **Dynamic Content Placeholders:**
+    *   Result Display Label: "Bikram Sambat (BS) Date"
+    *   Event Summary Title: "Events & Holidays: {MonthName} {BSYear}" (e.g., "Events & Holidays: Baishakh 2080")
+
+#### 5.3.4. `src/app/api-info/page.tsx` (Route: `/api-info`)
+*   Server Component that fetches API documentation details from `/api/calendar/info`.
+*   Displays detailed information about the API, including endpoints, data structures, data coverage, and usage notes.
+*   Uses ShadCN `Card`, `Accordion`, `Badge`, and custom table rendering for a structured and readable documentation page.
+*   Provides a link to the API Playground.
+*   Includes page-specific SEO metadata for title, description, keywords, Open Graph, and Twitter cards.
+
+##### Key Page Content (for SEO Analysis):
+*   **Main Title (Dynamic):** e.g., "Date Bliss Calendar API"
+*   **Main Description (Dynamic):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
+*   **Badges (Dynamic):** "Version: {version}", "Status: {status}"
+*   **Contact (Dynamic):** "Contact: {email}"
+*   **Button Text:** "Go to API Playground"
+*   **Section Titles:**
+    *   "API Endpoints"
+    *   "Data Structures"
+    *   "Data Coverage & Notes"
+*   **Endpoint Accordion Triggers (Dynamic):**
+    *   "GET /api/calendar/info"
+    *   "GET /api/calendar/{YYYY}/{MM}"
+*   **Key Descriptions within Endpoints (Dynamic, examples):**
+    *   "Provides detailed information about the API..."
+    *   "Retrieves Bikram Sambat calendar data for a specific BS year (YYYY) and month (MM, 1-12)."
+    *   Parameter names and descriptions (e.g., "YYYY", "MM")
+    *   "Example Request:", "Example Response:", "Example Response Summary:", "Possible Error Responses:"
+*   **Data Structure Titles (Dynamic):**
+    *   "BsMonthData"
+    *   "BsDayData"
+*   **Data Structure Descriptions (Dynamic):**
+    *   "Represents all data for a specific Bikram Sambat month."
+    *   "Represents data for a single day in the Bikram Sambat calendar."
+    *   Field names and descriptions within tables (e.g., "bs_year", "metadata", "days", "holiFest", "n", "ne", "e", "t", "f", "h", "d")
+*   **Data Coverage Section (Dynamic):**
+    *   "Available Bikram Sambat Years in Data: {list of years}"
+    *   "Data Source & Accuracy" (Alert title)
+    *   "The data is sourced from publicly available Nepali calendar information..." (Alert description)
+    *   "Important Notes:"
+*   **Footer Note (Dynamic):** "API Documentation last updated: {current date}"
+
+#### 5.3.5. `src/app/api-playground/page.tsx` (Route: `/api-playground`)
+*   Client component (`'use client'`).
+*   Provides an interactive interface for users to test the `/api/calendar/{YYYY}/{MM}` endpoint.
+*   Users can select BS Year and Month.
+*   Dynamically displays the request URL and allows users to send the request.
+*   Shows the API response status code and the JSON response body.
+*   Uses `react-hook-form`, `zod`, and ShadCN components.
+*   Inherits SEO metadata from `layout.tsx` (as `generateMetadata` was removed due to client component restrictions).
+
+##### Key Page Content (for SEO Analysis):
+*   **Headings:**
+    *   "API Playground"
+*   **Paragraphs/Descriptions:**
+    *   "Test the /api/calendar/[YYYY]/[MM] endpoint. View the full API documentation here." (with "here" being a link to /api-info)
+*   **Form Labels:**
+    *   "Bikram Sambat Year (YYYY)"
+    *   "Bikram Sambat Month (MM)"
+    *   "Request URL"
+*   **Button Texts:**
+    *   "Send Request"
+    *   "Open" (next to request URL, to open in new tab)
+*   **Section Title (Dynamic):** "API Response"
+*   **Dynamic Content Placeholders:**
+    *   The actual request URL.
+    *   "Status: {statusCode}"
+    *   "Error: {errorMessage}"
+    *   "Response Body:" (followed by JSON)
 
 ### 5.4. API Route Handlers (`src/app/api/.../route.ts`)
 
@@ -161,7 +261,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `GET` handler that returns a JSON object containing detailed API documentation.
     *   Dynamically fetches available BS years using `getBsYears()` to include in the documentation.
     *   Constructs example request URLs based on the current request's origin.
-    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field.
+    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. It now includes more comprehensive descriptions, notes on delimiters, and the `ne` field.
 *   **`src/app/api/calendar/[...params]/route.ts`**:
     *   `GET` handler for fetching calendar data for a specific BS year and month.
     *   Extracts year and month from the dynamic path parameters.
@@ -179,14 +279,14 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **`src/lib/date-converter.ts`**:
     *   `convertBsToAd(bsDate)`: Contains the logic to convert a BS date to its AD equivalent.
         *   It accesses the pre-loaded calendar data via `getBsCalendarData()`.
-        *   Finds the specific BS month and day data.
-        *   Uses the `ne` (Nepali day in English numerals) for matching the input day.
-        *   Calls `getAdDateForBsDay` to determine the precise AD date, handling month/year transitions within a BS month.
+        *   Finds the specific BS month and day data. It now uses the `ne` (Nepali day in English numerals) for matching the input day after parsing it to an integer.
+        *   Calls `getAdDateForBsDay` to determine the precise AD date.
     *   `convertAdToBs(adDate)`: Contains the logic to convert an AD date to its BS equivalent.
         *   Iterates through the loaded BS calendar data.
-        *   For each BS month, it iterates through its days, calculating the corresponding AD date for each BS day (handling AD month/year transitions).
+        *   For each BS month, it iterates through its days, calculating the corresponding AD date for each BS day.
+        *   When constructing the BS date result, the `day` property is now derived by parsing the `ne` field to an integer.
         *   Returns the matching BS date when the AD date is found.
-    *   `getAdDateForBsDay(bsDayEntry, monthDataRef)`: Helper function to accurately determine the AD year, month, and day for a given `BsDayData` entry within its `BsMonthData` context. It handles cases where a BS month spans across two AD months or even two AD years (e.g., Poush/Magh).
+    *   `getAdDateForBsDay(bsDayEntry, monthDataRef)`: Helper function to accurately determine the AD year, month, and day for a given `BsDayData` entry within its `BsMonthData` context. It handles cases where a BS month spans across two AD months or even two AD years (e.g., Poush/Magh). It uses the `ne` field from `bsDayEntry` for consistency if needed, but primarily relies on the already determined AD context from the parent function.
     *   Exports `getDaysInBsMonth` (re-exported from `bsCalendarData.ts`) for use in form validation.
 *   **`src/lib/bsCalendarData.ts`**:
     *   Manages loading and accessing the Bikram Sambat calendar data stored in JSON files.
@@ -203,7 +303,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **`src/components/layout/AppHeader.tsx`**:
     *   Renders the main application header.
     *   Includes the "Date Bliss" logo/title linking to the homepage.
-    *   Provides primary navigation links for desktop view.
+    *   Provides primary navigation links for desktop view, including a new link to the "API Playground".
     *   Uses a `Sheet` component for a mobile-friendly drawer navigation menu.
     *   Icons from `lucide-react` are used for navigation items.
 *   **`src/components/layout/AppFooter.tsx`**:
@@ -216,16 +316,16 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Responsible for displaying holidays and events for a selected BS month.
     *   Takes `holiFest`, `marriageEvents`, `bratabandhaEvents`, loading state, error state, and current BS year/month name as props.
     *   `EventSection`: An internal helper component to render sections for "Holidays & Festivals", "Auspicious Marriage Dates", and "Auspicious Bratabandha Dates".
-        *   For "Holidays & Festivals", it groups events by day. It parses the day from the `holiFest` string (using `_::_` as a delimiter) and displays it as a prominent badge. Event descriptions are then listed. If an event string contains multiple descriptions separated by commas, they are displayed as distinct items under the same day badge.
+        *   For "Holidays & Festivals", it now groups events by day. It parses the day from the `holiFest` string (using `_::_` as a delimiter) and displays it as a prominent badge. Event descriptions (which may be split by commas) are then listed under that badge. Events marked with "•" or without a day part are displayed individually.
         *   For Marriage and Bratabandha dates, it displays the provided strings.
-    *   Uses icons from `lucide-react` for section titles.
-    *   Handles loading and error states gracefully.
+    *   Uses icons from `lucide-react` for section titles (`Sparkles`, `Heart`, `Milestone`).
+    *   The UI for event items has been enhanced with card-like styling for better visual distinction. Loading, error, and "no events" states are also styled more clearly.
 
 ### 5.7. TypeScript Types (`src/types/index.ts`)
 
 *   Defines all major data structures and types used throughout the application:
     *   `BsDayData`: Structure for individual day data within a BS month, including Nepali date (`n`), Nepali date in English numerals (`ne`), English date (`e`), Tithi (`t`), festival info (`f`), holiday flag (`h`), and day of the week (`d`).
-    *   `BsMonthData`: Structure for an entire BS month's data, including `metadata` (EN/NP names, AD year/month start/end), `days` array, `holiFest` array, `marriage` array, `bratabandha` array, `bs_year`, and `bs_month`.
+    *   `BsMonthData`: Structure for an entire BS month's data, including `metadata` (EN/NP names, AD year/month start/end), `days` array, `holiFest` array (strings in `Day_::_Description` format), `marriage` array, `bratabandha` array, `bs_year`, and `bs_month`.
     *   `BsCalendar`: An object mapping "YYYY/M" strings to `BsMonthData`.
     *   `NepaliDate`: Interface for representing a BS date.
     *   `EnglishDate`: Interface for representing an AD date.
@@ -252,24 +352,23 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     ```json
     {
       "metadata": {
-        "en": "Apr/May 2022", // English representation of AD month/year span
-        "np": "बैशाख २०७९"    // Nepali representation of BS month/year
+        "en": "Apr/May 2022", 
+        "np": "बैशाख २०७९"    
       },
       "days": [
         {
-          "n": "१",         // Nepali numeral for day
-          "ne": "1",        // English numeral for Nepali day
-          "e": "14",        // Corresponding Gregorian day
-          "t": "त्रयोदशी", // Tithi (lunar day)
-          "f": "नव वर्ष २०७९ आरम्भ, महावीर जयन्ती", // Festivals/Events
-          "h": true,        // Is it a holiday?
-          "d": 1            // Day of week (1=Sunday, ..., 7=Saturday)
-        },
-        // ... more days
+          "n": "१",         
+          "ne": "1",        
+          "e": "14",        
+          "t": "त्रयोदशी", 
+          "f": "नव वर्ष २०७९ आरम्भ, महावीर जयन्ती", 
+          "h": true,        
+          "d": 1            
+        }
       ],
       "holiFest": [
         "०१_::_नव वर्ष २०७९ आरम्भ, महावीर जयन्ती, भ.पु. विश्वध्वजपातन (विस्काजात्रा)",
-        // ... more holiday strings (Day_::_Description)
+        "•_::_Some general festival note for the month"
       ],
       "marriage": [
         "२, ४, ६, ७, ८, ९, १०, १४, १९, २०, २१, २६, २७, २८, २९, ३० र  ३१ गते"
@@ -279,7 +378,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
       ]
     }
     ```
-    *   The `holiFest` array stores holiday and festival information. Each string typically starts with the BS day (Nepali numeral or '•') followed by the delimiter `_::_` and then the event description. Multiple events on the same day might be comma-separated within the description part.
+    *   The `holiFest` array stores holiday and festival information. Each string is now formatted as `Day_::_Description`, where `Day` is the BS day (Nepali numeral or '•') and `Description` is the event text. Multiple events on the same day are comma-separated within the description part.
     *   `marriage` and `bratabandha` arrays list auspicious dates or a message indicating no such dates for the month.
 
 ### 5.10. Scraper Scripts (`scripts/`)
@@ -289,10 +388,9 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `scrapeData(year, month)`: Fetches calendar data for a given BS year and month from `https://nepalicalendar.rat32.com/index_nep.php`.
     *   Parses the HTML response to extract:
         *   Month metadata (English and Nepali names).
-        *   Day-by-day information (BS date, AD date, Tithi, events, holiday status).
+        *   Day-by-day information (BS date, AD date, Tithi, events, holiday status). It now extracts the `ne` field (Nepali day in English numerals).
         *   Lists of holidays/festivals (`holiFest`), marriage dates (`marriage`), and bratabandha dates (`bratabandha`).
-        *   Uses a helper `nepaliToEnglishNumerals` to convert Nepali numerals in date strings to English numerals for the `ne` field.
-        *   Stores the scraped `holiFest` data using the `_::_` delimiter between the day and the description.
+        *   The `holiFest` data is now scraped by specifically targeting the table rows in the HTML, extracting the day from the first `<td>` and description from the second `<td>`, and joining them with `_::_` as a delimiter.
     *   Saves the extracted data into a JSON file at `data/{year}/{month}.json`.
     *   Includes error handling and checks if data already exists to avoid re-fetching.
 *   **`scripts/run-scraper.js`**:
