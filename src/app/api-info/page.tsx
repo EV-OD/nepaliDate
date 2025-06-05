@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -5,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
-import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle } from "lucide-react";
+import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle, KeyRound } from "lucide-react";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -35,7 +36,19 @@ export const metadata: Metadata = {
 
 async function getApiInfo() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'; 
-  const res = await fetch(`${baseUrl}/api/calendar/info`, { cache: 'no-store' }); 
+  const apiKey = process.env.API_KEY_NEPALIDATE;
+
+  if (!apiKey) {
+    console.error("API_KEY_NEPALIDATE is not set in environment variables for ApiInfoPage fetch.");
+    throw new Error("Server configuration error: API key for internal data fetching is missing.");
+  }
+
+  const res = await fetch(`${baseUrl}/api/calendar/info`, { 
+    cache: 'no-store',
+    headers: {
+      'X-API-Key': apiKey,
+    }
+  }); 
   if (!res.ok) {
     const errorText = await res.text();
     console.error("API Info Fetch Error:", res.status, errorText);
@@ -45,7 +58,8 @@ async function getApiInfo() {
     return await res.json();
   } catch (e) {
     console.error("API Info JSON Parse Error:", e);
-    const responseText = await res.text();
+    // If parsing fails, try to get the text to see what was returned
+    const responseText = await res.text().catch(() => "Could not read response text after JSON parse failure.");
     console.error("Response text that failed to parse:", responseText.substring(0, 500));
     throw new Error(`Failed to parse API info JSON. Error: ${(e as Error).message}`);
   }
@@ -156,6 +170,23 @@ export default async function ApiInfoPage() {
         </div>
       </header>
 
+      {apiInfoData.authentication && (
+         <section id="authentication">
+             <Card className="shadow-lg border-primary/20">
+                 <CardHeader>
+                     <CardTitle className="flex items-center gap-3 text-2xl font-headline">
+                         <KeyRound className="h-7 w-7 text-accent"/> Authentication
+                     </CardTitle>
+                 </CardHeader>
+                 <CardContent>
+                     <p className="text-sm text-muted-foreground">Type: <Badge variant="outline">{apiInfoData.authentication.type}</Badge></p>
+                     <p className="text-sm text-muted-foreground mt-2">Header Name: <code className="bg-muted p-1 rounded-sm text-primary">{apiInfoData.authentication.headerName}</code></p>
+                     <p className="text-sm text-muted-foreground mt-2">{apiInfoData.authentication.description}</p>
+                 </CardContent>
+             </Card>
+         </section>
+      )}
+
       <section id="endpoints">
         <Card className="shadow-lg border-primary/20">
           <CardHeader>
@@ -163,7 +194,7 @@ export default async function ApiInfoPage() {
               <Network className="h-7 w-7 text-accent" />
               Nepali Calendar API Endpoints
             </CardTitle>
-            <CardDescription>Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events.</CardDescription>
+            <CardDescription>Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events. All endpoints require API Key authentication.</CardDescription>
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full">
@@ -284,6 +315,9 @@ export default async function ApiInfoPage() {
                           {apiInfoData.notes.map((note: string, index: number) => (
                           <li key={index}>{note}</li>
                           ))}
+                          {apiInfoData.authentication && (
+                            <li>To access any of the <code className="bg-muted p-0.5 rounded-sm text-xs">/api/calendar/*</code> endpoints, you must include your API key in the <code className="bg-muted p-0.5 rounded-sm text-xs">{apiInfoData.authentication.headerName}</code> request header.</li>
+                          )}
                       </ul>
                   </div>
               )}
@@ -299,3 +333,6 @@ export default async function ApiInfoPage() {
     </div>
   );
 }
+
+
+    
