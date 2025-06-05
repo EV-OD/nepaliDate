@@ -9,26 +9,26 @@ import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookO
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Nepali Calendar API Documentation | Date Bliss API",
-  description: "Explore the Date Bliss API for Bikram Sambat (BS) calendar data, including date conversions, holidays, festivals, and auspicious dates. Detailed endpoint and data structure information.",
-  keywords: ["Nepali Calendar API", "Bikram Sambat API", "Date Bliss API", "Nepali Patro API", "API Documentation", "Nepal Date API"],
+  title: "Nepali Calendar API Documentation | Date Bliss Bikram Sambat API",
+  description: "Explore the Date Bliss API for Bikram Sambat (BS) calendar data, including date conversions, Nepali holidays, festivals, and auspicious dates. Detailed endpoint and data structure information for your application.",
+  keywords: ["Nepali Calendar API", "Bikram Sambat API", "Date Bliss API", "Nepali Patro API", "API Documentation", "Nepal Date API", "BS Calendar Data", "Nepali event API"],
   openGraph: {
-    title: "Date Bliss API Documentation | Nepali Calendar Data",
-    description: "Access comprehensive Bikram Sambat calendar data via the Date Bliss API. Endpoints, data structures, and examples for Nepali dates.",
+    title: "Date Bliss Nepali Calendar API: Documentation & Integration",
+    description: "Access comprehensive Bikram Sambat (BS) calendar data via the Date Bliss API. Details on endpoints, data structures, and examples for integrating Nepali dates and events.",
     url: "/api-info",
     images: [
       {
-        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+API',
+        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+API+Docs',
         width: 1200,
         height: 630,
-        alt: 'Date Bliss API Documentation',
-        'data-ai-hint': 'api documentation nepali calendar',
+        alt: 'Date Bliss API Documentation - Nepali Calendar and Bikram Sambat Data',
+        'data-ai-hint': 'api documentation code',
       }
     ]
   },
   twitter: {
-    title: "Date Bliss API Documentation | Nepali Calendar Data & Events",
-    description: "Full documentation for the Date Bliss Nepali Calendar API. Learn how to integrate BS date conversions and event data.",
+    title: "Date Bliss API Documentation: Integrate Nepali Calendar Data",
+    description: "Full documentation for the Date Bliss Nepali Calendar API. Learn how to integrate BS date conversions, Nepali holidays, and event data into your applications.",
   },
 };
 
@@ -161,9 +161,9 @@ export default async function ApiInfoPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-2xl font-headline">
               <Network className="h-7 w-7 text-accent" />
-              API Endpoints
+              Nepali Calendar API Endpoints
             </CardTitle>
-            <CardDescription>Detailed information about each available API endpoint for the Nepali Calendar.</CardDescription>
+            <CardDescription>Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events.</CardDescription>
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full">
@@ -240,9 +240,9 @@ export default async function ApiInfoPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-2xl font-headline">
               <ListTree className="h-7 w-7 text-accent" />
-              Data Structures
+              API Data Structures (BS Calendar)
             </CardTitle>
-            <CardDescription>Explanation of the JSON data structures returned by the Bikram Sambat Calendar API.</CardDescription>
+            <CardDescription>Explanation of the JSON data structures, such as `BsMonthData` and `BsDayData`, returned by the Bikram Sambat Calendar API.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {apiInfoData.dataStructures && Object.entries(apiInfoData.dataStructures).map(([key, structure]: [string, any]) => (
@@ -261,9 +261,9 @@ export default async function ApiInfoPage() {
           <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl font-headline">
                   <Database className="h-7 w-7 text-accent"/>
-                  Data Coverage & Notes
+                  Data Coverage & Notes (Nepali Patro)
               </CardTitle>
-              <CardDescription>Information about the Bikram Sambat data provided by the API.</CardDescription>
+              <CardDescription>Information about the Bikram Sambat data coverage for our Nepali Patro API, including available years and data sourcing.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
               <div>
@@ -279,7 +279,7 @@ export default async function ApiInfoPage() {
               </Alert>
               {apiInfoData.notes && apiInfoData.notes.length > 0 && (
                   <div>
-                      <h3 className="text-lg font-semibold mt-5 mb-2.5 text-foreground">Important Notes:</h3>
+                      <h3 className="text-lg font-semibold mt-5 mb-2.5 text-foreground">Important Notes for API Users:</h3>
                       <ul className="list-disc space-y-2.5 pl-5 text-sm text-muted-foreground">
                           {apiInfoData.notes.map((note: string, index: number) => (
                           <li key={index}>{note}</li>
@@ -290,7 +290,7 @@ export default async function ApiInfoPage() {
           </CardContent>
           <CardFooter>
               <p className="text-xs text-muted-foreground">
-                  API Documentation last updated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}.
+                  Nepali Calendar API Documentation last updated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}.
               </p>
           </CardFooter>
         </Card>

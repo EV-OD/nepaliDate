@@ -5,9 +5,9 @@ import AppHeader from '@/components/layout/AppHeader';
 import AppFooter from '@/components/layout/AppFooter';
 
 const APP_NAME = "Date Bliss";
-const APP_DEFAULT_TITLE = "Date Bliss - BS to AD & AD to BS Nepali Calendar Converter";
-const APP_TITLE_TEMPLATE = "%s | Date Bliss";
-const APP_DESCRIPTION = "Convert Bikram Sambat (BS) dates to Gregorian (AD) and vice-versa. Get holiday and event information for BS months, plus API access.";
+const APP_DEFAULT_TITLE = "Date Bliss: Nepali Calendar BS to AD Converter & API";
+const APP_TITLE_TEMPLATE = "%s | Date Bliss - Nepali Calendar Tools";
+const APP_DESCRIPTION = "Your ultimate Nepali calendar tool: Convert Bikram Sambat (BS) to Gregorian (AD) dates and vice-versa. Access Nepali holidays, events, and a comprehensive BS calendar API with Date Bliss.";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
 
 export const metadata: Metadata = {
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     template: APP_TITLE_TEMPLATE,
   },
   description: APP_DESCRIPTION,
-  keywords: ['Nepali Calendar', 'Bikram Sambat', 'BS to AD', 'AD to BS', 'Nepali Date Converter', 'Nepali Patro', 'Nepal Calendar API', 'Date Bliss'],
-  manifest: "/manifest.json", // Assuming you might add a manifest later
+  keywords: ['BS to AD converter', 'AD to BS converter', 'Nepali Calendar', 'Bikram Sambat', 'Nepali Date Converter', 'Nepali Patro', 'Nepal Calendar API', 'Date Bliss', 'Nepali holidays', 'date conversion Nepal'],
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -40,12 +40,12 @@ export const metadata: Metadata = {
     url: APP_URL,
     images: [
       {
-        url: 'https://placehold.co/1200x630.png?text=Date+Bliss', // Replace with your actual OG image
+        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+Calendar',
         width: 1200,
         height: 630,
-        alt: 'Date Bliss - Nepali Calendar Converter and API',
+        alt: 'Date Bliss - Your Nepali Calendar BS to AD Converter and API',
         type: 'image/png',
-        'data-ai-hint': 'calendar date conversion logo',
+        'data-ai-hint': 'nepali calendar logo',
       },
     ],
   },
@@ -58,13 +58,13 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
     images: [
       {
-        url: 'https://placehold.co/1200x630.png?text=Date+Bliss', // Replace with your actual Twitter image
-        alt: 'Date Bliss - Nepali Calendar Converter and API',
-        'data-ai-hint': 'calendar date conversion social',
+        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+Social',
+        alt: 'Date Bliss - Nepali Calendar Converter, Events, and API for Social Sharing',
+        'data-ai-hint': 'calendar social media',
       }
     ],
   },
-  robots: { // Basic robots configuration
+  robots: { 
     index: true,
     follow: true,
     googleBot: {
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#A7D1AB', // From your globals.css --primary (Light blue)
+  themeColor: '#A7D1AB', 
 };
 
 export default function RootLayout({

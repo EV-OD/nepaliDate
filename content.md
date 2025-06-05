@@ -1,7 +1,7 @@
 
 # Date Bliss Application - Page Content Analysis
 
-This document provides a detailed breakdown of the textual content on each key page of the Date Bliss application. It is intended for SEO analysis, content strategy, and ensuring keyword alignment.
+This document provides a detailed breakdown of the textual content on each key page of the Date Bliss application. It is intended for SEO analysis, content strategy, and ensuring keyword alignment with terms like "BS to AD converter," "AD to BS converter," "Nepali calendar API," "Bikram Sambat," and "Nepali holidays."
 
 ## Table of Contents
 1.  [Homepage (`/`)](#homepage--)
@@ -16,21 +16,21 @@ This document provides a detailed breakdown of the textual content on each key p
 
 *   **Route:** `/`
 *   **Main Heading (H1 Equivalent - Visual):** "Welcome to Date Bliss" (Accompanied by `CalendarDays` icon)
-*   **Main Descriptive Paragraph:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar."
+*   **Main Descriptive Paragraph:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar. Use our BS to AD converter, AD to BS converter, or explore the Nepali Calendar API."
 *   **Section Cards:**
     *   **Card 1: BS to AD Converter**
         *   **Heading (H2 Equivalent - CardTitle):** "BS to AD Converter" (Accompanied by `ArrowRightLeft` icon)
-        *   **Description (CardDescription):** "Convert Bikram Sambat dates to Gregorian dates and see relevant Nepali calendar events."
+        *   **Description (CardDescription):** "Convert Bikram Sambat (BS) dates to Gregorian (AD) dates and see relevant Nepali calendar events using our accurate converter."
         *   **Button Text:** "Go to BS to AD Converter"
         *   **Button Link:** `/bs-to-ad`
     *   **Card 2: AD to BS Converter**
         *   **Heading (H2 Equivalent - CardTitle):** "AD to BS Converter" (Accompanied by `ArrowRightLeft` icon)
-        *   **Description (CardDescription):** "Convert Gregorian dates to Bikram Sambat dates and explore Nepali Patro events."
+        *   **Description (CardDescription):** "Convert Gregorian (AD) dates to Bikram Sambat (BS) dates and explore Nepali Patro events with our reliable tool."
         *   **Button Text:** "Go to AD to BS Converter"
         *   **Button Link:** `/ad-to-bs`
     *   **Card 3: Nepali Calendar API**
         *   **Heading (H2 Equivalent - CardTitle):** "Nepali Calendar API" (Accompanied by `ServerIcon` icon)
-        *   **Description (CardDescription):** "Explore our API for Bikram Sambat calendar data, holidays, and events."
+        *   **Description (CardDescription):** "Explore our comprehensive API for Bikram Sambat calendar data, including Nepali holidays, festivals, and events. Perfect for developers."
         *   **Button Text:** "View API Details"
         *   **Button Link:** `/api-info`
 
@@ -39,13 +39,13 @@ This document provides a detailed breakdown of the textual content on each key p
 ## 2. BS to AD Converter (`/bs-to-ad`)
 
 *   **Route:** `/bs-to-ad`
-*   **Main Card Heading (H1 Equivalent - CardTitle):** "Bikram Sambat (BS) to Gregorian (AD)"
-*   **Main Card Description (CardDescription):** "Enter a BS date to convert it to AD and see relevant Nepali calendar events."
+*   **Main Card Heading (H1 Equivalent - CardTitle):** "Bikram Sambat (BS) to Gregorian (AD) Converter"
+*   **Main Card Description (CardDescription):** "Use this BS to AD converter to accurately change Bikram Sambat dates to Gregorian (AD) and discover associated Nepali holidays and events for the chosen BS month from the Nepali Patro."
 *   **Form Fields & Labels:**
-    *   **Label:** "BS Year" (Associated with a `Select` component for BS Year)
-    *   **Label:** "BS Month" (Associated with a `Select` component for BS Month)
-    *   **Label:** "BS Day" (Associated with a `Select` component for BS Day)
-*   **Button Text:** "Convert to AD" (Triggers conversion server action)
+    *   **Label:** "BS Year" (Associated with a `Select` component for Bikram Sambat Year)
+    *   **Label:** "BS Month" (Associated with a `Select` component for Bikram Sambat Month)
+    *   **Label:** "BS Day" (Associated with a `Select` component for Bikram Sambat Day)
+*   **Button Text:** "Convert BS to AD" (Triggers conversion server action)
     *   **Loading State Text (within button):** (Implied by `Loader2` icon)
 *   **Result Display (Dynamic Content):**
     *   **Label (Static):** "Gregorian (AD) Date"
@@ -53,7 +53,7 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Day of Week Output Format:** "{AD_Day_Of_Week}" (e.g., "Sunday")
 *   **Event Summary Display (Dynamic Content):**
     *   **Section Title:** "Events & Holidays: {BS_Month_Name} {BS_Year}" (e.g., "Events & Holidays: Baishakh 2080")
-    *   **Subsection Title 1:** "Holidays & Festivals" (Accompanied by `Sparkles` icon)
+    *   **Subsection Title 1:** "Holidays & Festivals" (Accompanied by `Sparkles` icon, lists Nepali holidays)
         *   **Event Item Format:** Day Badge (e.g., "०१") + Event Description (e.g., "नव वर्ष २०८० आरम्भ")
         *   Multiple events on the same day are listed under the same badge.
         *   Events without a specific day (marked "•") are displayed individually.
@@ -77,13 +77,13 @@ This document provides a detailed breakdown of the textual content on each key p
 ## 3. AD to BS Converter (`/ad-to-bs`)
 
 *   **Route:** `/ad-to-bs`
-*   **Main Card Heading (H1 Equivalent - CardTitle):** "Gregorian (AD) to Bikram Sambat (BS)"
-*   **Main Card Description (CardDescription):** "Enter an AD date to convert it to BS and see relevant Nepali calendar events."
+*   **Main Card Heading (H1 Equivalent - CardTitle):** "Gregorian (AD) to Bikram Sambat (BS) Converter"
+*   **Main Card Description (CardDescription):** "Use our AD to BS converter to easily change Gregorian dates to Bikram Sambat (BS). This tool also displays relevant Nepali holidays and events from the Nepali Patro for the converted BS month."
 *   **Form Fields & Labels:**
     *   **Label:** "AD Date" (Associated with a `Calendar` popover component)
         *   **Calendar Popover Button Text (Default):** "Pick a date"
         *   **Calendar Popover Button Text (Selected):** "{Formatted AD Date, e.g., January 1, 2024}"
-*   **Button Text:** "Convert to BS" (Triggers conversion server action)
+*   **Button Text:** "Convert AD to BS" (Triggers conversion server action)
     *   **Loading State Text (within button):** (Implied by `Loader2` icon)
 *   **Result Display (Dynamic Content):**
     *   **Label (Static):** "Bikram Sambat (BS) Date"
@@ -91,7 +91,7 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Day of Week Output Format:** "{BS_Day_Of_Week}" (e.g., "Friday")
 *   **Event Summary Display (Dynamic Content):**
     *   **Section Title:** "Events & Holidays: {BS_Month_Name} {BS_Year}" (e.g., "Events & Holidays: Baishakh 2080")
-    *   (Subsections for Holidays, Marriage, Bratabandha are identical in format to the BS to AD converter page)
+    *   (Subsections for Nepali Holidays, Marriage, Bratabandha are identical in format to the BS to AD converter page)
     *   **Loading State (Visual):** Animated placeholders.
     *   **Error State Message (if event data fails):** `{eventDataError}`
     *   **No Events Message (if data is loaded but empty):** "No Specific Events Found..."
@@ -108,8 +108,8 @@ This document provides a detailed breakdown of the textual content on each key p
 ## 4. API Information Page (`/api-info`)
 
 *   **Route:** `/api-info`
-*   **Main Page Title (H1 - Dynamic from API):** `apiInfoData.apiName` (e.g., "Date Bliss Calendar API")
-*   **Main Page Description (Paragraph - Dynamic from API):** `apiInfoData.description` (e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions...")
+*   **Main Page Title (H1 - Dynamic from API):** `apiInfoData.apiName` (e.g., "Date Bliss: Nepali Calendar & Bikram Sambat API")
+*   **Main Page Description (Paragraph - Dynamic from API):** `apiInfoData.description` (e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data...")
 *   **Badges (Dynamic from API):**
     *   "Version: {apiInfoData.version}"
     *   "Status: {apiInfoData.status}" (Styled based on status)
@@ -118,8 +118,8 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Text:** "Go to API Playground" (Accompanied by `PlayCircle` icon)
     *   **Link:** `/api-playground`
 *   **Section 1: API Endpoints**
-    *   **Heading (H2 Equivalent - CardTitle):** "API Endpoints" (Accompanied by `Network` icon)
-    *   **Description (CardDescription):** "Detailed information about each available API endpoint for the Nepali Calendar."
+    *   **Heading (H2 Equivalent - CardTitle):** "Nepali Calendar API Endpoints" (Accompanied by `Network` icon)
+    *   **Description (CardDescription):** "Detailed information about each available API endpoint for accessing Bikram Sambat (BS) calendar data, Nepali holidays, and events."
     *   **Accordion Items (Dynamic from `apiInfoData.endpoints`):**
         *   **Trigger Text:** "{HTTP_METHOD} {ENDPOINT_PATH}" (e.g., "GET /api/calendar/info")
         *   **Content:**
@@ -134,8 +134,8 @@ This document provides a detailed breakdown of the textual content on each key p
             *   **Possible Error Responses Heading:** "Possible Error Responses:"
                 *   **Error Item Format:** Badge "{err.statusCode}" + `err.description`
 *   **Section 2: Data Structures**
-    *   **Heading (H2 Equivalent - CardTitle):** "Data Structures" (Accompanied by `ListTree` icon)
-    *   **Description (CardDescription):** "Explanation of the JSON data structures returned by the Bikram Sambat Calendar API."
+    *   **Heading (H2 Equivalent - CardTitle):** "API Data Structures (BS Calendar)" (Accompanied by `ListTree` icon)
+    *   **Description (CardDescription):** "Explanation of the JSON data structures, such as `BsMonthData` and `BsDayData`, returned by the Bikram Sambat Calendar API."
     *   **Data Structure Blocks (Dynamic from `apiInfoData.dataStructures`):**
         *   **Structure Name (H3):** e.g., "BsMonthData", "BsDayData" (in `font-mono`)
         *   **Structure Description:** `structure.description`
@@ -144,16 +144,16 @@ This document provides a detailed breakdown of the textual content on each key p
             *   **Rows (Dynamic from `structure.fields`):** `{field.name}`, `{field.type}`, `{field.description}`
             *   **Nested Fields:** If a field has sub-fields, a nested table is rendered.
 *   **Section 3: Data Coverage & Notes**
-    *   **Heading (H2 Equivalent - CardTitle):** "Data Coverage & Notes" (Accompanied by `Database` icon)
-    *   **Description (CardDescription):** "Information about the Bikram Sambat data provided by the API."
+    *   **Heading (H2 Equivalent - CardTitle):** "Data Coverage & Notes (Nepali Patro)" (Accompanied by `Database` icon)
+    *   **Description (CardDescription):** "Information about the Bikram Sambat data coverage for our Nepali Patro API, including available years and data sourcing."
     *   **Available Years Heading:** "Available Bikram Sambat Years in Data:"
     *   **Available Years Text:** `apiInfoData.dataCoverage.bsYears`
     *   **Alert: Data Source & Accuracy**
         *   **Title (AlertTitle):** "Data Source & Accuracy" (Accompanied by `Info` icon)
         *   **Description (AlertDescription):** `apiInfoData.dataCoverage.note`
-    *   **Important Notes Heading:** "Important Notes:"
+    *   **Important Notes Heading:** "Important Notes for API Users:"
     *   **Notes List (Dynamic from `apiInfoData.notes`):** List items for each note.
-*   **Footer Note (Static + Dynamic):** "API Documentation last updated: {new Date().toLocaleDateString(...)}"
+*   **Footer Note (Static + Dynamic):** "Nepali Calendar API Documentation last updated: {new Date().toLocaleDateString(...)}"
 *   **Loading State:** "Loading API information..." (with spinner)
 *   **Error State (if API info fetch fails):**
     *   **Title:** "Error Fetching API Information"
@@ -164,24 +164,24 @@ This document provides a detailed breakdown of the textual content on each key p
 ## 5. API Playground (`/api-playground`)
 
 *   **Route:** `/api-playground`
-*   **Main Card Heading (H1 Equivalent - CardTitle):** "API Playground" (Accompanied by `TestTube2` icon)
-*   **Main Card Description (CardDescription):** "Test the `/api/calendar/[YYYY]/[MM]` endpoint. View the full API documentation <a href='/api-info'>here</a>."
+*   **Main Card Heading (H1 Equivalent - CardTitle):** "Nepali Calendar API Playground" (Accompanied by `TestTube2` icon)
+*   **Main Card Description (CardDescription):** "Test the Date Bliss <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
 *   **Form Fields & Labels:**
     *   **Label:** "Bikram Sambat Year (YYYY)" (Associated with a `Select` for BS Year)
     *   **Label:** "Bikram Sambat Month (MM)" (Associated with a `Select` for BS Month)
-    *   **Label (Dynamic):** "Request URL"
+    *   **Label (Dynamic):** "Request URL for Nepali Calendar API:"
         *   **URL Display:** `"{baseUrl}/api/calendar/{selected_year}/{selected_month}"`
 *   **Buttons:**
-    *   **Button 1 Text:** "Send Request" (Triggers API call, accompanied by `PlayCircle` or `Loader2` icon)
+    *   **Button 1 Text:** "Send API Request" (Triggers API call, accompanied by `PlayCircle` or `Loader2` icon)
     *   **Button 2 Text:** "Open" (Opens request URL in new tab, accompanied by `ExternalLink` icon)
 *   **API Response Section (Dynamic, appears after request):**
-    *   **Section Heading:** "API Response" (Accompanied by `Code` icon)
+    *   **Section Heading:** "Bikram Sambat API Response" (Accompanied by `Code` icon)
     *   **Status Display:** "Status: {statusCode}" (e.g., "Status: 200" or "Status: 404")
     *   **Error Display (if error):**
         *   **Error Heading:** "Error:"
         *   **Error Message:** `{errorMessage}`
     *   **Response Body Display (if successful or error with body):**
-        *   **Body Heading:** "Response Body:"
+        *   **Body Heading:** "Response Body (BS Calendar Data):"
         *   **Content:** JSON data rendered in a code block.
 *   **Toast Messages (Dynamic, on action):**
     *   **Success Toast Title:** "Success"
@@ -194,6 +194,4 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **URL Error Toast Description:** "Could not construct request URL."
 
 ---
-This provides a comprehensive overview of the textual content present on the main pages of the Date Bliss application.
-
-    
+This provides a comprehensive overview of the textual content present on the main pages of the Date Bliss application for SEO analysis.

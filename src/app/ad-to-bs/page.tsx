@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useTransition } from 'react';
@@ -14,10 +13,7 @@ import { convertAdToBsWithEvents } from '@/app/actions';
 import { AdDateFormField, ResultDisplay } from '@/components/converters/DateConverterFormFields';
 import EventSummaryDisplay from '@/components/converters/EventSummaryDisplay';
 import { Loader2 } from 'lucide-react';
-// Removed: import type { Metadata } from 'next';
 import { NEPALI_MONTHS } from '@/types';
-
-// Removed generateMetadata function
 
 const formSchema = z.object({
   adDate: z.date({ required_error: "Please select an AD date." }),
@@ -87,8 +83,8 @@ export default function AdToBsPage() {
     <div className="max-w-2xl mx-auto">
       <Card className="shadow-xl">
         <CardHeader>
-          <CardTitle className="text-3xl font-headline">Gregorian (AD) to Bikram Sambat (BS)</CardTitle>
-          <CardDescription>Enter an AD date to convert it to BS and see relevant Nepali calendar events.</CardDescription>
+          <CardTitle className="text-3xl font-headline">Gregorian (AD) to Bikram Sambat (BS) Converter</CardTitle>
+          <CardDescription>Use our AD to BS converter to easily change Gregorian dates to Bikram Sambat (BS). This tool also displays relevant Nepali holidays and events from the Nepali Patro for the converted BS month.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -96,7 +92,7 @@ export default function AdToBsPage() {
               <AdDateFormField control={form.control} fieldName="adDate" label="AD Date" />
               <Button type="submit" className="w-full" disabled={isPending}>
                 {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Convert to BS
+                Convert AD to BS
               </Button>
             </form>
           </Form>

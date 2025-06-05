@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useTransition } from 'react';
@@ -13,9 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types';
 import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2 } from 'lucide-react';
-// Removed: import type { Metadata } from 'next';
-
-// Removed generateMetadata function
 
 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 56) 
@@ -105,11 +101,11 @@ export default function ApiPlaygroundPage() {
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-headline flex items-center gap-2">
-            <TestTube2 className="h-8 w-8 text-primary" /> API Playground
+            <TestTube2 className="h-8 w-8 text-primary" /> Nepali Calendar API Playground
           </CardTitle>
           <CardDescription>
-            Test the <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint. 
-            View the full API documentation <Link href="/api-info" className="text-primary hover:underline">here</Link>.
+            Test the Date Bliss <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. 
+            View the full <Link href="/api-info" className="text-primary hover:underline">Nepali Calendar API documentation here</Link>.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -170,7 +166,7 @@ export default function ApiPlaygroundPage() {
 
               {requestUrl && (
                 <div className="space-y-1.5">
-                  <FormLabel>Request URL</FormLabel>
+                  <FormLabel>Request URL for Nepali Calendar API:</FormLabel>
                   <div className="flex items-center gap-2">
                     <code className="text-sm bg-muted p-2 rounded-md block overflow-x-auto flex-grow break-all">{requestUrl}</code>
                     <Button variant="outline" size="sm" asChild>
@@ -184,7 +180,7 @@ export default function ApiPlaygroundPage() {
 
               <Button type="submit" className="w-full" disabled={isPending || !requestUrl}>
                 {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="mr-2 h-4 w-4" />}
-                Send Request
+                Send API Request
               </Button>
             </form>
           </Form>
@@ -195,7 +191,7 @@ export default function ApiPlaygroundPage() {
         <Card className="mt-6 shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl font-headline flex items-center gap-2">
-              <Code className="h-6 w-6 text-primary" /> API Response
+              <Code className="h-6 w-6 text-primary" /> Bikram Sambat API Response
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -215,7 +211,7 @@ export default function ApiPlaygroundPage() {
             )}
             {apiResponse && (
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1 mt-2">Response Body:</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1 mt-2">Response Body (BS Calendar Data):</h3>
                 <JsonCodeBlock data={apiResponse} />
               </div>
             )}
