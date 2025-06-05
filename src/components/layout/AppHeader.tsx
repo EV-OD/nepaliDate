@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, CalendarDays, Info, Home, PlayCircle } from 'lucide-react';
 
 const navItems = [
@@ -41,10 +41,15 @@ export default function AppHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] sm:w-[320px]">
-              <div className="flex items-center gap-2 border-b pb-4 mb-4">
-                <CalendarDays className="h-6 w-6 text-primary" />
-                <span className="text-xl font-bold font-headline text-foreground">NepaliDate</span>
-              </div>
+              <SheetHeader className="border-b pb-4 mb-4 text-left">
+                <SheetTitle className="flex items-center gap-2 text-xl">
+                  <CalendarDays className="h-6 w-6 text-primary" />
+                  NepaliDate Menu
+                </SheetTitle>
+                <SheetDescription>
+                  Navigate through the application sections.
+                </SheetDescription>
+              </SheetHeader>
               <nav className="flex flex-col space-y-2">
                 {navItems.map((item) => (
                   <Button key={item.label} variant="ghost" className="justify-start text-base h-12" asChild>
@@ -62,3 +67,4 @@ export default function AppHeader() {
     </header>
   );
 }
+
