@@ -165,23 +165,29 @@ This document provides a detailed breakdown of the textual content on each key p
 
 *   **Route:** `/api-playground`
 *   **Main Card Heading (H1 Equivalent - CardTitle):** "Nepali Calendar API Playground" (Accompanied by `TestTube2` icon)
-*   **Main Card Description (CardDescription):** "Test the NepaliDate <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
-*   **Form Fields & Labels:**
-    *   **Label:** "Bikram Sambat Year (YYYY)" (Associated with a `Select` for BS Year)
-    *   **Label:** "Bikram Sambat Month (MM)" (Associated with a `Select` for BS Month)
-    *   **Label (Dynamic):** "Request URL for Nepali Calendar API:"
-        *   **URL Display:** `"{baseUrl}/api/calendar/{selected_year}/{selected_month}"`
+*   **Main Card Description (CardDescription):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint and provide parameters if needed. View the full <Link href='/api-info' class='text-primary hover:underline'>Nepali Calendar API documentation here</Link>."
+*   **Endpoint Selection Section:**
+    *   **Label:** "Select API Endpoint:"
+    *   **Radio Option 1:** (Icon `FileText`) `/api/calendar/info`
+    *   **Radio Option 2:** (Icon `List`) `/api/calendar/[YYYY]`
+    *   **Radio Option 3:** (Icon `CalendarClock`) `/api/calendar/[YYYY]/[MM]`
+*   **Form Fields & Labels (Conditional):**
+    *   **Label:** "Bikram Sambat Year (YYYY)" (Associated with a `Select` for BS Year, shown for `/api/calendar/[YYYY]` and `/api/calendar/[YYYY]/[MM]`)
+    *   **Label:** "Bikram Sambat Month (MM)" (Associated with a `Select` for BS Month, shown for `/api/calendar/[YYYY]/[MM]`)
+*   **Request URL Display:**
+    *   **Label:** "Request URL for API:"
+    *   **URL (Dynamic):** `"{baseUrl}/api/calendar/{selected_endpoint_and_params}"`
 *   **Buttons:**
     *   **Button 1 Text:** "Send API Request" (Triggers API call, accompanied by `PlayCircle` or `Loader2` icon)
     *   **Button 2 Text:** "Open" (Opens request URL in new tab, accompanied by `ExternalLink` icon)
 *   **API Response Section (Dynamic, appears after request):**
-    *   **Section Heading:** "Bikram Sambat API Response" (Accompanied by `Code` icon)
+    *   **Section Heading:** "API Response" (Accompanied by `Code` icon)
     *   **Status Display:** "Status: {statusCode}" (e.g., "Status: 200" or "Status: 404")
     *   **Error Display (if error):**
         *   **Error Heading:** "Error:"
         *   **Error Message:** `{errorMessage}`
     *   **Response Body Display (if successful or error with body):**
-        *   **Body Heading:** "Response Body (BS Calendar Data):"
+        *   **Body Heading:** "Response Body:"
         *   **Content:** JSON data rendered in a code block.
 *   **Toast Messages (Dynamic, on action):**
     *   **Success Toast Title:** "Success"
@@ -191,7 +197,9 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Fetch Error Toast Title:** "Fetch Error"
     *   **Fetch Error Toast Description:** `{error_message_from_fetch_exception}`
     *   **URL Error Toast Title:** "Error"
-    *   **URL Error Toast Description:** "Could not construct request URL."
+    *   **URL Error Toast Description:** "Could not construct request URL. Please select valid parameters."
 
 ---
 This provides a comprehensive overview of the textual content present on the main pages of the NepaliDate application for SEO analysis.
+
+    

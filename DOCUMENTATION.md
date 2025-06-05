@@ -31,7 +31,7 @@
     *   `/api/calendar/info`: Provides detailed API documentation for the Bikram Sambat calendar data.
     *   `/api/calendar/{YYYY}`: Fetches all calendar data for a specific BS year (YYYY).
     *   `/api/calendar/{YYYY}/{MM}`: Fetches calendar data for a specific BS year (YYYY) and month (MM).
-*   **API Playground:** Interactive UI to test the `/api/calendar/{YYYY}/{MM}` endpoint of the Nepali Calendar API.
+*   **API Playground:** Interactive UI to test all available Nepali Calendar API endpoints (`/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`).
 *   **Responsive Design:** The application is designed to work across various screen sizes.
 *   **SEO Friendly:** Metadata is implemented for better search engine visibility, focusing on keywords like "BS to AD converter," "AD to BS converter," and "Nepali Calendar API."
 
@@ -253,35 +253,40 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 #### 5.3.5. `src/app/api-playground/page.tsx` (Route: `/api-playground`)
 *   Client component (`'use client'`).
-*   Provides an interactive interface for users to test the `/api/calendar/{YYYY}/{MM}` endpoint of the Nepali Calendar API.
-*   Users can select BS Year and Month.
+*   Provides an interactive interface for users to test the Nepali Calendar API endpoints: `/api/calendar/info`, `/api/calendar/{YYYY}`, and `/api/calendar/{YYYY}/{MM}`.
+*   Users can select the endpoint and relevant BS Year/Month.
 *   Dynamically displays the request URL and allows users to send the request.
 *   Shows the API response status code and the JSON response body.
-*   Uses `react-hook-form`, `zod`, and ShadCN components.
+*   Uses `react-hook-form`, `zod`, ShadCN components (including `RadioGroup` for endpoint selection).
 *   Inherits SEO metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "API Playground," "Nepali Calendar API," and "Bikram Sambat."
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/api-playground`
 *   **Main Heading (Card Title - H1 equivalent):** "Nepali Calendar API Playground"
-*   **Description (Card Description):** "Test the NepaliDate <code class='...'>/api/calendar/[YYYY]/[MM]</code> endpoint to fetch Bikram Sambat (BS) month data. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
-*   **Form Labels:**
+*   **Description (Card Description):** "Test the NepaliDate Bikram Sambat (BS) calendar API endpoints. Select an endpoint and provide parameters if needed. View the full <Link href='/api-info' class='...'>Nepali Calendar API documentation here</Link>."
+*   **Endpoint Selection Label:** "Select API Endpoint:"
+*   **Endpoint Radio Options & Labels:**
+    *   `/api/calendar/info`
+    *   `/api/calendar/[YYYY]`
+    *   `/api/calendar/[YYYY]/[MM]`
+*   **Form Labels (conditional):**
     *   "Bikram Sambat Year (YYYY)"
     *   "Bikram Sambat Month (MM)"
-    *   "Request URL for Nepali Calendar API:"
+    *   "Request URL for API:"
 *   **Button Texts:**
     *   "Send API Request"
     *   "Open" (next to request URL, to open in new tab)
-*   **Section Title (Dynamic):** "Bikram Sambat API Response" (appears after request)
+*   **Section Title (Dynamic):** "API Response" (appears after request)
 *   **Dynamic Content Placeholders:**
-    *   The actual request URL: `{baseUrl}/api/calendar/{selected_year}/{selected_month}`
+    *   The actual request URL (changes based on selection).
     *   "Status: {statusCode}" (e.g., "Status: 200" or "Status: 404")
     *   "Error: {errorMessage}" (if an error occurs)
-    *   "Response Body (BS Calendar Data):" (followed by JSON data or error object)
+    *   "Response Body:" (followed by JSON data or error object)
 *   **Toast Messages (Dynamic, on action):**
     *   Success: "Success", "API request successful."
     *   Error: "Error: {statusCode}", "{error_message}" or "Fetch Error", "{error_message}"
-    *   URL Error: "Error", "Could not construct request URL."
-*   **Icons:** `TestTube2` (main title), `Code` (response section title), `PlayCircle` (button), `ExternalLink` (button).
+    *   URL Error: "Error", "Could not construct request URL. Please select valid parameters."
+*   **Icons:** `TestTube2` (main title), `Code` (response section title), `PlayCircle` (button), `ExternalLink` (button), `FileText`, `List`, `CalendarClock` (endpoint selection).
 
 ### 5.4. API Route Handlers (`src/app/api/.../route.ts`)
 
@@ -361,3 +366,5 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **`src/ai/dev.ts`**: Development entry point for Genkit.
 
 This detailed breakdown should provide a good understanding of the NepaliDate application's architecture, features, and codebase, with a focus on its date conversion capabilities and Nepali Calendar API.
+
+    
