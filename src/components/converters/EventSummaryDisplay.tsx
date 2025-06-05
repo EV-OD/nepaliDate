@@ -22,15 +22,15 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
   if (title === "Holidays & Festivals") {
     const processedHolidayEvents: { dayBadge?: string; description: string; key: string }[] = [];
     events.forEach((item, originalIndex) => {
-      const dayMatch = item.match(/^(\S+)\s+(.*)/); // Match non-space characters for day, then rest
+      const dayMatch = item.match(/^(\S+)\s+(.*)/); // Match non-space characters for day, then space, then rest
       let dayBadgeContent: string | undefined = undefined;
       let eventDescriptionsString = item;
 
       if (dayMatch) {
         const potentialDay = dayMatch[1];
-        // Check if the first part looks like a day (contains a digit or common Nepali numeral/range format)
+        // Check if the first part looks like a day (contains a digit or common Nepali numeral/range format, or is '•')
         // and is not overly long.
-        if (/([०-९\d]+(?:-[०-९\d]+)?)/.test(potentialDay) && potentialDay.length <= 5) { 
+        if ((/([०-९\d]+(?:-[०-९\d]+)?)/.test(potentialDay) && potentialDay.length <= 5) || potentialDay === "•") { 
           dayBadgeContent = potentialDay;
           eventDescriptionsString = dayMatch[2];
         }
@@ -39,7 +39,7 @@ function EventSection({ title, icon, events, itemSuffix }: EventSectionProps) {
       if (eventDescriptionsString.includes(',')) {
         const subEvents = eventDescriptionsString.split(',').map(s => s.trim());
         subEvents.forEach((subEvent, subIndex) => {
-          if (subEvent) { // Ensure subEvent is not empty after trim
+          if (subEvent) { 
             processedHolidayEvents.push({ 
               dayBadge: dayBadgeContent, 
               description: subEvent, 
@@ -217,4 +217,3 @@ export default function EventSummaryDisplay({
     </Card>
   );
 }
-

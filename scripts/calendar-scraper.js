@@ -48,14 +48,36 @@ const _fetchData = async (year, month) => {
         }
 
         // holidays & festivals
-        const holiElement = dom.window.document.querySelector("#holi");
-        if (holiElement) {
-            const holiBElement = holiElement.querySelector("b");
-            if (holiBElement) holiBElement.remove();
-            const holiAElement = holiElement.querySelector("a");
-            if (holiAElement) holiAElement.remove();
+        let holiFest = [];
+        const holiCTable = dom.window.document.querySelector("#holiC table tbody");
+        if (holiCTable) {
+            const rows = holiCTable.querySelectorAll("tr");
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                if (cells.length === 2) {
+                    const dayPart = cells[0].textContent.trim();
+                    let descPart = cells[1].textContent.trim().replace(/\s\s+/g, ' '); // Replace multiple spaces/newlines
+                    
+                    if (dayPart && descPart) {
+                        holiFest.push(`${dayPart} ${descPart}`);
+                    } else if (descPart) { // Handle cases where dayPart might be empty (though unlikely for this structure)
+                        holiFest.push(descPart);
+                    }
+                }
+            });
         }
-        let holiFest = holiElement ? holiElement.textContent.trim().split('\n').map(s => s.trim()).filter(s => s) : [];
+        // Fallback if the table structure isn't found or doesn't yield results
+        if (holiFest.length === 0) {
+            const holiElementRoot = dom.window.document.querySelector("#holi");
+            if (holiElementRoot) {
+                const holiBElement = holiElementRoot.querySelector("b");
+                if (holiBElement) holiBElement.remove();
+                const holiAElement = holiElementRoot.querySelector("a");
+                if (holiAElement) holiAElement.remove();
+                const holiContentElement = dom.window.document.querySelector("#holiC") || holiElementRoot; // Prefer #holiC if available
+                holiFest = holiContentElement.textContent.trim().split('\n').map(s => s.trim().replace(/\s\s+/g, ' ')).filter(s => s && s !== "See Calendar in English Language");
+            }
+        }
 
 
         // marriage date
@@ -77,21 +99,22 @@ const _fetchData = async (year, month) => {
 
         let days = [];
 
-        let dayCount = 1; // This seems to be intended as day of the week, 1-7
+        let dayCount = 1; 
         let arr = Array.from(dom.window.document.querySelectorAll('.cells'));
         arr.forEach(cell => {
-            // Check if the cell has content, skip if it's an empty cell from the calendar grid
             const ndayContent = cell.querySelector('#nday') ? cell.querySelector('#nday').textContent.trim() : "";
             if (!ndayContent) {
-                return; // Skip empty cells
+                return; 
             }
 
-            dom = new JSDOM(cell.innerHTML); // Re-parse individual cell for cleaner access
+            // Re-parse individual cell for cleaner access to its direct children
+            // This avoids carrying over context from previous JSDOM initializations if any issue.
+            const cellDom = new JSDOM(cell.innerHTML); 
             
-            const ndayNode = dom.window.document.querySelector('#nday');
-            const edayNode = dom.window.document.querySelector('#eday');
-            const dashiNode = dom.window.document.querySelector('#dashi');
-            const festNode = dom.window.document.querySelector('#fest');
+            const ndayNode = cellDom.window.document.querySelector('#nday');
+            const edayNode = cellDom.window.document.querySelector('#eday');
+            const dashiNode = cellDom.window.document.querySelector('#dashi');
+            const festNode = cellDom.window.document.querySelector('#fest');
             const fontNode = ndayNode ? ndayNode.querySelector('font') : null;
 
             const nepaliDayString = ndayNode ? ndayNode.textContent.trim() : "";
@@ -104,7 +127,7 @@ const _fetchData = async (year, month) => {
                 t: dashiNode ? dashiNode.textContent.trim() : "",
                 f: festNode ? festNode.textContent.trim() : "",
                 h: fontNode ? fontNode.getAttribute('color')?.trim() == "red" : false,
-                d: dayCount // This is the day of the week in the source, not BS day of month
+                d: dayCount 
             });
 
             dayCount++;
@@ -125,7 +148,6 @@ const _fetchData = async (year, month) => {
 
 const scrapeData = async (year, month) => {
     await _fetchData(year, month);
-    // console.log("Data fetch completed for", year, month); // Log moved to _fetchData
 }
 
 module.exports = { scrapeData };
