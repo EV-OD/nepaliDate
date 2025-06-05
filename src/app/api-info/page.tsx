@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -7,9 +6,35 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle } from "lucide-react";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Nepali Calendar API Documentation | Date Bliss API",
+  description: "Explore the Date Bliss API for Bikram Sambat (BS) calendar data, including date conversions, holidays, festivals, and auspicious dates. Detailed endpoint and data structure information.",
+  keywords: ["Nepali Calendar API", "Bikram Sambat API", "Date Bliss API", "Nepali Patro API", "API Documentation", "Nepal Date API"],
+  openGraph: {
+    title: "Date Bliss API Documentation | Nepali Calendar Data",
+    description: "Access comprehensive Bikram Sambat calendar data via the Date Bliss API. Endpoints, data structures, and examples for Nepali dates.",
+    url: "/api-info",
+    images: [
+      {
+        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+API',
+        width: 1200,
+        height: 630,
+        alt: 'Date Bliss API Documentation',
+        'data-ai-hint': 'api documentation nepali calendar',
+      }
+    ]
+  },
+  twitter: {
+    title: "Date Bliss API Documentation | Nepali Calendar Data & Events",
+    description: "Full documentation for the Date Bliss Nepali Calendar API. Learn how to integrate BS date conversions and event data.",
+  },
+};
+
 
 async function getApiInfo() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'; // Make sure NEXT_PUBLIC_APP_URL is set in your env
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'; 
   const res = await fetch(`${baseUrl}/api/calendar/info`, { cache: 'no-store' }); 
   if (!res.ok) {
     const errorText = await res.text();
@@ -37,10 +62,10 @@ function JsonCodeBlock({ data, maxHeight = "20rem" }: { data: any, maxHeight?: s
 interface DataStructureField {
   name: string;
   type: string;
-  in?: string; // For parameters
-  required?: boolean; // For parameters
+  in?: string; 
+  required?: boolean; 
   description: string;
-  fields?: DataStructureField[]; // For nested objects
+  fields?: DataStructureField[]; 
 }
 
 function DataStructureTable({ fields }: { fields: DataStructureField[] }) {
@@ -138,7 +163,7 @@ export default async function ApiInfoPage() {
               <Network className="h-7 w-7 text-accent" />
               API Endpoints
             </CardTitle>
-            <CardDescription>Detailed information about each available API endpoint.</CardDescription>
+            <CardDescription>Detailed information about each available API endpoint for the Nepali Calendar.</CardDescription>
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full">
@@ -217,7 +242,7 @@ export default async function ApiInfoPage() {
               <ListTree className="h-7 w-7 text-accent" />
               Data Structures
             </CardTitle>
-            <CardDescription>Explanation of the JSON data structures returned by the API.</CardDescription>
+            <CardDescription>Explanation of the JSON data structures returned by the Bikram Sambat Calendar API.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {apiInfoData.dataStructures && Object.entries(apiInfoData.dataStructures).map(([key, structure]: [string, any]) => (
@@ -238,7 +263,7 @@ export default async function ApiInfoPage() {
                   <Database className="h-7 w-7 text-accent"/>
                   Data Coverage & Notes
               </CardTitle>
-              <CardDescription>Information about the data provided by the API.</CardDescription>
+              <CardDescription>Information about the Bikram Sambat data provided by the API.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
               <div>
@@ -274,6 +299,3 @@ export default async function ApiInfoPage() {
     </div>
   );
 }
-
-
-    

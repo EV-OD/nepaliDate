@@ -5,14 +5,46 @@ import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import Link from 'next/link'; // Added missing import
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types';
-import { Code, Info, Loader2, PlayCircle, ExternalLink } from 'lucide-react';
+import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2 } from 'lucide-react'; // Added TestTube2
+import type { Metadata } from 'next';
+
+// Metadata for this page
+// Note: In App Router, client components cannot directly export metadata. 
+// This would typically be done in a parent server component or a layout file.
+// Placing it here for clarity of intent.
+export function generateMetadata(): Metadata {
+  return {
+    title: "API Playground | Test Nepali Calendar API | Date Bliss",
+    description: "Interactively test the Date Bliss Nepali Calendar API. Select Bikram Sambat (BS) year and month to fetch calendar data, events, and holidays directly.",
+    keywords: ["API Playground", "Test Nepali Calendar API", "Bikram Sambat API Test", "Date Bliss API", "JSON API", "Nepal Date API Test"],
+    openGraph: {
+      title: "Date Bliss API Playground | Test Nepali Calendar Endpoints",
+      description: "Experiment with the Date Bliss API for Nepali calendar data. A hands-on way to explore API responses for BS dates.",
+      url: "/api-playground",
+      images: [
+        {
+          url: 'https://placehold.co/1200x630.png?text=API+Playground',
+          width: 1200,
+          height: 630,
+          alt: 'Date Bliss API Playground',
+          'data-ai-hint': 'api test interface calendar',
+        }
+      ]
+    },
+    twitter: {
+      title: "Date Bliss API Playground | Test & Explore Nepali Calendar Data",
+      description: "Directly test and view responses from the Date Bliss Nepali Calendar API.",
+    },
+  };
+}
+
 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 56) 
   ? new Date().getFullYear() + 56 
@@ -54,7 +86,6 @@ export default function ApiPlaygroundPage() {
 
   React.useEffect(() => {
     if (watchedYear && watchedMonth) {
-      // Ensure window is defined (for client-side execution)
       if (typeof window !== 'undefined') {
         const baseUrl = window.location.origin;
         setRequestUrl(`${baseUrl}/api/calendar/${watchedYear}/${watchedMonth}`);
@@ -82,7 +113,7 @@ export default function ApiPlaygroundPage() {
 
         if (!res.ok) {
           setError(data.error || `Request failed with status ${res.status}`);
-          setApiResponse(data); // Show error response body
+          setApiResponse(data); 
           toast({ variant: "destructive", title: `Error: ${res.status}`, description: data.error || "API request failed" });
         } else {
           setApiResponse(data);
@@ -91,7 +122,7 @@ export default function ApiPlaygroundPage() {
       } catch (e) {
         const errMessage = e instanceof Error ? e.message : "An unknown error occurred during fetch.";
         setError(errMessage);
-        setStatusCode(null); // No status code if fetch itself fails
+        setStatusCode(null); 
         toast({ variant: "destructive", title: "Fetch Error", description: errMessage });
       }
     });
@@ -102,10 +133,10 @@ export default function ApiPlaygroundPage() {
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-headline flex items-center gap-2">
-            <PlayCircle className="h-8 w-8 text-primary" /> API Playground
+            <TestTube2 className="h-8 w-8 text-primary" /> API Playground
           </CardTitle>
           <CardDescription>
-            Test the <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint. 
+            Test the <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint for the Nepali Calendar. 
             View the full API documentation <Link href="/api-info" className="text-primary hover:underline">here</Link>.
           </CardDescription>
         </CardHeader>
@@ -222,4 +253,3 @@ export default function ApiPlaygroundPage() {
     </div>
   );
 }
-

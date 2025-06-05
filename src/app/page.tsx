@@ -1,7 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRightLeft, CalendarDays } from "lucide-react";
+import { ArrowRightLeft, CalendarDays, ServerIcon } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Date Bliss | BS to AD & AD to BS Nepali Calendar Converter",
+  description: "Easily convert Bikram Sambat (BS) dates to Gregorian (AD) and vice-versa with Date Bliss. Explore Nepali calendar events, holidays, and our comprehensive API.",
+  keywords: ["Nepali Calendar", "BS to AD", "AD to BS", "Bikram Sambat Converter", "Nepali Date Converter", "Date Bliss Home", "Nepali Patro"],
+  openGraph: {
+    title: "Date Bliss | BS to AD & AD to BS Nepali Calendar Converter",
+    description: "Your reliable tool for Bikram Sambat and Gregorian date conversions. Features event data and API access for Nepali dates.",
+    url: "/",
+    images: [
+      {
+        url: 'https://placehold.co/1200x630.png?text=Date+Bliss+Home',
+        width: 1200,
+        height: 630,
+        alt: 'Date Bliss Homepage - BS to AD and AD to BS Converter',
+        'data-ai-hint': 'calendar date conversion homepage',
+      }
+    ]
+  },
+  twitter: {
+    title: "Date Bliss | BS to AD & AD to BS Nepali Calendar Converter",
+    description: "Convert Nepali dates seamlessly. BS to AD, AD to BS, events, and API by Date Bliss.",
+  },
+};
 
 export default function HomePage() {
   return (
@@ -10,7 +35,7 @@ export default function HomePage() {
         <CalendarDays className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-5xl font-bold mb-2 font-headline">Welcome to Date Bliss</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights.
+          Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar.
         </p>
       </div>
 
@@ -21,7 +46,7 @@ export default function HomePage() {
               <ArrowRightLeft className="h-6 w-6 text-accent" />
               BS to AD Converter
             </CardTitle>
-            <CardDescription>Convert Bikram Sambat dates to Gregorian dates and see relevant events.</CardDescription>
+            <CardDescription>Convert Bikram Sambat dates to Gregorian dates and see relevant Nepali calendar events.</CardDescription>
           </CardHeader>
           <CardContent>
             <Link href="/bs-to-ad" passHref>
@@ -36,7 +61,7 @@ export default function HomePage() {
               <ArrowRightLeft className="h-6 w-6 text-accent" />
               AD to BS Converter
             </CardTitle>
-            <CardDescription>Convert Gregorian dates to Bikram Sambat dates and explore events.</CardDescription>
+            <CardDescription>Convert Gregorian dates to Bikram Sambat dates and explore Nepali Patro events.</CardDescription>
           </CardHeader>
           <CardContent>
             <Link href="/ad-to-bs" passHref>
@@ -49,9 +74,10 @@ export default function HomePage() {
          <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-2xl font-headline">
-                    API Information
+                    <ServerIcon className="h-6 w-6 text-accent" />
+                    Nepali Calendar API
                 </CardTitle>
-                <CardDescription>Explore our API for Bikram Sambat calendar data.</CardDescription>
+                <CardDescription>Explore our API for Bikram Sambat calendar data, holidays, and events.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Link href="/api-info" passHref>

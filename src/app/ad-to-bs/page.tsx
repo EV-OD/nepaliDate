@@ -14,7 +14,35 @@ import { convertAdToBsWithEvents } from '@/app/actions';
 import { AdDateFormField, ResultDisplay } from '@/components/converters/DateConverterFormFields';
 import EventSummaryDisplay from '@/components/converters/EventSummaryDisplay';
 import { Loader2 } from 'lucide-react';
+import type { Metadata } from 'next';
+import { NEPALI_MONTHS } from '@/types';
 
+// Metadata for this page
+export function generateMetadata(): Metadata {
+  return {
+    title: "AD to BS Converter | Gregorian to Bikram Sambat | Date Bliss",
+    description: "Convert Gregorian (AD) dates to Bikram Sambat (BS) with ease. Access Nepali holidays, marriage, and bratabandha dates for the corresponding BS month.",
+    keywords: ["AD to BS converter", "Gregorian to Bikram Sambat", "Convert English date to Nepali", "Nepali Patro", "Date Bliss", "AD to BS date conversion"],
+    openGraph: {
+      title: "AD to BS Converter | Date Bliss",
+      description: "Seamlessly convert Gregorian (AD) dates to Bikram Sambat (BS) and explore relevant Nepali calendar events.",
+      url: "/ad-to-bs",
+      images: [
+        {
+          url: 'https://placehold.co/1200x630.png?text=AD+to+BS+Converter',
+          width: 1200,
+          height: 630,
+          alt: 'AD to BS Date Converter - Date Bliss',
+          'data-ai-hint': 'date conversion AD BS',
+        }
+      ]
+    },
+    twitter: {
+      title: "AD to BS Converter | Gregorian to Bikram Sambat Tool",
+      description: "Convert AD dates to BS easily and find Nepali event information using Date Bliss.",
+    },
+  };
+}
 
 const formSchema = z.object({
   adDate: z.date({ required_error: "Please select an AD date." }),
@@ -52,7 +80,7 @@ export default function AdToBsPage() {
       try {
         const adDate = {
           year: values.adDate.getFullYear(),
-          month: values.adDate.getMonth() + 1, // Date object month is 0-indexed
+          month: values.adDate.getMonth() + 1, 
           day: values.adDate.getDate(),
         };
         const result = await convertAdToBsWithEvents(adDate);
@@ -69,7 +97,7 @@ export default function AdToBsPage() {
         setBratabandhaEvents(result.bratabandha);
         if(result.eventDataError) setEventDataError(result.eventDataError);
         setEventsYear(result.bsYearForEvents);
-        setEventsMonthName(result.bsMonthNameForEvents);
+        setEventsMonthName(result.bsYearForEvents && result.bsMonthForEvents ? NEPALI_MONTHS[result.bsMonthForEvents - 1] : undefined);
 
       } catch (error) {
         const errMessage = error instanceof Error ? error.message : "An unknown error occurred.";
@@ -85,7 +113,7 @@ export default function AdToBsPage() {
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-headline">Gregorian (AD) to Bikram Sambat (BS)</CardTitle>
-          <CardDescription>Enter an AD date to convert it to BS and see relevant events.</CardDescription>
+          <CardDescription>Enter an AD date to convert it to BS and see relevant Nepali calendar events.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>

@@ -14,9 +14,44 @@ import { convertBsToAdWithEvents } from '@/app/actions';
 import { BsDateFormFields, ResultDisplay } from '@/components/converters/DateConverterFormFields';
 import EventSummaryDisplay from '@/components/converters/EventSummaryDisplay';
 import { Loader2 } from 'lucide-react';
-import { getClientSafeDaysInBsMonth, CLIENT_SIDE_BS_YEARS } from '@/types'; // Updated import
+import { getClientSafeDaysInBsMonth, CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types'; 
+import type { Metadata } from 'next';
 
-const currentBsYear = new Date().getFullYear() + 56; // Rough estimate for default
+// Metadata cannot be exported from client components directly.
+// This would typically be handled by a parent server component or layout if dynamic metadata is needed.
+// For static metadata in client component routes, it's often set in a layout specific to this route, or here if it's purely static.
+// However, Next.js App Router expects metadata export from server components or static in layout.
+// For now, I'm placing it here for clarity on what *should* be the metadata for this page.
+// A better approach might be a dedicated layout.tsx for this route if dynamic parts were needed.
+
+export function generateMetadata(): Metadata {
+  return {
+    title: "BS to AD Converter | Bikram Sambat to Gregorian | Date Bliss",
+    description: "Convert Bikram Sambat (BS) dates to Gregorian (AD) accurately. View Nepali holidays, marriage, and bratabandha dates for the selected BS month.",
+    keywords: ["BS to AD converter", "Bikram Sambat to Gregorian", "Convert Nepali date", "Nepali calendar events", "Date Bliss", "BS to AD date conversion"],
+    openGraph: {
+      title: "BS to AD Converter | Date Bliss",
+      description: "Accurately convert Bikram Sambat (BS) dates to Gregorian (AD) and discover associated Nepali calendar events.",
+      url: "/bs-to-ad",
+      images: [
+        {
+          url: 'https://placehold.co/1200x630.png?text=BS+to+AD+Converter',
+          width: 1200,
+          height: 630,
+          alt: 'BS to AD Date Converter - Date Bliss',
+          'data-ai-hint': 'date conversion BS AD',
+        }
+      ]
+    },
+    twitter: {
+      title: "BS to AD Converter | Bikram Sambat to Gregorian Tool",
+      description: "Convert BS dates to AD easily and find Nepali event information with Date Bliss.",
+    },
+  };
+}
+
+
+const currentBsYear = new Date().getFullYear() + 56; 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(currentBsYear) ? currentBsYear : CLIENT_SIDE_BS_YEARS[CLIENT_SIDE_BS_YEARS.length -1] || 2080;
 
 
@@ -25,7 +60,7 @@ const formSchema = z.object({
   bsMonth: z.number().min(1).max(12),
   bsDay: z.number().min(1).max(32),
 }).refine(data => {
-    const daysInMonth = getClientSafeDaysInBsMonth(data.bsYear, data.bsMonth); // Use client-safe function
+    const daysInMonth = getClientSafeDaysInBsMonth(data.bsYear, data.bsMonth); 
     return data.bsDay <= daysInMonth;
 }, {
     message: "Day is invalid for the selected month and year.",
@@ -58,7 +93,6 @@ export default function BsToAdPage() {
   const watchedBsMonth = form.watch("bsMonth");
 
   React.useEffect(() => {
-    // Reset day to 1 when year or month changes, if the current day is invalid for new selection
     const currentDay = form.getValues("bsDay");
     const daysInNewMonth = getClientSafeDaysInBsMonth(watchedBsYear, watchedBsMonth);
     if (currentDay > daysInNewMonth) {
@@ -95,7 +129,8 @@ export default function BsToAdPage() {
         setBratabandhaEvents(result.bratabandha);
         if(result.eventDataError) setEventDataError(result.eventDataError);
         setEventsYear(result.bsYearForEvents);
-        setEventsMonthName(result.bsMonthNameForEvents);
+        setEventsMonthName(result.bsYearForEvents && result.bsMonthForEvents ? NEPALI_MONTHS[result.bsMonthForEvents - 1] : undefined);
+
 
       } catch (error) {
         const errMessage = error instanceof Error ? error.message : "An unknown error occurred.";
@@ -111,7 +146,7 @@ export default function BsToAdPage() {
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="text-3xl font-headline">Bikram Sambat (BS) to Gregorian (AD)</CardTitle>
-          <CardDescription>Enter a BS date to convert it to AD and see relevant events.</CardDescription>
+          <CardDescription>Enter a BS date to convert it to AD and see relevant Nepali calendar events.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
