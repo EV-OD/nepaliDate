@@ -294,20 +294,20 @@
     }
   ],
   "holiFest": [
-    "1 Saune Sankranti, Luto falne yebam raanko balne, Tharu guriya parba, Deuda Parba",
-    "2 Gorakhkali Puja",
-    "5 Harisayani Ekadashi Brat, Tulashi Ropne, Chaturmas Brat Aarambha",
-    "9 Guru Purnima",
-    "12 Mangal Chauthibrat",
-    "15 Khir Khane Din",
-    "16 Aastami Brat, Gorakhkali Puja",
-    "20 Kamika Ekadashi Brat",
-    "22 Ghantakarna Chaturdashi, Gathamugcharhe Puja",
-    "25 Guunla Dharmarambha",
-    "27 Barahjayanti",
-    "29 Naagpanchami (Naag Tasne)",
-    "32 Gorakhkali Puja, Yal Panchadaan",
-    "On the day of Bakar Eid (Edul Joha)(Holiday for related religions and cultures)1"
+    "1_::_Saune Sankranti, Luto falne yebam raanko balne, Tharu guriya parba, Deuda Parba",
+    "2_::_Gorakhkali Puja",
+    "5_::_Harisayani Ekadashi Brat, Tulashi Ropne, Chaturmas Brat Aarambha",
+    "9_::_Guru Purnima",
+    "12_::_Mangal Chauthibrat",
+    "15_::_Khir Khane Din",
+    "16_::_Aastami Brat, Gorakhkali Puja",
+    "20_::_Kamika Ekadashi Brat",
+    "22_::_Ghantakarna Chaturdashi, Gathamugcharhe Puja",
+    "25_::_Guunla Dharmarambha",
+    "27_::_Barahjayanti",
+    "29_::_Naagpanchami (Naag Tasne)",
+    "32_::_Gorakhkali Puja, Yal Panchadaan",
+    "_::_On the day of Bakar Eid (Edul Joha)(Holiday for related religions and cultures)1"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

@@ -285,15 +285,15 @@
     }
   ],
   "holiFest": [
-    "1 Ghyalpo Lhosar (Holiday for Related)",
-    "8 Chirotthan, Holikarambha",
-    "11 World Leprosy Day",
-    "12 Aamalaki Ekadashi",
-    "15 Falgu Purnima (Holidays in 56 districts of Himalayan, Hilly and inner Madhesh)",
-    "16 Holi (Holiday in 21 districts of Terai)",
-    "25 Paapmochini Ekadashi for Smarta",
-    "26 Paapmochini Ekadashi for Baishnab",
-    "29 Ghodejatra (Holiday in KTM Valley)1"
+    "1_::_Ghyalpo Lhosar (Holiday for Related)",
+    "8_::_Chirotthan, Holikarambha",
+    "11_::_World Leprosy Day",
+    "12_::_Aamalaki Ekadashi",
+    "15_::_Falgu Purnima (Holidays in 56 districts of Himalayan, Hilly and inner Madhesh)",
+    "16_::_Holi (Holiday in 21 districts of Terai)",
+    "25_::_Paapmochini Ekadashi for Smarta",
+    "26_::_Paapmochini Ekadashi for Baishnab",
+    "29_::_Ghodejatra (Holiday in KTM Valley)1"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

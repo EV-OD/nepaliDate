@@ -267,19 +267,19 @@
     }
   ],
   "holiFest": [
-    "3 Aasthami Brat, Gorakhkali Puja",
-    "6 Safala Ekadashi, Shortest Day",
-    "9 Darsha Shradda, Nishi Barne, Christmas Day ***",
-    "10 Snaandaan ka lagi aaunshi, Khandagras Chandragraha",
-    "11 Tol Lhosar, Chandrodaya",
-    "15 Tamu Lhosar (Holiday for related)",
-    "16 2020 AD Starts",
-    "17 Rastriya Posak Diwas",
-    "18 Aasthami Brat, Gorakhkali Puja",
-    "21 Putrada Ekadashi Brat",
-    "25 Shree Swasthani Brat Aarambha",
-    "27 Prithvi Jayanti, Rastriya Ekata Diwas",
-    "29 Mangal Chauthi Brat3"
+    "3_::_Aasthami Brat, Gorakhkali Puja",
+    "6_::_Safala Ekadashi, Shortest Day",
+    "9_::_Darsha Shradda, Nishi Barne, Christmas Day ***",
+    "10_::_Snaandaan ka lagi aaunshi, Khandagras Chandragraha",
+    "11_::_Tol Lhosar, Chandrodaya",
+    "15_::_Tamu Lhosar (Holiday for related)",
+    "16_::_2020 AD Starts",
+    "17_::_Rastriya Posak Diwas",
+    "18_::_Aasthami Brat, Gorakhkali Puja",
+    "21_::_Putrada Ekadashi Brat",
+    "25_::_Shree Swasthani Brat Aarambha",
+    "27_::_Prithvi Jayanti, Rastriya Ekata Diwas",
+    "29_::_Mangal Chauthi Brat3"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

@@ -276,16 +276,16 @@
     }
   ],
   "holiFest": [
-    "1 Bishwokarma Puja, Darsha Shradda, Aunshi Shradda, Bastu Diwas",
-    "2 Adhikmas Apug Daan Suru, Matsyanarayan Mela Suru",
-    "3 Constitution Day (National Day)",
-    "11 Padmini Ekadashi Brat, Paryatan Diwas",
-    "13 World Heart Day",
-    "15 Anala Punhi, Purnima Brat",
-    "16 Word Non-Violence Day",
-    "20 Mangal Chauthi Brat",
-    "27 Parama Ekadashi Brat",
-    "30 Adhikmas Apugdaan Samapti, Matsyanarayan Mela Samapti1"
+    "1_::_Bishwokarma Puja, Darsha Shradda, Aunshi Shradda, Bastu Diwas",
+    "2_::_Adhikmas Apug Daan Suru, Matsyanarayan Mela Suru",
+    "3_::_Constitution Day (National Day)",
+    "11_::_Padmini Ekadashi Brat, Paryatan Diwas",
+    "13_::_World Heart Day",
+    "15_::_Anala Punhi, Purnima Brat",
+    "16_::_Word Non-Violence Day",
+    "20_::_Mangal Chauthi Brat",
+    "27_::_Parama Ekadashi Brat",
+    "30_::_Adhikmas Apugdaan Samapti, Matsyanarayan Mela Samapti1"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

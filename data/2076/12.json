@@ -276,17 +276,17 @@
     }
   ],
   "holiFest": [
-    "4 Baumasthmi",
-    "7 Paapmochani Ekadashi",
-    "10 Bhadrakali Pithma lingo thadyaune",
-    "11 Ghode Jatra (Holiday in Ktm)",
-    "14 Matsyendranarayan Mela",
-    "19 Chaite Dashain",
-    "20 Shree Ram Nawami",
-    "22 Kamada Ekadashi",
-    "24 Mahabir Jayanti (Jains Holiday)",
-    "26 Hanuman Jayanti, Balaju Bayesdhara Mela",
-    "27 Bkt Bairab Bhadrakali Yatra, Lalitpur Matsendranath Snaan4"
+    "4_::_Baumasthmi",
+    "7_::_Paapmochani Ekadashi",
+    "10_::_Bhadrakali Pithma lingo thadyaune",
+    "11_::_Ghode Jatra (Holiday in Ktm)",
+    "14_::_Matsyendranarayan Mela",
+    "19_::_Chaite Dashain",
+    "20_::_Shree Ram Nawami",
+    "22_::_Kamada Ekadashi",
+    "24_::_Mahabir Jayanti (Jains Holiday)",
+    "26_::_Hanuman Jayanti, Balaju Bayesdhara Mela",
+    "27_::_Bkt Bairab Bhadrakali Yatra, Lalitpur Matsendranath Snaan4"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

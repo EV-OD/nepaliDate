@@ -294,20 +294,20 @@
     }
   ],
   "holiFest": [
-    "1 Saaune Shankranti, Luto Falne Din",
-    "8 Aasthami Brat",
-    "9 Gorakhkali Puja",
-    "12 Kamika Ekadashi Brat",
-    "14 Ghantakarna Chaturdashi, Gathemangal",
-    "15 Khir Khane Din",
-    "16 Snaan Daanka lagi Aunshi, Halo Barne",
-    "17 Guunladharma Aarambha",
-    "18 Barah Jayanti",
-    "20 Naag Panchami",
-    "23 Aasthami Brat, Gorakhali Puja",
-    "26 Putrada Ekadashi",
-    "30 Janai Purnima, Rakshya Bandhan, RishiTarpani",
-    "31 Gai Jatra (Holiday in Kathmandu Valley)1"
+    "1_::_Saaune Shankranti, Luto Falne Din",
+    "8_::_Aasthami Brat",
+    "9_::_Gorakhkali Puja",
+    "12_::_Kamika Ekadashi Brat",
+    "14_::_Ghantakarna Chaturdashi, Gathemangal",
+    "15_::_Khir Khane Din",
+    "16_::_Snaan Daanka lagi Aunshi, Halo Barne",
+    "17_::_Guunladharma Aarambha",
+    "18_::_Barah Jayanti",
+    "20_::_Naag Panchami",
+    "23_::_Aasthami Brat, Gorakhali Puja",
+    "26_::_Putrada Ekadashi",
+    "30_::_Janai Purnima, Rakshya Bandhan, RishiTarpani",
+    "31_::_Gai Jatra (Holiday in Kathmandu Valley)1"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

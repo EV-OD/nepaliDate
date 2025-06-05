@@ -276,14 +276,14 @@
     }
   ],
   "holiFest": [
-    "2 Valentine Day",
-    "7 Democaracy Day, Bijaya Ekadashi",
-    "9 Maha Shiva Ratri",
-    "12 Ghyalpo Lhosar (Holiday for related)",
-    "23 Aamalaki Ekadashi",
-    "23 Womens Day",
-    "26 Falgu Purnima (Holiday in Hilly Districts)",
-    "27 Falgu Purnima (Holiday in Terai)2"
+    "2_::_Valentine Day",
+    "7_::_Democaracy Day, Bijaya Ekadashi",
+    "9_::_Maha Shiva Ratri",
+    "12_::_Ghyalpo Lhosar (Holiday for related)",
+    "23_::_Aamalaki Ekadashi",
+    "23_::_Womens Day",
+    "26_::_Falgu Purnima (Holiday in Hilly Districts)",
+    "27_::_Falgu Purnima (Holiday in Terai)2"
   ],
   "marriage": [
     "४, ५, १३, १४, १५, १९, २५, २७, २८, २९ र  ३० गते"

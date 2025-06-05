@@ -276,16 +276,16 @@
     }
   ],
   "holiFest": [
-    "2 Valentine Day",
-    "4 Shree Swasthani Brat Samapti",
-    "7 Rastriya Prajatantra Diwas, Nirwachan Diwas",
-    "12 Gorakhkali Puja, Chaitalo Parba",
-    "15 Bijaya Ekadashi Brat",
-    "17 Maha Shiva Ratri Brat, Ladi Puja (Majhi Samudaya)",
-    "19 Gyalpo Lhosar (Holiday only for related religion, culture, geography and location)",
-    "24 International Womens Day",
-    "26 Gorakhkali Puja, Chirothhan, Holikarambha",
-    "30 Aamalaki Ekadashi Brat2"
+    "2_::_Valentine Day",
+    "4_::_Shree Swasthani Brat Samapti",
+    "7_::_Rastriya Prajatantra Diwas, Nirwachan Diwas",
+    "12_::_Gorakhkali Puja, Chaitalo Parba",
+    "15_::_Bijaya Ekadashi Brat",
+    "17_::_Maha Shiva Ratri Brat, Ladi Puja (Majhi Samudaya)",
+    "19_::_Gyalpo Lhosar (Holiday only for related religion, culture, geography and location)",
+    "24_::_International Womens Day",
+    "26_::_Gorakhkali Puja, Chirothhan, Holikarambha",
+    "30_::_Aamalaki Ekadashi Brat2"
   ],
   "marriage": [
     "६ गते"

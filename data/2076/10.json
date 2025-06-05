@@ -267,14 +267,14 @@
     }
   ],
   "holiFest": [
-    "1 Maghe Shakranti, Maghi Parba, Chantyal Parba (Holiday for related)",
-    "6 Shatila Ekadashi",
-    "10 Aryaghatma Madhav Narayan Mela",
-    "11 Sonam Lhosar (Holiday for related)",
-    "16 Martyrs Day, Shree Panchami, Saraswoti Puja (Holiday for Educational Institution)",
-    "22 Bhima Ekadashi",
-    "26 Swasthani Brat Samapti",
-    "1"
+    "1_::_Maghe Shakranti, Maghi Parba, Chantyal Parba (Holiday for related)",
+    "6_::_Shatila Ekadashi",
+    "10_::_Aryaghatma Madhav Narayan Mela",
+    "11_::_Sonam Lhosar (Holiday for related)",
+    "16_::_Martyrs Day, Shree Panchami, Saraswoti Puja (Holiday for Educational Institution)",
+    "22_::_Bhima Ekadashi",
+    "26_::_Swasthani Brat Samapti",
+    "_::_1"
   ],
   "marriage": [
     "२, ४, १५, १६, १७, २१, २६, २७ र  २९ गते"

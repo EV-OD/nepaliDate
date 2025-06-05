@@ -276,16 +276,16 @@
     }
   ],
   "holiFest": [
-    "1 Maghe Shankranti, Maghi Parba(Holiday for Tharu, Magar, Chantyal)",
-    "2 Rastriya Bhukampa Surakhsya Diwas",
-    "8 Asthami Brat, Gorakhkali Puja, Seto Matsyandranath Snan",
-    "11 Putrada Ekadashi",
-    "15 Shree Swasthani Brat Starts",
-    "16 Shahid Diwas",
-    "25 Shatila Ekadashi for Smarta",
-    "26 Shatila Ekadashi for Baishnab",
-    "30 Sonam Lhosar (Holiday for Related)",
-    "1"
+    "1_::_Maghe Shankranti, Maghi Parba(Holiday for Tharu, Magar, Chantyal)",
+    "2_::_Rastriya Bhukampa Surakhsya Diwas",
+    "8_::_Asthami Brat, Gorakhkali Puja, Seto Matsyandranath Snan",
+    "11_::_Putrada Ekadashi",
+    "15_::_Shree Swasthani Brat Starts",
+    "16_::_Shahid Diwas",
+    "25_::_Shatila Ekadashi for Smarta",
+    "26_::_Shatila Ekadashi for Baishnab",
+    "30_::_Sonam Lhosar (Holiday for Related)",
+    "_::_1"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

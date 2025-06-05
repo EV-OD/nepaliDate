@@ -267,16 +267,16 @@
     }
   ],
   "holiFest": [
-    "2 Valentine Day",
-    "4 Basanta Panchami, Shree Panchami, Sarashwoti Puja (Educational Institution Holiday)",
-    "7 Democracy Day, Election Day",
-    "11 Bhima Ekadashi",
-    "15 Shree Swasthani Brat Magh Snaan Samapti",
-    "18 Majhi Peoples Ladi Puja",
-    "22 National Blood Donors Day",
-    "24 International Womens Day",
-    "25 Bijaya Ekadashi",
-    "27 Maha Shivaratri2"
+    "2_::_Valentine Day",
+    "4_::_Basanta Panchami, Shree Panchami, Sarashwoti Puja (Educational Institution Holiday)",
+    "7_::_Democracy Day, Election Day",
+    "11_::_Bhima Ekadashi",
+    "15_::_Shree Swasthani Brat Magh Snaan Samapti",
+    "18_::_Majhi Peoples Ladi Puja",
+    "22_::_National Blood Donors Day",
+    "24_::_International Womens Day",
+    "25_::_Bijaya Ekadashi",
+    "27_::_Maha Shivaratri2"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

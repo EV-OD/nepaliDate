@@ -294,16 +294,16 @@
     }
   ],
   "holiFest": [
-    "1 Saune Shankranti, Luto Falne, Guriya Parba, Kamika Ekadashi Brat",
-    "4 Ghantakarna Chaturdashi, Gathemangal",
-    "5 Sombare Aaunshi, Nishi tatha Halo Barne",
-    "10 Naag Panchami",
-    "15 Khir Khane Din, Putrada Ekadashi",
-    "19 Janai Purnima, Rakshya Bandhan, Rishitarpani",
-    "20 Gai Jatra, Saparu (Holiday in Ktm)",
-    "27 Shree Krishna Janmasthami",
-    "31 Ajaa Ekadashi",
-    "On the day of Bakar Eid (Edul Joha)(Holiday for related religions and cultures)1"
+    "1_::_Saune Shankranti, Luto Falne, Guriya Parba, Kamika Ekadashi Brat",
+    "4_::_Ghantakarna Chaturdashi, Gathemangal",
+    "5_::_Sombare Aaunshi, Nishi tatha Halo Barne",
+    "10_::_Naag Panchami",
+    "15_::_Khir Khane Din, Putrada Ekadashi",
+    "19_::_Janai Purnima, Rakshya Bandhan, Rishitarpani",
+    "20_::_Gai Jatra, Saparu (Holiday in Ktm)",
+    "27_::_Shree Krishna Janmasthami",
+    "31_::_Ajaa Ekadashi",
+    "_::_On the day of Bakar Eid (Edul Joha)(Holiday for related religions and cultures)1"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

@@ -276,18 +276,18 @@
     }
   ],
   "holiFest": [
-    "7 Rama Ekadashi",
-    "8 Dhanteras",
-    "9 Kaag Tihar, Dhanwantari Jayanti",
-    "10 Kukur Tihar, Laxmi Puja, Deepawali 2019",
-    "11 Mha Puja, Gai Goru Puja",
-    "12 Gobardhan Puja, Bhai Tika, Kija Puja, Nepal Sambat 1140 starts",
-    "16 Chaath Parba",
-    "22 Haribodhini Ekadashi Brat, Tulashi Bibah",
-    "23 Ruru Ridi Rishikesh Kshetra Rath Yatra",
-    "25 Falgunand Jayanti ***",
-    "26 Guru Nanak Jayanti ***",
-    "***: Holiday only for related region and culture7"
+    "7_::_Rama Ekadashi",
+    "8_::_Dhanteras",
+    "9_::_Kaag Tihar, Dhanwantari Jayanti",
+    "10_::_Kukur Tihar, Laxmi Puja, Deepawali 2019",
+    "11_::_Mha Puja, Gai Goru Puja",
+    "12_::_Gobardhan Puja, Bhai Tika, Kija Puja, Nepal Sambat 1140 starts",
+    "16_::_Chaath Parba",
+    "22_::_Haribodhini Ekadashi Brat, Tulashi Bibah",
+    "23_::_Ruru Ridi Rishikesh Kshetra Rath Yatra",
+    "25_::_Falgunand Jayanti ***",
+    "26_::_Guru Nanak Jayanti ***",
+    "_::_***: Holiday only for related region and culture7"
   ],
   "marriage": [
     "यो महिना को लागी विवाह मुर्हुत छैन ।"

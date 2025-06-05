@@ -285,17 +285,17 @@
     }
   ],
   "holiFest": [
-    "1 New Year 2076 BS",
-    "2 Smartaharuko Kamada Ekadashi",
-    "3 Baishnabharuko Kamada Ekadashi",
-    "4 Mahabir Jayanti (Holiday for Jains)",
-    "6 Hanuman Jayanti",
-    "11 Loktantra Diwas",
-    "17 Baruthini Ekadashi",
-    "18 International Workers Day",
-    "21 Mata Tirtha Aaunshi, Aamako Mukh Herne, Mothers Day",
-    "22 Lalitpur Matsendranath Rath Yatra Arambha",
-    "24 Akshyaya Tritiya<"
+    "1_::_New Year 2076 BS",
+    "2_::_Smartaharuko Kamada Ekadashi",
+    "3_::_Baishnabharuko Kamada Ekadashi",
+    "4_::_Mahabir Jayanti (Holiday for Jains)",
+    "6_::_Hanuman Jayanti",
+    "11_::_Loktantra Diwas",
+    "17_::_Baruthini Ekadashi",
+    "18_::_International Workers Day",
+    "21_::_Mata Tirtha Aaunshi, Aamako Mukh Herne, Mothers Day",
+    "22_::_Lalitpur Matsendranath Rath Yatra Arambha",
+    "24_::_Akshyaya Tritiya<"
   ],
   "marriage": [
     "३, ४, ५, ६, ७, ८, १८, २३, २४, २९ र  ३१ गते"

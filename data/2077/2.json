@@ -294,19 +294,19 @@
     }
   ],
   "holiFest": [
-    "5 Apara Ekadashi",
-    "10 Gosaikunda Snanarambha",
-    "13 Mangal Chauthi Brat",
-    "15 Ganatantra Diwas, Kumar Sasthi, Sithi:Nakha",
-    "18 No Smoking Day",
-    "19 Gosaikunda Snan Samapti",
-    "20 Nirjala Ekadashi, Tulashi ko Dal Rakhne",
-    "21 National Day for the Elimination of Racial Discrimination and Untouchability",
-    "27 Mangal Chauthi Brat",
-    "31 Deupatanma Trishul Yatra",
-    "32 World Blood Donor Day",
-    "Eid (Eid-ul-Fitr) for Muslims (Holiday for related religion, culture)",
-    "Matsyendranath Ko Bhoto dekhaune Jatra (Holiday to Kathmandu Valley only)5"
+    "5_::_Apara Ekadashi",
+    "10_::_Gosaikunda Snanarambha",
+    "13_::_Mangal Chauthi Brat",
+    "15_::_Ganatantra Diwas, Kumar Sasthi, Sithi:Nakha",
+    "18_::_No Smoking Day",
+    "19_::_Gosaikunda Snan Samapti",
+    "20_::_Nirjala Ekadashi, Tulashi ko Dal Rakhne",
+    "21_::_National Day for the Elimination of Racial Discrimination and Untouchability",
+    "27_::_Mangal Chauthi Brat",
+    "31_::_Deupatanma Trishul Yatra",
+    "32_::_World Blood Donor Day",
+    "_::_Eid (Eid-ul-Fitr) for Muslims (Holiday for related religion, culture)",
+    "_::_Matsyendranath Ko Bhoto dekhaune Jatra (Holiday to Kathmandu Valley only)5"
   ],
   "marriage": [
     "४, ५, १० र  ३१ गते"

@@ -276,17 +276,17 @@
     }
   ],
   "holiFest": [
-    "4 International Childrens Day",
-    "6 Smartaharuko Utpattika Ekadashi",
-    "7 Baishnabharuko Utpattika Ekadashi",
-    "9 Bala Chaturdashi, Shatbij Chharne",
-    "10 Darsha Shradda, Halo tatha Nishi Barne",
-    "15 Bibah Panchami, AIDS Day, Shadananda Jayanti",
-    "17 International Disabilities Day ***",
-    "20 Kirtipure Indrayani Jatra",
-    "22 Mokshyada Ekadashi",
-    "26 Dhanya Purnima, Urdhyauli Parba, Dhaneshwor Mela, Yomaripunhi (Holiday for related religion and culture)",
-    "[ ***: Holiday for people with disabilities ]4"
+    "4_::_International Childrens Day",
+    "6_::_Smartaharuko Utpattika Ekadashi",
+    "7_::_Baishnabharuko Utpattika Ekadashi",
+    "9_::_Bala Chaturdashi, Shatbij Chharne",
+    "10_::_Darsha Shradda, Halo tatha Nishi Barne",
+    "15_::_Bibah Panchami, AIDS Day, Shadananda Jayanti",
+    "17_::_International Disabilities Day ***",
+    "20_::_Kirtipure Indrayani Jatra",
+    "22_::_Mokshyada Ekadashi",
+    "26_::_Dhanya Purnima, Urdhyauli Parba, Dhaneshwor Mela, Yomaripunhi (Holiday for related religion and culture)",
+    "_::_[ ***: Holiday for people with disabilities ]4"
   ],
   "marriage": [
     "३, ६, १२, १४, १९, २०, २१ र  २५ गते"
