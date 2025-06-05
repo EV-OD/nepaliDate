@@ -2,7 +2,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ListChecks, Info, CalendarX2 } from 'lucide-react'; // Replaced PartyPopper
+import { ListChecks, Info, CalendarX2, Sparkles, Heart, Milestone, Loader2 } from 'lucide-react'; // Added more icons
 import React from 'react';
 
 interface EventDisplayProps {
@@ -14,6 +14,29 @@ interface EventDisplayProps {
   bsYear?: number;
   bsMonthName?: string;
 }
+
+function EventSection({ title, icon, events, itemSuffix }: { title: string; icon: React.ElementType; events?: string[]; itemSuffix?: string }) {
+  if (!events || events.length === 0) {
+    return null;
+  }
+  const IconComponent = icon;
+  return (
+    <div className="mt-4">
+      <h4 className="flex items-center gap-2 text-lg font-semibold text-primary mb-2">
+        <IconComponent className="h-5 w-5 text-accent" />
+        {title}
+      </h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {events.map((item, index) => (
+          <div key={index} className="bg-background/70 p-3 rounded-md border border-border text-sm text-foreground/90 shadow-sm">
+            {item.includes("गते") || itemSuffix === "" ? item : `${item}${itemSuffix}`}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
 export default function EventSummaryDisplay({ 
   holiFest, 
@@ -32,19 +55,20 @@ export default function EventSummaryDisplay({
 
   if (isLoading) {
     return (
-      <Card className="mt-6 bg-secondary/30">
+      <Card className="mt-6 bg-card shadow-lg border-primary/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-headline">
-            <ListChecks className="h-5 w-5 animate-pulse text-primary" />
+          <CardTitle className="flex items-center gap-2 font-headline text-xl text-primary">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
             Events & Holidays for {bsMonthName} {bsYear}
           </CardTitle>
-          <CardDescription>Loading event details...</CardDescription>
+          <CardDescription className="text-muted-foreground">Loading event details, please wait...</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            <div className="h-4 bg-muted rounded animate-pulse w-3/4"></div>
+          <div className="space-y-3">
+            <div className="h-6 bg-muted rounded animate-pulse w-3/4"></div>
             <div className="h-4 bg-muted rounded animate-pulse w-1/2"></div>
             <div className="h-4 bg-muted rounded animate-pulse w-5/6"></div>
+             <div className="h-4 bg-muted rounded animate-pulse w-4/6"></div>
           </div>
         </CardContent>
       </Card>
@@ -53,64 +77,49 @@ export default function EventSummaryDisplay({
 
   if (eventDataError) {
     return (
-      <Card className="mt-6 border-destructive bg-destructive/10">
+      <Card className="mt-6 border-destructive bg-destructive/10 shadow-md">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-headline text-destructive">
-            <CalendarX2 className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 font-headline text-destructive text-xl">
+            <CalendarX2 className="h-6 w-6" />
             Error Loading Events
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-destructive-foreground">{eventDataError}</p>
+          <p className="text-destructive-foreground font-medium">{eventDataError}</p>
+          <p className="text-sm text-destructive-foreground/80 mt-1">Data might be limited for the selected month or an issue occurred.</p>
         </CardContent>
       </Card>
     );
   }
 
-  // Only show the card if there's a year and month, even if no events or error yet
-  // This avoids showing an empty card before a conversion happens
   if (!bsYear || !bsMonthName) {
     return null;
   }
   
-  const renderEventList = (items: string[] | undefined, typeLabel: string, itemSuffix: string = "") => {
-    if (!items || items.length === 0) {
-      return null; // Don't render section if no items
-    }
-    return (
-      <div>
-        <h4 className="font-semibold text-md mt-3 mb-1 text-primary">{typeLabel}:</h4>
-        <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/90">
-          {items.map((item, index) => (
-            <li key={index}>
-              {item.includes("गते") || itemSuffix === "" ? item : `${item}${itemSuffix}`}
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
-
-
   return (
-    <Card className="mt-6 bg-secondary/30 shadow-md">
+    <Card className="mt-6 bg-card shadow-lg border-primary/30">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 font-headline text-lg">
-          <ListChecks className="h-6 w-6 text-primary" />
-          Events & Holidays for {bsMonthName} {bsYear}
+        <CardTitle className="flex items-center gap-2 font-headline text-xl text-primary">
+          <ListChecks className="h-6 w-6" />
+          Events & Holidays: {bsMonthName} {bsYear}
         </CardTitle>
-        <CardDescription>Overview of notable dates for the selected month.</CardDescription>
+        <CardDescription className="text-muted-foreground">
+          An overview of notable dates for the selected Bikram Sambat month.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {!hasAnyEventData && (
-          <div className="flex items-center gap-2 text-muted-foreground py-2">
-            <Info className="h-5 w-5"/>
-            <p>No specific events listed for this month in our current data.</p>
+          <div className="flex flex-col items-center justify-center text-center p-6 bg-muted/50 rounded-md border border-dashed">
+            <Info className="h-10 w-10 text-muted-foreground mb-3" />
+            <p className="font-semibold text-foreground">No Specific Events Found</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              There are no specific holidays, marriage, or bratabandha dates listed for {bsMonthName} {bsYear} in our current dataset.
+            </p>
           </div>
         )}
-        {renderEventList(holiFest, "Holidays & Festivals")}
-        {renderEventList(marriageEvents, "Auspicious Marriage Dates", " गते")}
-        {renderEventList(bratabandhaEvents, "Auspicious Bratabandha Dates", " गते")}
+        <EventSection title="Holidays & Festivals" icon={Sparkles} events={holiFest} />
+        <EventSection title="Auspicious Marriage Dates" icon={Heart} events={marriageEvents} itemSuffix=" गते" />
+        <EventSection title="Auspicious Bratabandha Dates" icon={Milestone} events={bratabandhaEvents} itemSuffix=" गते" />
       </CardContent>
     </Card>
   );
