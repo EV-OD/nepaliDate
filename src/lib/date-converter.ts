@@ -48,6 +48,7 @@ export function convertBsToAd(bsDate: NepaliDate): ConversionResult {
   const { year, month, day } = bsDate;
   const calendar = getBsCalendarData();
   const monthData = calendar[`${year}/${month}`];
+  console.log(bsDate, monthData)
 
   if (!monthData) {
     const availableYears = getBsYears().join(', ');
@@ -57,6 +58,7 @@ export function convertBsToAd(bsDate: NepaliDate): ConversionResult {
 
   // Use 'ne' (Nepali date in English numerals) for comparison
   const dayData = monthData.days.find(d => parseInt(d.ne) === day);
+  console.log(dayData)
 
   if (!dayData) {
     return { error: `Invalid day ${day} for BS ${NEPALI_MONTHS[month-1]} ${year}. This month has ${monthData.days.length} days.` };

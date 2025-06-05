@@ -86,6 +86,7 @@ function loadCalendarDataFromFileSystem(): BsCalendar {
           },
           days: jsonData.days.map((d: any) => ({
               n: d.n,
+              ne:d.ne,
               e: d.e,
               t: d.t,
               f: d.f,
