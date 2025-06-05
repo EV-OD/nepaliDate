@@ -1,6 +1,7 @@
 
 export interface BsDayData {
   n: string; // nepali date
+  ne: string; // nepali date in english numerals
   e: string; // english date
   t: string; // tithi
   f: string; // festival

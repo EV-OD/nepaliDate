@@ -5,6 +5,16 @@ const { JSDOM } = require("jsdom");
 
 const DAYS = ["आईतवार", "सोमवार", "मंगलवार", "बुधवार", "बिहीवार", "शुक्रवार", "शनिवार"];
 
+const NEPALI_TO_ENGLISH_NUMERAL_MAP: { [key: string]: string } = {
+    '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
+    '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
+};
+
+function nepaliToEnglishNumerals(nepaliString: string): string {
+    if (!nepaliString) return "";
+    return nepaliString.split('').map(char => NEPALI_TO_ENGLISH_NUMERAL_MAP[char] || char).join('');
+}
+
 const _fetchData = async (year, month) => {
     try {
         console.log("fetching", year, month);
@@ -84,8 +94,12 @@ const _fetchData = async (year, month) => {
             const festNode = dom.window.document.querySelector('#fest');
             const fontNode = ndayNode ? ndayNode.querySelector('font') : null;
 
+            const nepaliDayString = ndayNode ? ndayNode.textContent.trim() : "";
+            const englishEquivalentNepaliDay = nepaliToEnglishNumerals(nepaliDayString);
+
             days.push({
-                n: ndayNode ? ndayNode.textContent.trim() : "",
+                n: nepaliDayString,
+                ne: englishEquivalentNepaliDay,
                 e: edayNode ? edayNode.textContent.trim() : "",
                 t: dashiNode ? dashiNode.textContent.trim() : "",
                 f: festNode ? festNode.textContent.trim() : "",
