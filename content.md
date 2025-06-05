@@ -113,7 +113,7 @@ This document provides a detailed breakdown of the textual content on each key p
 *   **Badges (Dynamic from API):**
     *   "Version: {apiInfoData.version}"
     *   "Status: {apiInfoData.status}" (Styled based on status)
-*   **Contact Information (Dynamic from API):** "Contact: <a href='mailto:{apiInfoData.contactEmail}'>{apiInfoData.contactEmail}</a>"
+*   **Contact Information (Dynamic from API):** "Contact: <a href='mailto:{apiInfoData.contactEmail}'>{contact@sevenx.com.np}</a>"
 *   **Button to Playground:**
     *   **Text:** "Go to API Playground" (Accompanied by `PlayCircle` icon)
     *   **Link:** `/api-playground`

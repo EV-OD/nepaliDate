@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     version: "1.2.0", 
     status: "Operational",
     description: "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data. Provides detailed daily information, including Nepali holidays, festivals, tithis (lunar days), and auspicious dates for marriage (vivah) and bratabandha for a given BS month. Ideal for integrating Nepali Patro data into your applications.",
-    contactEmail: "api-support@nepalidate.example.com",
+    contactEmail: "contact@sevenx.com.np",
     documentationUrl: request.nextUrl.origin + "/api-info",
     endpoints: [
       {

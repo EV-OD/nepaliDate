@@ -123,7 +123,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   The homepage of the application, a central hub for date conversion tools.
 *   Provides a welcoming message and navigation links to the BS-to-AD and AD-to-BS converters, and the Nepali Calendar API documentation.
 *   Uses ShadCN `Card` and `Button` components for layout.
-*   Includes page-specific SEO metadata for title, description, keywords, Open Graph, and Twitter cards, optimized with terms like "BS to AD converter", "Nepali Calendar API", and "Bikram Sambat".
+*   Includes page-specific SEO metadata for title, description, keywords, Open Graph, and Twitter cards, optimized with terms like "BS to AD converter," "Nepali Calendar API," and "Bikram Sambat."
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/`
@@ -211,7 +211,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   **Main Title (H1, Dynamic from API):** e.g., "NepaliDate: Nepali Calendar & Bikram Sambat API"
 *   **Main Description (Dynamic from API):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
 *   **Badges (Dynamic from API):** "Version: {version}", "Status: {status}"
-*   **Contact (Dynamic from API):** "Contact: {email}" (with mailto link)
+*   **Contact (Dynamic from API):** "Contact: {contact@sevenx.com.np}" (with mailto link)
 *   **Button Text:** "Go to API Playground" (Links to `/api-playground`)
 *   **Section Titles (H2/Card Titles):**
     *   "Nepali Calendar API Endpoints"
@@ -278,7 +278,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `GET` handler that returns a JSON object containing detailed API documentation for the Nepali Calendar API.
     *   Dynamically fetches available BS years using `getBsYears()` to include in the documentation.
     *   Constructs example request URLs based on the current request's origin.
-    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API".
+    *   Defines the structure of `BsMonthData` and `BsDayData` and explains each field. Includes comprehensive descriptions, notes on delimiters (`_::_`), and the `ne` field for Nepali dates in English numerals. Content is optimized for keywords like "Nepali Calendar API", "Bikram Sambat API", and "event data". Its `apiName` is "NepaliDate: Nepali Calendar & Bikram Sambat API". Contact email is `contact@sevenx.com.np`.
 *   **`src/app/api/calendar/[...params]/route.ts`**:
     *   `GET` handler for fetching calendar data for a specific BS year and month.
     *   Extracts year and month from the dynamic path parameters.
