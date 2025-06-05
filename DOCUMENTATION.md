@@ -21,6 +21,7 @@
 *   **Date Conversion (Website Use Only):**
     *   Bikram Sambat (BS) to Gregorian (AD) Converter (Implemented via Server Actions, intended for website UI use)
     *   Gregorian (AD) to Bikram Sambat (BS) Converter (Implemented via Server Actions, intended for website UI use)
+    *   *Data Access Note:* The conversion Server Actions internally fetch event data by calling the application's own `/api/calendar/{YYYY}/{MM}` endpoint, which requires the server-configured `API_KEY_NEPALIDATE` for access. This ensures calendar data is centrally managed and secured.
 *   **Date Validation:** Input validation notifies users of impossible date inputs (e.g., BS day exceeding days in the month).
 *   **Date Picker:** User-friendly date picker components for easy date selection in both BS and AD converters.
 *   **Event Display:** For a selected/converted BS month, the application displays Nepali holidays and events:
@@ -128,10 +129,10 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Applies base styles to the body and heading elements.
 *   **`src/app/actions.ts`**:
     *   Contains Next.js Server Actions used by the converter pages.
-    *   `convertBsToAdWithEvents(bsDate)`: Converts BS to AD and fetches associated events (Nepali holidays, marriage, bratabandha) for the target BS month.
-    *   `convertAdToBsWithEvents(adDate)`: Converts AD to BS and fetches associated events for the resulting BS month.
-    *   `fetchEventData(bsYear, bsMonth)`: A helper function to retrieve event data from the loaded `bsCalendarData`.
-    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. For truly "website-only" execution, more advanced techniques like strict CSRF token validation, session-based checks (if users were authenticated), or WAF rules would be needed. The current implementation relies on standard Next.js Server Action behavior.
+    *   `convertBsToAdWithEvents(bsDate)`: Converts BS to AD. Internally calls the app's API-key-protected `/api/calendar/{YYYY}/{MM}` endpoint to fetch associated events (Nepali holidays, marriage, bratabandha) for the target BS month.
+    *   `convertAdToBsWithEvents(adDate)`: Converts AD to BS. Internally calls the app's API-key-protected `/api/calendar/{YYYY}/{MM}` endpoint to fetch associated events for the resulting BS month.
+    *   `fetchEventData(bsYear, bsMonth)`: A helper function that now makes an authenticated internal API call to retrieve event data.
+    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests by the application's frontend. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. The data these actions consume (event data) is now fetched from API-key-protected endpoints. For truly "website-only" execution of the actions themselves, more advanced techniques like strict CSRF token validation beyond Next.js defaults, session-based checks (if users were authenticated), or WAF rules would be needed.
 
 ### 5.3. Page Routes (`src/app/.../page.tsx`)
 
@@ -143,21 +144,24 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/`
-*   **Main Heading (H1):** "Welcome to NepaliDate"
-*   **Main Paragraph/Description:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar. Use our BS to AD converter, AD to BS converter, or explore the Nepali Calendar API."
-*   **Section Headings (Card Titles - H2 equivalent):**
-    *   "BS to AD Converter"
-    *   "AD to BS Converter"
-    *   "Nepali Calendar API"
-*   **Section Descriptions (Card Descriptions):**
-    *   "Convert Bikram Sambat (BS) dates to Gregorian (AD) dates and see relevant Nepali calendar events using our accurate converter."
-    *   "Convert Gregorian (AD) dates to Bikram Sambat (BS) dates and explore Nepali Patro events with our reliable tool."
-    *   "Explore our comprehensive API for Bikram Sambat calendar data, including Nepali holidays, festivals, and events. Perfect for developers."
-*   **Button Texts:**
-    *   "Go to BS to AD Converter" (Links to `/bs-to-ad`)
-    *   "Go to AD to BS Converter" (Links to `/ad-to-bs`)
-    *   "View API Details" (Links to `/api-info`)
-*   **Icon:** `CalendarDays` icon used above main heading.
+*   **Main Heading (H1 Equivalent - Visual):** "Welcome to NepaliDate" (Accompanied by `CalendarDays` icon)
+*   **Main Descriptive Paragraph:** "Your one-stop solution for Bikram Sambat (BS) and Gregorian (AD) date conversions, enriched with holiday and event insights for the Nepali calendar. Use our BS to AD converter, AD to BS converter, or explore the Nepali Calendar API."
+*   **Section Cards:**
+    *   **Card 1: BS to AD Converter**
+        *   **Heading (H2 Equivalent - CardTitle):** "BS to AD Converter" (Accompanied by `ArrowRightLeft` icon)
+        *   **Description (CardDescription):** "Convert Bikram Sambat (BS) dates to Gregorian (AD) dates and see relevant Nepali calendar events using our accurate converter."
+        *   **Button Text:** "Go to BS to AD Converter"
+        *   **Button Link:** `/bs-to-ad`
+    *   **Card 2: AD to BS Converter**
+        *   **Heading (H2 Equivalent - CardTitle):** "AD to BS Converter" (Accompanied by `ArrowRightLeft` icon)
+        *   **Description (CardDescription):** "Convert Gregorian (AD) dates to Bikram Sambat (BS) dates and explore Nepali Patro events with our reliable tool."
+        *   **Button Text:** "Go to AD to BS Converter"
+        *   **Button Link:** `/ad-to-bs`
+    *   **Card 3: Nepali Calendar API**
+        *   **Heading (H2 Equivalent - CardTitle):** "Nepali Calendar API" (Accompanied by `ServerIcon` icon)
+        *   **Description (CardDescription):** "Explore our comprehensive API for Bikram Sambat calendar data, including Nepali holidays, festivals, and events. Perfect for developers."
+        *   **Button Text:** "View API Details"
+        *   **Button Link:** `/api-info`
 
 #### 5.3.2. `src/app/bs-to-ad/page.tsx` (Route: `/bs-to-ad`)
 *   Client component (`'use client'`). Allows users to convert Bikram Sambat (BS) dates to Gregorian (AD).
@@ -167,7 +171,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   On submission, calls the `convertBsToAdWithEvents` server action.
 *   Displays the converted AD date and relevant Nepali holidays and events using `ResultDisplay` and `EventSummaryDisplay` components.
 *   Handles loading states (`useTransition`) and displays errors using `toast`.
-*   Inherits SEO metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "BS to AD converter" and related terms.
+*   This page does not export its own `metadata` or `generateMetadata` function due to being a client component. It inherits metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "BS to AD converter" and related terms.
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/bs-to-ad`
@@ -196,7 +200,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   On submission, calls the `convertAdToBsWithEvents` server action.
 *   Displays the converted BS date and relevant Nepali holidays and events.
 *   Handles loading states and errors similarly to the BS-to-AD page.
-*   Inherits SEO metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "AD to BS converter" and related terms.
+*   This page does not export its own `metadata` or `generateMetadata` function due to being a client component. It inherits metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "AD to BS converter" and related terms.
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/ad-to-bs`
@@ -225,7 +229,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/api-info`
 *   **Main Title (H1, Dynamic from API):** e.g., "NepaliDate: Nepali Calendar & Bikram Sambat API"
-*   **Main Description (Dynamic from API):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data..."
+*   **Main Description (Dynamic from API):** e.g., "A comprehensive API for Bikram Sambat (BS) to Gregorian (AD) date conversions and Nepali calendar event data... Requires API Key authentication via 'X-API-Key' header."
 *   **Badges (Dynamic from API):** "Version: {version}", "Status: {status}"
 *   **Authentication Section (Dynamic from API):**
     *   Type: `API Key`
@@ -270,7 +274,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 *   Dynamically displays the request URL and allows users to send the request (with the API key in headers).
 *   Shows the API response status code and the JSON response body.
 *   Uses `react-hook-form`, `zod`, ShadCN components (including `RadioGroup` for endpoint selection, `Input` for API key).
-*   Inherits SEO metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "API Playground," "Nepali Calendar API," and "Bikram Sambat."
+*   This page does not export its own `metadata` or `generateMetadata` function due to being a client component. It inherits metadata from `layout.tsx`. On-page H1 and descriptions are optimized for "API Playground," "Nepali Calendar API," and "Bikram Sambat."
 
 ##### Key Page Content (for SEO Analysis):
 *   **Route:** `/api-playground`

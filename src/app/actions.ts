@@ -2,7 +2,7 @@
 'use server';
 
 import { convertBsToAd, convertAdToBs } from '@/lib/date-converter';
-import { getBsCalendarData } from '@/lib/bsCalendarData'; // Updated import
+// getBsCalendarData is no longer directly used by fetchEventData
 import type { NepaliDate, EnglishDate, ConversionResult, BsMonthData } from '@/types';
 import { NEPALI_MONTHS } from '@/types';
 
@@ -17,19 +17,49 @@ interface ConversionAndEventsResult {
   bsMonthNameForEvents?: string;
 }
 
+// This function now fetches event data from the app's own API endpoint
 async function fetchEventData(bsYear: number, bsMonth: number): Promise<{ holiFest?: string[], marriage?: string[], bratabandha?: string[], eventDataError?: string }> {
-  const calendar = getBsCalendarData(); // Use getBsCalendarData
-  const monthData: BsMonthData | undefined = calendar[`${bsYear}/${bsMonth}`]; // Look up month data
-
-  if (!monthData) {
-    return { eventDataError: `Could not retrieve event data for ${NEPALI_MONTHS[bsMonth-1]} ${bsYear}. Mock data might be limited for this month.` };
+  const apiKey = process.env.API_KEY_NEPALIDATE;
+  if (!apiKey) {
+    console.error("API_KEY_NEPALIDATE is not set in environment variables.");
+    return { eventDataError: "Server configuration error: API key for internal data fetching is missing." };
   }
 
-  return {
-    holiFest: monthData.holiFest,
-    marriage: monthData.marriage,
-    bratabandha: monthData.bratabandha
-  };
+  // Determine the base URL for the API call
+  // For server-side calls to its own API, localhost is often preferred in dev.
+  // In production, NEXT_PUBLIC_APP_URL should be the externally accessible URL.
+  // However, for server-to-server internal calls, if the app runs in a containerized env,
+  // localhost might refer to the container itself. Using NEXT_PUBLIC_APP_URL if available.
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.env.PORT || 9002}`;
+  const apiUrl = `${appUrl}/api/calendar/${bsYear}/${bsMonth}`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        'X-API-Key': apiKey,
+      },
+      cache: 'no-store', // Ensure fresh data for each conversion context
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: `API request failed with status ${response.status}` }));
+      console.error(`Error fetching event data from ${apiUrl}: ${response.status}`, errorData);
+      return { eventDataError: `Could not retrieve event data (status ${response.status}): ${errorData.error || 'Unknown API error'}.` };
+    }
+
+    const monthData: BsMonthData = await response.json();
+
+    return {
+      holiFest: monthData.holiFest,
+      marriage: monthData.marriage,
+      bratabandha: monthData.bratabandha
+    };
+
+  } catch (error) {
+    console.error("Error in fetchEventData (calling internal API):", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error during internal API call.";
+    return { eventDataError: `Failed to connect to internal event data API: ${errorMessage}` };
+  }
 }
 
 export async function convertBsToAdWithEvents(bsDate: NepaliDate): Promise<ConversionAndEventsResult> {
