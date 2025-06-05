@@ -12,38 +12,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { CLIENT_SIDE_BS_YEARS, NEPALI_MONTHS } from '@/types';
-import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2 } from 'lucide-react'; // Added TestTube2
-import type { Metadata } from 'next';
+import { Code, Info, Loader2, PlayCircle, ExternalLink, TestTube2 } from 'lucide-react';
+// Removed: import type { Metadata } from 'next';
 
-// Metadata for this page
-// Note: In App Router, client components cannot directly export metadata. 
-// This would typically be done in a parent server component or a layout file.
-// Placing it here for clarity of intent.
-export function generateMetadata(): Metadata {
-  return {
-    title: "API Playground | Test Nepali Calendar API | Date Bliss",
-    description: "Interactively test the Date Bliss Nepali Calendar API. Select Bikram Sambat (BS) year and month to fetch calendar data, events, and holidays directly.",
-    keywords: ["API Playground", "Test Nepali Calendar API", "Bikram Sambat API Test", "Date Bliss API", "JSON API", "Nepal Date API Test"],
-    openGraph: {
-      title: "Date Bliss API Playground | Test Nepali Calendar Endpoints",
-      description: "Experiment with the Date Bliss API for Nepali calendar data. A hands-on way to explore API responses for BS dates.",
-      url: "/api-playground",
-      images: [
-        {
-          url: 'https://placehold.co/1200x630.png?text=API+Playground',
-          width: 1200,
-          height: 630,
-          alt: 'Date Bliss API Playground',
-          'data-ai-hint': 'api test interface calendar',
-        }
-      ]
-    },
-    twitter: {
-      title: "Date Bliss API Playground | Test & Explore Nepali Calendar Data",
-      description: "Directly test and view responses from the Date Bliss Nepali Calendar API.",
-    },
-  };
-}
+// Removed generateMetadata function
 
 
 const defaultBsYear = CLIENT_SIDE_BS_YEARS.includes(new Date().getFullYear() + 56) 
@@ -136,7 +108,7 @@ export default function ApiPlaygroundPage() {
             <TestTube2 className="h-8 w-8 text-primary" /> API Playground
           </CardTitle>
           <CardDescription>
-            Test the <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint for the Nepali Calendar. 
+            Test the <code className="bg-muted px-1 py-0.5 rounded-sm text-primary">/api/calendar/[YYYY]/[MM]</code> endpoint. 
             View the full API documentation <Link href="/api-info" className="text-primary hover:underline">here</Link>.
           </CardDescription>
         </CardHeader>
