@@ -1,13 +1,13 @@
 
-import React from 'react'; // Added this line
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree } from "lucide-react";
+import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle } from "lucide-react";
 
 async function getApiInfo() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'; // Make sure NEXT_PUBLIC_APP_URL is set in your env
   const res = await fetch(`${baseUrl}/api/calendar/info`, { cache: 'no-store' }); 
   if (!res.ok) {
     const errorText = await res.text();
@@ -18,7 +18,7 @@ async function getApiInfo() {
     return await res.json();
   } catch (e) {
     console.error("API Info JSON Parse Error:", e);
-    const responseText = await res.text(); // Attempt to get text if JSON parse fails
+    const responseText = await res.text();
     console.error("Response text that failed to parse:", responseText.substring(0, 500));
     throw new Error(`Failed to parse API info JSON. Error: ${(e as Error).message}`);
   }
@@ -35,6 +35,8 @@ function JsonCodeBlock({ data, maxHeight = "20rem" }: { data: any, maxHeight?: s
 interface DataStructureField {
   name: string;
   type: string;
+  in?: string; // For parameters
+  required?: boolean; // For parameters
   description: string;
   fields?: DataStructureField[]; // For nested objects
 }
@@ -78,7 +80,7 @@ function DataStructureTable({ fields }: { fields: DataStructureField[] }) {
 
 
 export default async function ApiInfoPage() {
-  let apiInfoData: any; // Use any for now, or define a more specific type later
+  let apiInfoData: any;
   let error = null;
 
   try {
@@ -118,6 +120,13 @@ export default async function ApiInfoPage() {
             </Badge>
         </div>
         {apiInfoData.contactEmail && <p className="text-sm text-muted-foreground mt-4">Contact: <a href={`mailto:${apiInfoData.contactEmail}`} className="text-primary hover:underline">{apiInfoData.contactEmail}</a></p>}
+         <div className="mt-6">
+            <Button asChild size="lg">
+                <Link href="/api-playground" className="flex items-center gap-2">
+                    <PlayCircle className="h-5 w-5" /> Go to API Playground
+                </Link>
+            </Button>
+        </div>
       </header>
 
       <section id="endpoints">
