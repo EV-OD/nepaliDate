@@ -1,7 +1,8 @@
 
 'use server';
 
-import { getBsMonthDataForAi, convertBsToAd, convertAdToBs } from '@/lib/date-converter';
+import { convertBsToAd, convertAdToBs } from '@/lib/date-converter';
+import { getBsCalendarData } from '@/lib/bsCalendarData'; // Updated import
 import type { NepaliDate, EnglishDate, ConversionResult, BsMonthData } from '@/types';
 import { NEPALI_MONTHS } from '@/types';
 
@@ -17,25 +18,27 @@ interface ConversionAndEventsResult {
 }
 
 async function fetchEventData(bsYear: number, bsMonth: number): Promise<{ holiFest?: string[], marriage?: string[], bratabandha?: string[], eventDataError?: string }> {
-  const monthData: BsMonthData | null = getBsMonthDataForAi(bsYear, bsMonth);
+  const calendar = getBsCalendarData(); // Use getBsCalendarData
+  const monthData: BsMonthData | undefined = calendar[`${bsYear}/${bsMonth}`]; // Look up month data
+
   if (!monthData) {
     return { eventDataError: `Could not retrieve event data for ${NEPALI_MONTHS[bsMonth-1]} ${bsYear}. Mock data might be limited for this month.` };
   }
 
-  return { 
+  return {
     holiFest: monthData.holiFest,
     marriage: monthData.marriage,
-    bratabandha: monthData.bratabandha 
+    bratabandha: monthData.bratabandha
   };
 }
 
 export async function convertBsToAdWithEvents(bsDate: NepaliDate): Promise<ConversionAndEventsResult> {
   const conversionResult = convertBsToAd(bsDate);
-  
+
   if (conversionResult.adDate) {
     const eventData = await fetchEventData(bsDate.year, bsDate.month);
-    return { 
-      conversion: conversionResult, 
+    return {
+      conversion: conversionResult,
       ...eventData,
       bsYearForEvents: bsDate.year,
       bsMonthForEvents: bsDate.month,
@@ -50,8 +53,8 @@ export async function convertAdToBsWithEvents(adDate: EnglishDate): Promise<Conv
 
   if (conversionResult.bsDate) {
     const eventData = await fetchEventData(conversionResult.bsDate.year, conversionResult.bsDate.month);
-    return { 
-      conversion: conversionResult, 
+    return {
+      conversion: conversionResult,
       ...eventData,
       bsYearForEvents: conversionResult.bsDate.year,
       bsMonthForEvents: conversionResult.bsDate.month,

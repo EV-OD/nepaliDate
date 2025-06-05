@@ -14,8 +14,8 @@ const MONTH_NAME_TO_NUMBER: { [key: string]: number } = {
 function parseEnglishMeta(enMeta: string): Omit<BsMonthData['metadata'], 'np'> {
   // Examples: "Apr/May 2023", "Jan/Feb 2024", "Dec/Jan 2023/2024"
   const parts = enMeta.split(' ');
-  const yearPart = parts.pop()!; 
-  const monthPart = parts.join(' '); 
+  const yearPart = parts.pop()!;
+  const monthPart = parts.join(' ');
 
   const monthNames = monthPart.split('/');
   const ad_month_start_name = monthNames[0];
@@ -31,13 +31,13 @@ function parseEnglishMeta(enMeta: string): Omit<BsMonthData['metadata'], 'np'> {
     ad_year_end = parseInt(endYearStrSegment.length === 2 ? `${startYearStr.substring(0,2)}${endYearStrSegment}` : endYearStrSegment);
   } else {
     ad_year_start = parseInt(yearPart);
-    ad_year_end = ad_year_start; 
+    ad_year_end = ad_year_start;
     // If month names span across year-end (e.g. Dec/Jan) but only one year is listed, adjust end year
     if (MONTH_NAME_TO_NUMBER[ad_month_start_name] === 12 && MONTH_NAME_TO_NUMBER[ad_month_end_name] === 1) {
       ad_year_end = ad_year_start + 1;
     }
   }
-  
+
   return {
     en: enMeta,
     // np will be filled from JSON
@@ -73,16 +73,16 @@ function loadCalendarDataFromFileSystem(): BsCalendar {
         const filePath = path.join(yearPath, monthFile);
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         const jsonData = JSON.parse(fileContent);
-        
+
         const parsedMetaBase = parseEnglishMeta(jsonData.metadata.en);
-        
+
         const monthKey = `${bsYear}/${bsMonth}`;
         calendar[monthKey] = {
           bs_year: bsYear,
           bs_month: bsMonth,
           metadata: {
             ...parsedMetaBase,
-            np: jsonData.metadata.np, 
+            np: jsonData.metadata.np,
           },
           days: jsonData.days.map((d: any) => ({
               n: d.n,
@@ -100,7 +100,7 @@ function loadCalendarDataFromFileSystem(): BsCalendar {
     }
   } catch (error) {
     console.error("Error loading calendar data from file system:", error);
-    return calendar; 
+    return calendar;
   }
   // console.log(`Loaded ${Object.keys(calendar).length} months of data.`);
   return calendar;
@@ -119,7 +119,7 @@ export function getDaysInBsMonth(year: number, month: number): number {
   if (monthData && monthData.days) {
     return monthData.days.length;
   }
-  
+
   console.warn(`Data not found for ${year}/${month} in getDaysInBsMonth. Using default fallback values.`);
   // Fallback for robustness (from src/types/index.ts - DAYS_IN_BS_MONTH logic)
   // This should ideally not be hit if data files are present for the queried range
@@ -135,15 +135,9 @@ export function getDaysInBsMonth(year: number, month: number): number {
     return yearDays[month-1];
   }
 
-  if (month === 2 || month === 4 ) return 32; 
+  if (month === 2 || month === 4 ) return 32;
   if ([1,3,5,7,8].includes(month)) return 31; // Common lengths
   return 30; // Default for others
-}
-
-export function getBsMonthDataForAi(bsYear: number, bsMonth: number): BsMonthData | null {
-  const calendar = getBsCalendarData();
-  const monthData = calendar[`${bsYear}/${bsMonth}`];
-  return monthData || null;
 }
 
 export function getBsYears(): number[] {
