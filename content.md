@@ -253,9 +253,7 @@ This document provides a detailed breakdown of the textual content on each key p
     *   **Action:** Opens mail client with pre-filled `mailto:contact@sevenx.com.np?subject=API%20Key%20Request%20for%20NepaliDate`.
 *   **Footer Text:**
     *   "If you have any questions about the API or the request process, feel free to include them in your email or contact us separately."
-    *   "Looking for technical details? Visit the <Link href='/api-info' class='text-primary hover:underline'>API Documentation page</Link>."
+    *   "Looking for technical details? Visit the <Link href='/api-info' className='text-primary hover:underline'>API Documentation page</Link>."
 
 ---
 This provides a comprehensive overview of the textual content present on the main pages of the NepaliDate application for SEO analysis.
-
-

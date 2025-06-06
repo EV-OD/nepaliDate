@@ -21,7 +21,7 @@
 *   **Date Conversion (Website Use Only):**
     *   Bikram Sambat (BS) to Gregorian (AD) Converter (Implemented via Server Actions, intended for website UI use)
     *   Gregorian (AD) to Bikram Sambat (BS) Converter (Implemented via Server Actions, intended for website UI use)
-    *   *Data Access Note:* The conversion Server Actions internally fetch event data by calling the application's own `/api/calendar/{YYYY}/{MM}` endpoint, which requires the server-configured `API_KEY_NEPALIDATE` for access. This ensures calendar data is centrally managed and secured.
+    *   *Data Access Note:* The conversion Server Actions directly access the local Bikram Sambat calendar data (JSON files) for event information. This access is internal to the application server.
 *   **Date Validation:** Input validation notifies users of impossible date inputs (e.g., BS day exceeding days in the month).
 *   **Date Picker:** User-friendly date picker components for easy date selection in both BS and AD converters.
 *   **Event Display:** For a selected/converted BS month, the application displays Nepali holidays and events:
@@ -98,6 +98,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Configures Next.js specific options.
     *   Includes `typescript.ignoreBuildErrors` and `eslint.ignoreDuringBuilds` (used cautiously).
     *   Configures `images.remotePatterns` to allow placeholder images from `placehold.co`.
+    *   Includes `experimental.outputFileTracingIncludes` to ensure the `data` directory is included in Vercel builds.
 *   **`package.json`**:
     *   Lists project dependencies (e.g., `next`, `react`, `tailwindcss`, `lucide-react`, `genkit`, ShadCN UI components, `date-fns`, `zod`). `axios` is in devDependencies for API Playground snippet example.
     *   Defines scripts for development (`dev`), building (`build`), starting (`start`), linting (`lint`), type checking (`typecheck`), and running the data scraper (`scrape`) for Bikram Sambat data.
@@ -131,10 +132,10 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Applies base styles to the body and heading elements.
 *   **`src/app/actions.ts`**:
     *   Contains Next.js Server Actions used by the converter pages.
-    *   `convertBsToAdWithEvents(bsDate)`: Converts BS to AD. Internally calls the app's API-key-protected `/api/calendar/{YYYY}/{MM}` endpoint to fetch associated events (Nepali holidays, marriage, bratabandha) for the target BS month.
-    *   `convertAdToBsWithEvents(adDate)`: Converts AD to BS. Internally calls the app's API-key-protected `/api/calendar/{YYYY}/{MM}` endpoint to fetch associated events for the resulting BS month.
-    *   `fetchEventData(bsYear, bsMonth)`: A helper function that now makes an authenticated internal API call to retrieve event data.
-    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests by the application's frontend. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. The event data these actions consume is fetched from API-key-protected endpoints. For truly "website-only" execution of the actions themselves, more advanced techniques like strict CSRF token validation beyond Next.js defaults, session-based checks (if users were authenticated), or WAF rules would be needed. Rate limiting is a recommended general security measure.
+    *   `convertBsToAdWithEvents(bsDate)`: Converts BS to AD. Internally calls `fetchEventData` which directly accesses the local Bikram Sambat calendar JSON data to fetch associated events (Nepali holidays, marriage, bratabandha) for the target BS month.
+    *   `convertAdToBsWithEvents(adDate)`: Converts AD to BS. Internally calls `fetchEventData` which directly accesses the local Bikram Sambat calendar JSON data to fetch associated events for the resulting BS month.
+    *   `fetchEventData(bsYear, bsMonth)`: A helper function that now directly uses `getBsCalendarData()` to retrieve event data from local JSON files.
+    *   **Security Note on Server Actions:** Next.js Server Actions are invoked via HTTP POST requests by the application's frontend. While they have built-in mechanisms (like unique action IDs) that deter casual external calls, dedicated scripts can potentially invoke them if the action ID and payload structure are known. Rate limiting is a recommended general security measure for all endpoints, including Server Actions. The `/api/calendar/*` endpoints are separately protected by an API key for external use.
 
 ### 5.3. Page Routes (`src/app/.../page.tsx`)
 
@@ -222,8 +223,8 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   Error: "Conversion Error", "{error_message}"
 
 #### 5.3.4. `src/app/api-info/page.tsx` (Route: `/api-info`)
-*   Server Component that fetches API documentation details from `/api/calendar/info` using the server-configured API key.
-*   Displays detailed information about the Nepali Calendar API, including endpoints, data structures, data coverage for Bikram Sambat years, usage notes, and API key authentication requirements.
+*   Server Component that fetches API documentation details from `/api/calendar/info` using the server-configured API key (for the page's own data fetching).
+*   Displays detailed information about the Nepali Calendar API, including endpoints, data structures, data coverage for Bikram Sambat years, usage notes, and API key authentication requirements for external users.
 *   Uses ShadCN `Card`, `Accordion`, `Badge`, and custom table rendering for a structured and readable documentation page.
 *   Provides links to the API Playground and the "Get API Key" page.
 *   Includes page-specific SEO metadata for title, description, keywords (e.g., "Nepali Calendar API", "Bikram Sambat API", "API Documentation"), Open Graph, and Twitter cards. Content is optimized for these terms.
@@ -318,7 +319,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
 #### 5.3.6. `src/app/get-api-key/page.tsx` (Route: `/get-api-key`)
 *   Server Component.
 *   Provides detailed instructions on how to request an API key by emailing `contact@sevenx.com.np`.
-*   Outlines required information for the request (name, use case, etc., excluding expected volume).
+*   Outlines required information for the request (name, use case, etc.).
 *   Includes SEO metadata optimized for "get api key," "NepaliDate API key," etc.
 *   Uses ShadCN `Card`, `Button`, and relevant icons for a clear, user-friendly layout.
 
@@ -394,7 +395,7 @@ The following endpoints are deprecated and will return a 410 Gone status with a 
     *   `ResultDisplay`: Component to display converted dates.
 *   **`src/components/converters/EventSummaryDisplay.tsx`**:
     *   Responsible for displaying Nepali holidays and events. Uses `_::_` delimiter to parse `holiFest` data. Groups events by day for clarity.
-*   **`src/components/playground/CodeSnippetDisplay.tsx` (New)**:
+*   **`src/components/playground/CodeSnippetDisplay.tsx`**:
     *   Client component for displaying dynamic code snippets (JS, Python, Node.js) for API calls in the API Playground. Includes copy-to-clipboard functionality.
 
 ### 5.7. TypeScript Types (`src/types/index.ts`)

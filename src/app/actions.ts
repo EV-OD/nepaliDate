@@ -2,7 +2,7 @@
 'use server';
 
 import { convertBsToAd, convertAdToBs } from '@/lib/date-converter';
-// getBsCalendarData is no longer directly used by fetchEventData
+import { getBsCalendarData } from '@/lib/bsCalendarData'; // Directly use this
 import type { NepaliDate, EnglishDate, ConversionResult, BsMonthData } from '@/types';
 import { NEPALI_MONTHS } from '@/types';
 
@@ -17,37 +17,27 @@ interface ConversionAndEventsResult {
   bsMonthNameForEvents?: string;
 }
 
-// This function now fetches event data from the app's own API endpoint
+// This function now fetches event data by directly accessing the calendar data source
 async function fetchEventData(bsYear: number, bsMonth: number): Promise<{ holiFest?: string[], marriage?: string[], bratabandha?: string[], eventDataError?: string }> {
-  const apiKey = process.env.API_KEY_NEPALIDATE;
-  if (!apiKey) {
-    console.error("API_KEY_NEPALIDATE is not set in environment variables.");
-    return { eventDataError: "Server configuration error: API key for internal data fetching is missing." };
-  }
-
-  // Determine the base URL for the API call
-  // For server-side calls to its own API, localhost is often preferred in dev.
-  // In production, NEXT_PUBLIC_APP_URL should be the externally accessible URL.
-  // However, for server-to-server internal calls, if the app runs in a containerized env,
-  // localhost might refer to the container itself. Using NEXT_PUBLIC_APP_URL if available.
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${process.env.PORT || 9002}`;
-  const apiUrl = `${appUrl}/api/calendar/${bsYear}/${bsMonth}`;
-
   try {
-    const response = await fetch(apiUrl, {
-      headers: {
-        'X-API-Key': apiKey,
-      },
-      cache: 'no-store', // Ensure fresh data for each conversion context
-    });
+    const allCalendarData = getBsCalendarData();
+    const monthKey = `${bsYear}/${bsMonth}`;
+    const monthData: BsMonthData | undefined = allCalendarData[monthKey];
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: `API request failed with status ${response.status}` }));
-      console.error(`Error fetching event data from ${apiUrl}: ${response.status}`, errorData);
-      return { eventDataError: `Could not retrieve event data (status ${response.status}): ${errorData.error || 'Unknown API error'}.` };
+    if (!monthData) {
+      const availableYearsArray: number[] = [];
+      if (allCalendarData && Object.keys(allCalendarData).length > 0) {
+          Object.keys(allCalendarData).forEach(k => {
+              const y = parseInt(k.split('/')[0]);
+              if (!availableYearsArray.includes(y)) {
+                  availableYearsArray.push(y);
+              }
+          });
+          availableYearsArray.sort((a, b) => a - b);
+      }
+      const availableYears = availableYearsArray.join(', ');
+      return { eventDataError: `Event data not found for BS ${bsYear}/${bsMonth}. Available years: ${availableYears || 'None'}.` };
     }
-
-    const monthData: BsMonthData = await response.json();
 
     return {
       holiFest: monthData.holiFest,
@@ -56,9 +46,9 @@ async function fetchEventData(bsYear: number, bsMonth: number): Promise<{ holiFe
     };
 
   } catch (error) {
-    console.error("Error in fetchEventData (calling internal API):", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error during internal API call.";
-    return { eventDataError: `Failed to connect to internal event data API: ${errorMessage}` };
+    console.error("Error in fetchEventData (direct access):", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error fetching event data.";
+    return { eventDataError: `Failed to retrieve event data: ${errorMessage}` };
   }
 }
 
