@@ -68,7 +68,19 @@ export function Combobox({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-[--radix-popover-trigger-width] p-0", popoverClassName)}>
-        <Command>
+        <Command
+          filter={(itemValue, search) => {
+            // itemValue is the CommandItem's 'value' prop (option.value)
+            // search is the CommandInput's current text
+            const trimmedSearch = search.trim().toLowerCase();
+            if (trimmedSearch === "") return 1; // Show all if search is empty
+            
+            // Perform a case-insensitive "starts with" search on the item's value
+            if (itemValue.toLowerCase().startsWith(trimmedSearch)) return 1;
+            
+            return 0; // Hide if it doesn't start with the search term
+          }}
+        >
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
@@ -77,16 +89,15 @@ export function Combobox({
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
-                  value={option.value}
+                  value={option.value} // This is what the filter function receives as `itemValue`
                   onSelect={(currentValue) => {
-                    // Check if the selected value is actually different or if it's a valid option
+                    // currentValue is option.value from the selected CommandItem
                     const selectedOption = options.find(opt => opt.value.toLowerCase() === currentValue.toLowerCase());
                     if (selectedOption) {
                         onChange(selectedOption.value === value ? "" : selectedOption.value);
-                    } else if (currentValue === "" && value !== "") { // Allow clearing
+                    } else if (currentValue === "" && value !== "") { 
                         onChange("");
                     }
-                    // else, if not found and not clearing, do nothing or handle as invalid input
                     setOpen(false)
                   }}
                 >
@@ -107,3 +118,4 @@ export function Combobox({
     </Popover>
   )
 }
+
