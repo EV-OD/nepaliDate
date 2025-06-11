@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { Code, Info, Server, ExternalLink, Database, AlertCircle, Network, BookOpen, Pilcrow, ListTree, PlayCircle, KeyRound, Send } from "lucide-react";
 import type { Metadata } from 'next';
+import { generateApiInfoObject } from '@/lib/apiInfoGenerator'; // Import the generator
 
 export const metadata: Metadata = {
   title: "Nepali Calendar API Documentation | NepaliDate Bikram Sambat API",
@@ -33,34 +34,19 @@ export const metadata: Metadata = {
   },
 };
 
-
-async function getApiInfo() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'; 
-  const apiKey = process.env.API_KEY_NEPALIDATE;
-
-  if (!apiKey) {
-    console.error("API_KEY_NEPALIDATE is not set in environment variables for ApiInfoPage fetch.");
-    throw new Error("Server configuration error: API key for internal data fetching is missing.");
-  }
-
-  const res = await fetch(`${baseUrl}/api/calendar/info`, { 
-    cache: 'no-store',
-    headers: {
-      'X-API-Key': apiKey,
-    }
-  }); 
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("API Info Fetch Error:", res.status, errorText);
-    throw new Error(`Failed to fetch API info. Status: ${res.status}. Response: ${errorText.substring(0,200)}...`);
-  }
+async function getApiInfoData() {
+  // For server components, determine origin carefully or use a fixed one from env.
+  // NEXT_PUBLIC_APP_URL is available both client and server if defined in .env and prefixed.
+  // For server components, process.env.VERCEL_URL (if on Vercel) or a hardcoded base URL might be more reliable.
+  const requestOrigin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+  
+  // Directly call the generator function
   try {
-    return await res.json();
+    const apiInfo = generateApiInfoObject({ requestOrigin });
+    return apiInfo;
   } catch (e) {
-    console.error("API Info JSON Parse Error:", e);
-    const responseText = await res.text().catch(() => "Could not read response text after JSON parse failure.");
-    console.error("Response text that failed to parse:", responseText.substring(0, 500));
-    throw new Error(`Failed to parse API info JSON. Error: ${(e as Error).message}`);
+    console.error("Error generating API Info:", e);
+    throw new Error(`Failed to generate API info: ${(e as Error).message}`);
   }
 }
 
@@ -124,7 +110,8 @@ export default async function ApiInfoPage() {
   let error = null;
 
   try {
-    apiInfoData = await getApiInfo();
+    // Use the new direct data fetching function
+    apiInfoData = await getApiInfoData();
   } catch (e: any) {
     error = e.message;
   }
@@ -133,7 +120,7 @@ export default async function ApiInfoPage() {
     return (
       <Alert variant="destructive" className="max-w-4xl mx-auto my-8">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error Fetching API Information</AlertTitle>
+        <AlertTitle>Error Generating API Information</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
@@ -341,3 +328,4 @@ export default async function ApiInfoPage() {
     </div>
   );
 }
+
