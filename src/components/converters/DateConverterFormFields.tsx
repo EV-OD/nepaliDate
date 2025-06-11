@@ -1,8 +1,7 @@
 
 'use client';
 
-import { Control, Controller } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+import { Control } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { NEPALI_MONTHS, ENGLISH_MONTHS, CLIENT_SIDE_BS_YEARS, getClientSafeDaysInBsMonth } from "@/types"; // Updated imports
+import { NEPALI_MONTHS, ENGLISH_MONTHS, CLIENT_SIDE_BS_YEARS, getClientSafeDaysInBsMonth } from "@/types";
 import React from "react";
+import { Combobox, type ComboboxOption } from "@/components/ui/combobox"; // Import Combobox
 
 interface BsDateFormFieldsProps {
   control: Control<any>;
@@ -24,13 +24,16 @@ interface BsDateFormFieldsProps {
 }
 
 export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFieldName, bsYearWatch, bsMonthWatch }: BsDateFormFieldsProps) {
-  const availableBsYears = CLIENT_SIDE_BS_YEARS; // Use client-safe years
+  const bsYearOptions: ComboboxOption[] = CLIENT_SIDE_BS_YEARS.map(year => ({
+    value: year.toString(),
+    label: year.toString()
+  }));
   
   const daysInSelectedBsMonth = React.useMemo(() => {
     if (bsYearWatch && bsMonthWatch) {
-      return getClientSafeDaysInBsMonth(bsYearWatch, bsMonthWatch); // Use client-safe function
+      return getClientSafeDaysInBsMonth(bsYearWatch, bsMonthWatch);
     }
-    return 32; // Default max if year/month not selected
+    return 32;
   }, [bsYearWatch, bsMonthWatch]);
 
   return (
@@ -41,22 +44,14 @@ export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFi
         render={({ field }) => (
           <FormItem>
             <FormLabel>BS Year</FormLabel>
-            <Select
-              onValueChange={(value) => field.onChange(parseInt(value))}
-              defaultValue={field.value?.toString()}
-              value={field.value?.toString()} // Ensure value prop is also set for controlled component
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select BS Year" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {availableBsYears.map(year => (
-                  <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Combobox
+              options={bsYearOptions}
+              value={field.value?.toString()}
+              onChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
+              placeholder="Select BS Year"
+              searchPlaceholder="Search BS Year..."
+              emptyText="No year found."
+            />
             <FormMessage />
           </FormItem>
         )}
@@ -70,7 +65,7 @@ export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFi
             <Select
               onValueChange={(value) => field.onChange(parseInt(value))}
               defaultValue={field.value?.toString()}
-              value={field.value?.toString()} // Ensure value prop is also set
+              value={field.value?.toString()}
             >
               <FormControl>
                 <SelectTrigger>
@@ -95,7 +90,6 @@ export function BsDateFormFields({ control, yearFieldName, monthFieldName, dayFi
             <FormLabel>BS Day</FormLabel>
              <Select
               onValueChange={(value) => field.onChange(parseInt(value))}
-              // Ensure the field.value is string for defaultValue and value
               defaultValue={field.value?.toString()}
               value={field.value?.toString()}
               disabled={!bsYearWatch || !bsMonthWatch}
@@ -127,6 +121,7 @@ interface AdDateFormFieldProps {
   label: string;
 }
 
+// This component is no longer used by ad-to-bs page but kept for potential other uses or reference.
 export function AdDateFormField({ control, fieldName, label }: AdDateFormFieldProps) {
   return (
     <FormField
@@ -160,8 +155,7 @@ export function AdDateFormField({ control, fieldName, label }: AdDateFormFieldPr
                 selected={field.value}
                 onSelect={field.onChange}
                 disabled={(date) =>
-                  // Adjusted min date slightly to ensure 1992 AD is selectable as it corresponds to BS 2049 (min BS year)
-                  date > new Date() || date < new Date("1935-01-01") 
+                  date > new Date() || date < new Date("1930-01-01") 
                 }
                 initialFocus
               />
