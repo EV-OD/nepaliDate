@@ -51,7 +51,7 @@ The base URL for all API requests will be your application's deployed domain. Fo
 *   **Path**: `/api/calendar/{YYYY}`
 *   **Description**: Retrieves all Bikram Sambat (BS) calendar data for a specific BS year (YYYY), including all 12 months. Each month's data includes daily details, Nepali holidays, festivals, and other events. Requires API Key.
 *   **Path Parameters**:
-    *   `YYYY` (integer, required): The Bikram Sambat year (e.g., 2079).
+    *   `YYYY` (integer, required): The Bikram Sambat year (e.g., 2079). Data intended to be available from BS 1992 to 2110.
 *   **Example Request**:
     ```
     GET https://your-nepalidate-app.com/api/calendar/2079
@@ -86,7 +86,7 @@ The base URL for all API requests will be your application's deployed domain. Fo
 *   **Possible Error Responses**:
     *   `400 Bad Request`: Invalid year format.
     *   `401 Unauthorized`: Invalid or missing API Key.
-    *   `404 Not Found`: Data not found for the specified BS year. The response will list available years.
+    *   `404 Not Found`: Data not found for the specified BS year. The response will list available years based on scraped data.
 
 ### 4.3. Get BS Month Data
 
@@ -94,7 +94,7 @@ The base URL for all API requests will be your application's deployed domain. Fo
 *   **Path**: `/api/calendar/{YYYY}/{MM}`
 *   **Description**: Retrieves Bikram Sambat (BS) calendar data for a specific BS year (YYYY) and month (MM, 1-12). Includes daily details, Nepali holidays, festivals, and other events. Requires API Key.
 *   **Path Parameters**:
-    *   `YYYY` (integer, required): The Bikram Sambat year (e.g., 2079).
+    *   `YYYY` (integer, required): The Bikram Sambat year (e.g., 2079). Data intended to be available from BS 1992 to 2110.
     *   `MM` (integer, required): The Bikram Sambat month (1 for Baishakh, ..., 12 for Chaitra).
 *   **Example Request**:
     ```
@@ -128,7 +128,7 @@ The base URL for all API requests will be your application's deployed domain. Fo
 *   **Possible Error Responses**:
     *   `400 Bad Request`: Invalid year or month format.
     *   `401 Unauthorized`: Invalid or missing API Key.
-    *   `404 Not Found`: Data not found for the specified BS year/month. The response will list available years.
+    *   `404 Not Found`: Data not found for the specified BS year/month. The response will list available years based on scraped data.
 
 ## 5. Data Structures
 
@@ -173,7 +173,7 @@ Represents data for a single day in the Bikram Sambat calendar.
 
 ## 6. Data Coverage & Notes
 
-*   **Available BS Years**: 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083. (Based on currently loaded data files. This may be updated.)
+*   **Available BS Years**: The application aims to support Bikram Sambat years from 1992 to 2110. The actual availability of data for a specific year depends on the success of the data scraping process from `nepalicalendar.rat32.com`. You can check currently loaded years via the `/api/calendar/info` endpoint.
 *   **Data Source**: The data for this Nepali Calendar API is sourced from publicly available Nepali calendar information scraped from `nepalicalendar.rat32.com`. While efforts are made for accuracy, data should be verified for critical applications.
 *   The `holiFest` array uses a 'Day_::_Description' format. 'Day' can be a Nepali numeral or '•' for month-wide notes. Multiple descriptions for the same day are comma-separated after the delimiter.
 *   The `ne` field in `BsDayData` provides the Nepali day as an English numeral string, useful for programmatic access.

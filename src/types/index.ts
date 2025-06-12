@@ -62,21 +62,27 @@ export const ENGLISH_MONTHS = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+// Note: For accurate client-side day validation for years beyond 2083, 
+// this DAYS_IN_BS_MONTH map should be populated with actual data for those years.
+// The getClientSafeDaysInBsMonth function has a fallback for years not listed here.
+// The primary source of truth for conversions remains the JSON data files.
 export const DAYS_IN_BS_MONTH: { [key: string]: number[] } = {
   "1992": [30,31,31,32,31,31,30,30,29,30,29,30],
   "2076": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 29, 30], 
   "2077": [31, 31, 32, 31, 31, 30, 30, 29, 30, 29, 30, 30],
   "2078": [31, 31, 31, 32, 31, 31, 30, 29, 30, 29, 30, 30],
-  "2079": [31, 31, 32, 32, 31, 30, 30, 30, 29, 29,30,30], // Corrected for 2079
+  "2079": [31, 31, 32, 32, 31, 30, 30, 30, 29, 29, 30, 30],
   "2080": [31, 32, 31, 32, 31, 30, 29, 30, 29, 30, 30, 30],
   "2081": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
-  "2082": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30],
+  "2082": [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 30], 
   "2083": [31, 31, 32, 31, 31, 31, 30, 29, 30, 29, 30, 30]
+  // Entries for 2084-2110 would go here if precise day counts are known for client-side validation.
+  // Otherwise, getClientSafeDaysInBsMonth will use its fallback.
 };
 
 
 const MIN_BS_YEAR_CLIENT = 1992;
-const MAX_BS_YEAR_CLIENT = 2083; 
+const MAX_BS_YEAR_CLIENT = 2110; // Updated MAX_BS_YEAR_CLIENT
 export const CLIENT_SIDE_BS_YEARS: number[] = Array.from(
   { length: MAX_BS_YEAR_CLIENT - MIN_BS_YEAR_CLIENT + 1 },
   (_, i) => MIN_BS_YEAR_CLIENT + i
@@ -89,9 +95,12 @@ export function getClientSafeDaysInBsMonth(year: number, month: number): number 
     return DAYS_IN_BS_MONTH[yearStr][month - 1];
   }
   
-  if (month === 2 || month === 4 ) return 32; 
-  if ([1,3,5].includes(month)) return 31; 
-  return 30; 
+  // Fallback logic if year is not in DAYS_IN_BS_MONTH or month is out of bounds for the array
+  // This is a generic fallback and might not be accurate for all future years.
+  // Typical Nepali month day patterns:
+  if (month === 2 || month === 4 ) return 32; // Jestha, Shrawan often have 32
+  if ([1,3,5].includes(month)) return 31; // Baishakh, Ashadh, Bhadra often have 31
+  return 30; // Default for Ashwin, Kartik, Mangsir, Poush, Magh, Falgun, Chaitra
 }
 
 // Types for API Info (can be expanded)
