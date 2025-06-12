@@ -4,7 +4,7 @@ const fs = require('fs');
 
 async function main() {
   const startYear = 1992;
-  const endYear = 2083;
+  const endYear = 2110;
 
   console.log(`Starting to scrape calendar data from BS year ${startYear} to ${endYear}.`);
 
